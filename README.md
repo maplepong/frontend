@@ -1,4 +1,19 @@
-# frontend
+# Frontend
+
+# General convention
+
+- 기능별 브랜치 생성하고 코드 작성 후
+`Pull Request` 요청할 것
+- 필요한 기능들 `issue`에 달아놓을 것!
+- Pull Request/issue의 convention 지킬 것
+
+# Code convention
+`Google code convention`을 따름
+- `JavaScript`
+-  변수명, 함수명은 lowerCamelCase
+-  클래스명은 UpperCamelCase
+그 외는 [여기](https://google.github.io/styleguide/jsguide.html) 참고
+ 
 # Commit convention
 
 최대 50글자까지 작성
