@@ -13,6 +13,7 @@ export default class Component {
       // 기본적으로 비어있으며, 상속받는 Class에서
       // override 할 수 있다.
       // state를 정의하면 좋을 것 같다.
+      // 용도에 맞게 함수를 추가해보자.
       this.render();
       // 컴포넌트를 렌더링하는 메서드. 
       // $target의 innerHTML을 template 메서드가 반환하는 값으로 설정하고,
