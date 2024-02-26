@@ -51,6 +51,7 @@ export default class Login extends Component {
         this.$target.querySelector('#toHome').addEventListener('click', (e) => {
             console.log("홈으로 누름"); // 현재 상태 출력하여 확인
             history.pushState({}, '', '/home');
+            // History Api Stack에 /home 추가 후 이동 
             const event = new CustomEvent('routeChange');
             window.dispatchEvent(event);
         });
