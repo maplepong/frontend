@@ -34,9 +34,9 @@ export default class app extends Component {
 			<button id="contact">Contact</button>
 			<button id="login">Login</button>
 		</header>
-		<header data-component="item-appender"></header>
-		<main data-component="items"></main>
-		<footer data-component="item-filter"></footer>
+		<div data-component="item-appender"></div>
+		<div data-component="items"></div>
+		<div data-component="item-filter"></div>
 		<main></main>
 		`;
   }
