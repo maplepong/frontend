@@ -1,71 +1,44 @@
-import { Login } from './login.js';
-import { setupSignupButton } from './login.js';
-import { setupLoginForm } from './login.js';
-import { Signup } from './signup.js';
-import { Game } from './game.js';
+import home from "./components/Home.js";
+import login from "./components/Login.js";
 
-// 컴포넌트 함수들
-function Home() {
-    return `<h1>TRANSCENDENCE</h1>
-            <p>우당탕탕 초월 대작전</p>`;
-}
+class App {
+    constructor() {
+        // 초기 이벤트 등록 및 렌더링
+        this.setup();
+        this.render();
+    }
 
-function About() {
-    return `<h1>ABOUT</h1>
-            <p>참여자: 조수빈 정원이 이시원 박경민</p>
-            <p class="fade-move">이주현</p>`;
-}
+    setup() {
+        // app.js는 전체 컴포넌트들의 감독자 역할을 하게 되므로
+        // 전역 이벤트 감지 함수들이 위치한다.
+        // 'popstate'를 통해 web의 뒤로가기, 앞으로가기 이벤트를 감지한다.
+        // 'routeChange'는 주로 버튼을 누를 때 해당 컴포넌트에서 발생하는
+        // 전역 CustomEvent를 감지하여 App의 render 함수를 호출한다. 
+        window.addEventListener('popstate', () => this.render());
+        window.addEventListener('routeChange', () => this.render());
+    }
 
-function Contact() {
-    return `<h1>CONTACT</h1>
-            <p>연락 안 받습니다</p>`;
-}
+    render() {
+        const app = document.querySelector('#app');
+        var path = window.location.pathname;
+        
+        // 본래 const path = window.location.pathname
+        // 으로 코드 진행하고 아래 if 문은 없는게 맞지만,
+        // live server의 편의성을 위해 임시로 추가했습니다.
+        if (path === '/' || path === '/index.html') {
+            path = '/home';
+            window.history.pushState({}, '', '/home');
+        }
 
-// 라우터 함수
-function router() {
-    const path = window.location.pathname;
-    const main = document.querySelector('main');
-
-    switch (path) {
-        case '/home':
-            main.innerHTML = Home();
-            break;
-        case '/about':
-            main.innerHTML = About();
-            break;
-        case '/contact':
-            main.innerHTML = Contact();
-            break;
-        case '/login':
-            main.innerHTML = Login();
-            setupLoginForm();
-            setupSignupButton();
-            break;
-        case '/signup':
-            main.innerHTML = Signup();
-            break;
-        case '/game':
-            main.innerHTML = Game();
-            break;
-        default:
-            main.innerHTML = Home(); // 기본 경로
+        switch (path) {
+            case '/home':
+                new home(app); break;
+            case '/login':
+                new login(app); break;
+            default:
+                app.innerHTML = `<h1>404 Not Found</h1>`;
+        }
     }
 }
 
-// 이벤트 리스너
-document.addEventListener('DOMContentLoaded', () => {
-    ['home', 'about', 'contact', 'login'].forEach((path) => {
-        const button = document.getElementById(path);
-        button.addEventListener('click', () => {
-            const newPath = '/' + path;
-            history.pushState({}, '', newPath);
-            router(); // 변경된 URL에 따라 컴포넌트 렌더링
-        });
-    });
-
-    window.addEventListener('routeChange', router);
-    window.addEventListener('popstate', router);
-
-    // 초기 페이지 로드 시 라우터 호출
-    router();
-});
+new App();
