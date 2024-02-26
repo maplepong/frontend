@@ -11,7 +11,8 @@ export default class Home extends Component {
     setEvent() {
         this.$target.querySelector('#moveLogin').addEventListener('click', (e) => {
             console.log("로그인 버튼 누름"); // 현재 상태 출력하여 확인
-            history.pushState({}, '', '/login');
+            history.pushState({}, '', '/login'); 
+            // History Api Stack에 /login 추가 후 이동 
             const event = new CustomEvent('routeChange');
             window.dispatchEvent(event);
         });
