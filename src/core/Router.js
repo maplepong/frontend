@@ -1,22 +1,9 @@
 import { Home, About, Contact } from "../view/simplepage.js";
-import Login from "../view/Login.js";
-
-// //출처: https://nukw0n-dev.tistory.com/34 [찐이의 개발 연결구과:티스토리]
-// const routes = [
-//   { path: "/home", element: Home },
-//   { path: "/login", element: Login },
-//   { path: "/about", element: About },
-// ];
-
-// const findMatchedRoute = () =>
-//   routes.find((route) => route.path.test(location.pathname));
-
-// const route = () => {
-//   const TargetPage = findMatchedRoute()?.element || NotFound;
-//   new TargetPage(this.$container);
-// };
+import Login from "../page/Login.js";
+import Landing from "../page/Landing.js";
 
 // 라우터 함수
+// link 넣는 방법 : 태그 속성에 "data-route" 지정
 export default function router() {
   //   route();
   const path = window.location.pathname;
@@ -46,7 +33,7 @@ export default function router() {
     //   main.innerHTML = Game();
     //   break;
     default:
-      new Login(main);
+      new Landing(main);
     //   main.innerHTML = Home(); // 기본 경로
   }
 }
