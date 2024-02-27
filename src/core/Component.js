@@ -62,4 +62,18 @@ export default class Component {
       callback(event);
     });
   }
+
+  setCss(href) {
+    // Create a link element
+    var cssLink = document.createElement("link");
+
+    // Set the attributes
+    cssLink.href = "src/css/" + href;
+    cssLink.rel = "stylesheet";
+    cssLink.type = "text/css";
+    cssLink.id = "dynamic-link";
+
+    // Append it to the head
+    document.head.appendChild(cssLink);
+  }
 }

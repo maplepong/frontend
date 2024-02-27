@@ -21,6 +21,7 @@ export default class app extends Component {
 			<button data-route="about">About</button>
 			<button data-route="contact">Contact</button>
 			<button data-route="login">Login</button>
+			<button data-route="main">after login</button>
 		</header>
 		<main></main>
 		`;
