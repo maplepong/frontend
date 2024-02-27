@@ -22,6 +22,10 @@ export default function router() {
   const path = window.location.pathname;
   const main = document.querySelector("main");
 
+  // 동적으로 추가한 css등 링크 파일 제거
+  var dynamicLink = document.getElementById("dynamic-link");
+  if (dynamicLink) dynamicLink.parentNode.removeChild(dynamicLink);
+
   switch (path) {
     case "/home":
       main.innerHTML = Home();
