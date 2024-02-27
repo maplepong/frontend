@@ -30,12 +30,12 @@ export default class Input extends Component {
   setEvent() {
     const { validate } = this.props;
     const $input = this.$target.querySelector("input");
-    $input.onfocus = () => {
-      $input.style.backgroundColor = "green";
-    };
-    $input.onblur = () => {
-      $input.style.backgroundColor = "white";
-    };
+    // $input.onfocus = () => {
+    //   $input.style.backgroundColor = "green";
+    // };
+    // $input.onblur = () => {
+    //   $input.style.backgroundColor = "white";
+    // };
     this.addEvent("keyup", "input", ({ key, target }) => {
       if (key != "Enter") return;
       validate(target.value);

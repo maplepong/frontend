@@ -22,7 +22,7 @@ export default class app extends Component {
       ],
     };
     document.addEventListener("DOMContentLoaded", () => {
-      ["home", "about", "contact", "login"].forEach((path) => {
+      ["home", "about", "contact", "login"].forEach(path => {
         const button = document.getElementById(path);
         button.addEventListener("click", () => {
           const newPath = "/" + path;
@@ -95,7 +95,7 @@ export default class app extends Component {
     const items = [...this.state.items];
     //seq가 같은 item을 findIndex로 찾아서 제거
     items.splice(
-      items.findIndex((v) => v.seq === seq),
+      items.findIndex(v => v.seq === seq),
       1
     );
     this.setState({ items });
@@ -103,7 +103,7 @@ export default class app extends Component {
 
   toggleItem(seq) {
     const items = [...this.state.items];
-    const index = items.findIndex((v) => v.seq === seq);
+    const index = items.findIndex(v => v.seq === seq);
     items[index].active = !items[index].active;
     this.setState({ items });
   }
@@ -124,7 +124,7 @@ export default class app extends Component {
 
   addItem(contents) {
     const { items } = this.state;
-    const seq = Math.max(0, ...items.map((v) => v.seq)) + 1;
+    const seq = Math.max(0, ...items.map(v => v.seq)) + 1;
     const active = false;
     this.setState({
       items: [...items, { seq, contents, active }],

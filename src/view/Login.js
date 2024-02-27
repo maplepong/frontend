@@ -9,6 +9,18 @@ export default class Login extends Component {
   setup() {
     this.username = "";
     this.password = "";
+
+    // Create a link element
+    var cssLink = document.createElement("link");
+
+    // Set the attributes
+    cssLink.href = "src/css/login.css";
+    cssLink.rel = "stylesheet";
+    cssLink.type = "text/css";
+    cssLink.id = "dynamic-link";
+
+    // Append it to the head
+    document.head.appendChild(cssLink);
   }
   template() {
     return `

@@ -56,7 +56,7 @@ export default class Component {
   // callback: 이벤트 발생 시 실행시킬 함수
   addEvent(eventType, selector, callback) {
     const children = [...this.$target.querySelectorAll(selector)];
-    this.$target.addEventListener(eventType, (event) => {
+    this.$target.addEventListener(eventType, event => {
       event.preventDefault();
       if (!event.target.closest(selector)) return false;
       callback(event);
