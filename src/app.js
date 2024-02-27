@@ -6,7 +6,21 @@ import router from "../src/core/Router.js";
 
 export default class app extends Component {
   setup() {
-    this.state = {};
+    this.state = {
+      isFilter: 0,
+      items: [
+        {
+          content: "naber",
+          seq: 1,
+          active: true,
+        },
+        {
+          content: "naber",
+          seq: 1,
+          active: true,
+        },
+      ],
+    };
     document.addEventListener("DOMContentLoaded", () => {
       ["home", "about", "contact", "login"].forEach((path) => {
         const button = document.getElementById(path);

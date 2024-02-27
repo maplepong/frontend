@@ -1,21 +1,28 @@
 import Component from "../core/Component.js";
 
 export default class Input extends Component {
-  setup() {}
+  $button;
+  setup() {
+    this.$button = false;
+    if (this.props.button === true) this.$button = true;
+  }
   template() {
     return `
 	<input type="text"></input>
-	<button id="input-submit" />
+	${this.$button ? `<button id="input-submit" /> ` : ``}
 	`;
   }
   setEvent() {
-    const { submit } = this.props;
-    this.addEvent("keyup", "input", ({ key }) => {
+    const { validate } = this.props;
+    this.addEvent("keyup", "input", ({ key, target }) => {
       if (key != "Enter") return;
-      submit();
+      console.log(target.value);
+      validate(target.value);
     });
-    this.addEvent("click", "input", () => {
-      submit();
-    });
+    if (this.$button) {
+      this.addEvent("click", "#input-submit", (target) => {
+        validate(target.value);
+      });
+    }
   }
 }

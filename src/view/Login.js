@@ -14,15 +14,19 @@ export default class Login extends Component {
 		`;
   }
   mounted() {
-    const { submit } = this;
+    const { validateId, validatePassword } = this;
     const $idInput = this.$target.querySelector("#login-id-input");
     const $pwInput = this.$target.querySelector("#login-password-input");
 
-    new Input($idInput, { submit });
-    new Input($pwInput, { submit });
+    new Input($idInput, { validate: validateId, button: false });
+    new Input($pwInput, { validatePassword, button: false });
   }
 
-  submit() {
-    console.log("clicked" + this);
+  validateId(text) {
+    if (text.length < 5) console.log("too short");
+  }
+
+  validatePassword(key, target) {
+    if (text.length < 5) console.log("too short pw");
   }
 }
