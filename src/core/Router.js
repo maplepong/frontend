@@ -34,8 +34,6 @@ export default function router() {
       break;
     case "/login":
       new Login(main);
-      setupLoginForm();
-      setupSignupButton();
       break;
     // case "/signup":
     //   main.innerHTML = Signup();
@@ -44,6 +42,7 @@ export default function router() {
     //   main.innerHTML = Game();
     //   break;
     default:
-      main.innerHTML = Home(); // 기본 경로
+      new Login(main);
+    //   main.innerHTML = Home(); // 기본 경로
   }
 }
