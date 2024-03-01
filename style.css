@@ -1,72 +1,205 @@
-/* 기본 스타일 */
-body, html {
+body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
+    padding: 20px;
+    background-color: #f5f5f5;
     color: #333;
+}
+
+/* 헤더 및 버튼 스타일 */
+header {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
-/* Home 컴포넌트 스타일 */
-#tr, #title {
-    text-align: center;
-    color: #333;
-}
-
-/* 로그인 버튼 스타일 */
-button#moveLogin {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
+button {
     padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    display: block;
-    margin: 20px auto;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button#moveLogin:hover {
+button:hover {
     background-color: #0056b3;
 }
 
-/* Login 컴포넌트 스타일 */
-.login-container {
-    text-align: center;
+/* 메인 컨텐츠 영역 스타일 */
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.login-container form {
+h1 {
+    color: #333;
+}
+
+p {
+    line-height: 1.6;
+}
+
+form#loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 42 Seoul API 로그인 및 회원가입 버튼 스타일 */
+button.api-login,
+button.signup {
+    background-color: #4caf50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-evenly; /* 버튼 사이에 공간을 균등하게 배분 */ /* 버튼 사이의 간격 */
+}
+
+button.api-login:hover,
+button.signup:hover {
+    background-color: #45a049;
+}
+
+form#signupForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f8f9fa; /* 약간 다른 배경색으로 구분 */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* 입력 필드 포커스 스타일링 */
+.form-group input:focus {
+    border-color: #007bff; /* 포커스 시 보더 색상 변경 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* 회원가입 버튼 스타일링 - 더 돋보이게 */
+button[type='submit'] {
+    background-color: #28a745; /* 더 진한 녹색 */
+    font-weight: bold; /* 글씨 두껍게 */
+}
+
+button[type='submit']:hover {
+    background-color: #218838; /* 호버 시 더 진한 색상 */
+}
+
+/* 오른쪽으로 fade out하는 주현이 애니메이션 */
+@keyframes moveFade {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    75% {
+        transform: translateX(80%); /* 움직임의 범위와 속도 조절 */
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* 대상 요소에 애니메이션 적용 */
+.fade-move {
+    position: relative; /* 이동 애니메이션을 위한 설정 */
+    animation: moveFade 3s ease forwards; /* 애니메이션 지속시간과 타이밍 함수 설정 */
+}
+
+/* game.js */
+.game-container {
+    text-align: center;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+#startGame {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
     margin-top: 20px;
 }
 
-.login-container input[type="text"],
-.login-container input[type="password"] {
-    width: 90%;
-    padding: 10px;
-    margin: 10px auto;
-    display: block;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+#startGame:hover {
+    background-color: #0056b3;
 }
 
-.login-container button[type="submit"] {
-    background-color: #28a745;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
+#pongCanvas {
+    background: #000;
     display: block;
     margin: 20px auto;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
-.login-container button[type="submit"]:hover {
-    background-color: #218838;
+/* game.js, chatroom */
+.chat-container {
+    text-align: center;
+    margin-top: 20px;
 }
+
+.chat-messages {
+    width: 100%;
+    height: 200px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+#chatInput {
+    width: 75%;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+#sendChat {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
