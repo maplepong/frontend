@@ -1,0 +1,6 @@
+input {
+  background-color: azure;
+}
+input:focus {
+  background-color: darkseagreen;
+}
