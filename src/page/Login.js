@@ -17,6 +17,7 @@ export default class Login extends Component {
 			<div id="login-id-input"></div>
 			<div id="login-password-input"></div>
 			<button id="login-btn">로그인</button>
+      <button>회원가입</button>
 		</div>
 		`;
   }
@@ -53,10 +54,10 @@ export default class Login extends Component {
       .querySelector("#login-password-input")
       .querySelector("input").value;
     
+    // localstoarge 연습
     localStorage.setItem('username', this.username);
     // 실제 어플에서는 비밀번호를 저장하지 않는다고 함
     localStorage.setItem('password', this.password);
-
 
     alert(this.username + this.password + "login success");
   }
