@@ -1,4 +1,4 @@
-import { Home, About, Contact } from "../view/simplepage.js";
+import { Home, About, Contact } from "../page/simplepage.js";
 import Login from "../page/Login.js";
 import Landing from "../page/Landing.js";
 import Main from "../page/Main.js";
