@@ -1,5 +1,6 @@
 import Component from "../core/Component.js";
 import Input from "../components/Input.js";
+import Signup from "./Signup.js";
 
 //상태 확인했는데 로그인할게 없으니까 로그인 페이지로 들어갔겠지...
 //만약 로그인 상태면 home으로 리다이렉트하는 게 맞을듯
@@ -17,7 +18,7 @@ export default class Login extends Component {
 			<div id="login-id-input"></div>
 			<div id="login-password-input"></div>
 			<button id="login-btn">로그인</button>
-      <button>회원가입</button>
+      <button data-route="signup" id="signup-btn">회원가입</button>
 		</div>
 		`;
   }
@@ -67,7 +68,7 @@ export default class Login extends Component {
       if (key != "Enter") return;
       this.requestLogin();
     });
-    this.addEvent("click", "button", () => {
+    this.addEvent("click", "#login-btn", () => {
       this.requestLogin();
     });
   }
