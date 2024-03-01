@@ -1,3 +1,5 @@
+//언젠가 지울 페이지
+
 export function Home() {
   return `<h1>TRANSCENDENCE</h1>
             <p>우당탕탕 초월 대작전</p>`;
