@@ -1,0 +1,69 @@
+#container{
+	width:307px;
+	height:111px;
+	padding: 0px;
+	margin: 0;
+	text-align: center;
+	background-color: #3f3f3f;
+	
+	border-radius: 6px 6px 0px 0px;
+}
+
+div{
+	align-items: center;
+}
+
+#info-line{
+	width: 100%;
+	height: 33.4%;
+	display: flex;
+	margin: 0;
+}
+
+.level, .usernickname{
+	font-family: sans-serif;
+	/* font-family: "Nanum-Gothic"; */
+	font-weight: 600;
+	font-size: 20px;
+}
+
+.level{
+	width: 20%;
+	color: #FFB800
+}
+
+.usernickname {
+	color: white;
+}
+
+#status-line {
+	width: 100%;
+	height: 33.3%;
+	display: flex;
+}
+#stat-name {
+	width: 15%;
+}
+
+#stat-value{
+	display: absolute;
+	width: 85%;
+	height: 100%;
+	padding: 0;
+	z-index: 0;
+}
+#stat-value-bar{
+	height: 80%;
+	width: 100%;
+	margin: 0;
+	display: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 3;
+}
+.red{
+	background-color: red;
+}
+.blue{
+	background-color: blue;
+}
