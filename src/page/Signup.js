@@ -5,6 +5,7 @@ export default class Signup extends Component {
   newPassword;
   setup() {
       this.newUsername = "";
+      this.newId = "";
       this.newPassword = "";
       this.setCss("signup.css");
   }
@@ -12,34 +13,33 @@ export default class Signup extends Component {
   template() { // Html
     return `
       <form id="signup-form">
-        <div id="signup-id"><input type="text" id="username" placeholder="Username"></div>
-        <div id="signup-id"><input type="email" id="email" placeholder="Email"></div>
-        <div id="signup-id"><input type="password" id="password" placeholder="Password"></div>
-        <div><button type="submit">Sign Up</button></div>
+        <div id="signup-username"><input type="text" id="input-username" placeholder="Username"><button class="dup-check">중복 확인</button></div>
+        <div id="signup-id"><input type="password" id="input-id" placeholder="id"><button class="dup-check">중복 확인</button></div>
+        <div id="signup-password"><input type="password" id="input-password" placeholder="Password"></div>
+        <div id="btn-container"><button id="signup-btn" type="submit">Sign Up</button></div>
       </form>
     `;
   }
 
   setEvent() {
     // 제출 버튼 클릭 이벤트 처리
-    this.addEvent("submit", "#signup-form", (event) => {
-      event.preventDefault();
-      this.registerUser();
+    this.addEvent("click", "#signup-btn", (event) => {
+      this.registerUser(event);
     });
   }
 
   registerUser() {
-    const username = this.$target.querySelector("#username").value;
-    const email = this.$target.querySelector("#email").value;
-    const password = this.$target.querySelector("#password").value;
+    this.newUsername = this.$target.querySelector("#input-username").value;
+    this.newId = this.$target.querySelector("#input-id").value;
+    this.newPassword = this.$target.querySelector("#input-password").value;
 
-    // 여기에서 입력 유효성 검사를 수행할 수 있습니다.
+    console.log("Username: " + this.newUsername + "\nPassword: " + this.newPassword);
 
     // localStorage에 사용자 정보 저장
-    const user = { username, email, password };
-    localStorage.setItem(username, JSON.stringify(user));
+    const user = { username:this.newUsername, id:this.newId, password:this.newPassword };
+    localStorage.setItem(this.newId, JSON.stringify(user));
 
+    // 메세징
     alert("Signup successful!");
-    // 회원가입 성공 후, 로그인 페이지로 리다이렉트하거나 사용자에게 성공 메시지를 표시할 수 있습니다.
   }
 }
