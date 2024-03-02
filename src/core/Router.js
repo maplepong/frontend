@@ -2,6 +2,7 @@ import { Home, About, Contact } from "../page/simplepage.js";
 import Login from "../page/Login.js";
 import Landing from "../page/Landing.js";
 import Main from "../page/Main.js";
+import Signup from "../page/Signup.js";
 
 // 라우터 함수
 // link 넣는 방법 : 태그 속성에 "data-route" 지정
@@ -30,9 +31,9 @@ export default function router() {
     case "/main":
       new Main(main);
       break;
-    // case "/signup":
-    //   main.innerHTML = Signup();
-    //   break;
+    case "/signup":
+      new Signup(main);
+      break;
     // case "/game":
     //   main.innerHTML = Game();
     //   break;
