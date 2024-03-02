@@ -15,3 +15,4 @@ export function Contact() {
   return `<h1>CONTACT</h1>
             <p>연락 안 받습니다</p>`;
 }
+
