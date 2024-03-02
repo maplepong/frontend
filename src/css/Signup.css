@@ -1,6 +1,10 @@
 /* Signup.css */
 
-#signup-form {
+  #id-container {
+    display: flex;
+  }
+
+  #signup-form {
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
@@ -10,7 +14,8 @@
     background-color: #f9f9f9;
   }
   
-  #signup-id {
+  #signup-username, #signup-id, #signup-password {
+    display: flex;
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -18,26 +23,28 @@
     border-radius: 4px;
     box-sizing: border-box; /* Makes sure padding does not affect total width */
   }
-  
-  #signup-page button {
+
+  #input-username, #input-id {
+    display: flex;
+    width: 70%;
+    margin: 10px;
+    height: 20px;
+    justify-content: center;
+  }
+
+  #input-password {
+    display: flex;
     width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #5cb85c;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin: 10px;
+    height: 20px;
+    justify-content: center;
   }
-  
-  #signup-page button:hover {
-    background-color: #4cae4c;
+
+  .dup-check {
+    width: 150px;
   }
-  
-  #signup-page .form-title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+
+  #btn-container {
+    display: flex;
+    justify-content: center;
   }

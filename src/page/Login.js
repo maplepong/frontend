@@ -54,12 +54,6 @@ export default class Login extends Component {
     this.password = this.$target
       .querySelector("#login-password-input")
       .querySelector("input").value;
-    
-    // localstoarge 연습
-    localStorage.setItem('username', this.username);
-    // 실제 어플에서는 비밀번호를 저장하지 않는다고 함
-    localStorage.setItem('password', this.password);
-
     alert(this.username + this.password + "login success");
   }
 
