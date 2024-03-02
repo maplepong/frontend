@@ -24,3 +24,4 @@ export default class Main extends Component {
     new Banner($banner, {});
   }
 }
+

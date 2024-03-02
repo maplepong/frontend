@@ -24,3 +24,4 @@ export default class Banner extends Component {
 	new WidgetUserInfo($userInfo, {user: this.props.user});
   }
 }
+
