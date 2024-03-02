@@ -54,6 +54,7 @@ export default class Login extends Component {
     this.password = this.$target
       .querySelector("#login-password-input")
       .querySelector("input").value;
+
     alert(this.username + this.password + "login success");
   }
 
