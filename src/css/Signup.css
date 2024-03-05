@@ -14,7 +14,7 @@
     background-color: #f9f9f9;
   }
   
-  #signup-username, #signup-id, #signup-password {
+  #signup-username, #signup-nickname, #signup-password {
     display: flex;
     width: 100%;
     padding: 10px;
