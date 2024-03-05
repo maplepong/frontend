@@ -1,6 +1,7 @@
 import Component from "../core/Component.js";
 import Banner from "../components/Banner.js";
 
+// 메인 게임 페이지
 export default class Main extends Component {
   user;
   setup() {
@@ -12,12 +13,16 @@ export default class Main extends Component {
       userNickname: "cutie-pie",
       userLevel: 4.5,
     };
+
+    this.setCss("Banner.css");
   }
   template() {
     return `
-		<div id="content-page"></div>
-		<div class="banner"></div>
-		`;
+    <div id="main-container">
+      <div id="content-page"></div>
+      <div class="banner"></div>
+    </div>
+    `;
   }
   mounted() {
     const $banner = this.$target.querySelector(".banner");

@@ -26,7 +26,7 @@ export default class app extends Component {
 			<button data-route="main">after login</button>
 		</header>
 		<main></main>
-		`;
+    `;
   }
 
   mounted() {}

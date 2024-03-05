@@ -13,6 +13,8 @@ export default class Landing extends Component {
 
     // Append it to the head
     document.head.appendChild(cssLink);
+  
+    this.setCss("index.css");
   }
   template() {
     return `
