@@ -3,14 +3,14 @@
   display: flex;
   margin: 0 auto;
   width: 500px;
-  height: 500px%;
+  height: 500px;
   /* margin-top: 20px; */
   /* margin-bottom: 20px; */
 }
 
 #Landing {
   font-size: 40px;
-  margin: 40px;
+  margin: 10px;
   text-align: center;
 
 }
@@ -75,7 +75,7 @@ main {
   max-width: 600px;
   margin: 0 auto;
   /* background-color: white; */
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
