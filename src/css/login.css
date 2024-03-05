@@ -4,3 +4,27 @@ input {
 input:focus {
   background-color: darkseagreen;
 }
+
+#login-page {
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+#login-id-input, #login-password-input {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+#btnContainer {
+  display: flex;
+  padding-top: 10px;
+  justify-content: center;
+  gap: 20px;
+}
+
+inputlabel {
+  font-size: 30px;
+  margin-right: 10px;
+}
