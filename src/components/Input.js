@@ -5,25 +5,29 @@ import Component from "../core/Component.js";
 // validate: 유효성 검사를 위한 함수. 검사안할경우 false
 // -- target.value: input 안에 들어오는 값 전달
 // placeholder: input에 기본으로 들어가있는 text
+// id: id;
+// type: input type;
 
 export default class Input extends Component {
-  setup() {
-    this.props.placeholder =
-      this.props.placeholder === undefined ? null : this.props.placeholder;
-    this.props.label = this.props.label === undefined ? null : this.props.label;
+	$data;
+	setup() {
+		this.props = this.props == undefined ? {} : this.props;
+		console.log(this.props);
   }
   template() {
+	const $ = this.props;
     return `
-	${
-    this.props.label === null
+	${$.label == undefined
       ? ""
-      : "<InputLabel>" + this.props.label + "</InputLabel>"
+      : "<InputLabel>" + $.label + "</InputLabel>"
   }
-	<input type="text" 
+	<input
+	type="${$.type == undefined ? 'text' : $.type}"
+  	${$.input == undefined ? '' : 'id="'+ $.id + '"'}
 	style="margin: 5px"
-	${(this.props.placeholder = null
+	${($.placeholder == undefined 
     ? ""
-    : 'placeholder ="' + this.props.placeholder + '"')}
+    : 'placeholder ="' + $.placeholder + '"')}
 	></input>
 	`;
   }
@@ -33,18 +37,19 @@ export default class Input extends Component {
     // $input.onfocus = () => {
     //   $input.style.backgroundColor = "green";
     // };
-    // $input.onblur = () => {
-    //   $input.style.backgroundColor = "white";
-    // };
-    this.addEvent("keyup", "input", ({ key, target }) => {
-      if (key != "Enter") return;
-      validate(target.value);
-    });
-    if (this.$button) {
-      this.addEvent("click", "#input-submit", target => {
-        validate(target.value);
-      });
-    }
+    $input.onblur = () => {
+		if ($input.value)
+			validate($input.value);
+    };
+    // this.addEvent("keyup", "input", ({ key, target }) => {
+    //   if (key != "Enter") return;
+    //   validate(target.value);
+    // });
+    // if (this.$button) {
+    //   this.addEvent("click", "#input-submit", target => {
+    //     validate(target.value);
+    //   });
+    // }
   }
 }
 
