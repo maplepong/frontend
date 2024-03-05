@@ -13,11 +13,17 @@ export default class Landing extends Component {
 
     // Append it to the head
     document.head.appendChild(cssLink);
+  
+    this.setCss("index.css");
   }
   template() {
     return `
-		<div data-route="login">로그인
-		</div>
+		<div id="Landing" data-route="login">
+      <div id="Entrance">  
+        <img src="./src/asset/background/board.png" id="Board">
+        <span id="loginBtn" data-route="login">로그인</span>
+      </div>
+    </div>
 		`;
   }
   mounted() {
