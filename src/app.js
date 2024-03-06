@@ -38,11 +38,12 @@ export default class app extends Component {
         const newPath = "/" + route;
         history.pushState({}, "", newPath);
         router();
-      } else {
-        console.log("Invalid or empty data-route attribute");
-        history.pushState({}, "", "/");
-        router(); // 변경된 URL에 따라 컴포넌트 렌더링
-      }
+      } 
+	//   else {
+    //     console.log("Invalid or empty data-route attribute");
+    //     history.pushState({}, "", "/");
+    //     router(); // 변경된 URL에 따라 컴포넌트 렌더링
+    //   }
     });
   }
 }

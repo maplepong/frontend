@@ -12,7 +12,6 @@ export default class Input extends Component {
 	$data;
 	setup() {
 		this.props = this.props == undefined ? {} : this.props;
-		console.log(this.props);
   }
   template() {
 	const $ = this.props;
