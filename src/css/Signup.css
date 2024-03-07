@@ -3,7 +3,9 @@
   #id-container {
     display: flex;
   }
-
+  inputlabel {
+	width: 140px;
+  }
   #signup-form {
     max-width: 400px;
     margin: 20px auto;
