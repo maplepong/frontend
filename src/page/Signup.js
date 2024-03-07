@@ -3,8 +3,8 @@ import Api from "../core/Api.js"
 import Input from "../components/Input.js";
 
 export default class Signup extends Component {
-  newUsername;
-  newPassword;
+  Username;
+  Password;
   static api;
   setup() {
       this.newUsername = "";
@@ -37,22 +37,20 @@ export default class Signup extends Component {
   
   mounted() {
 	const {validateUsername, validateNickname, validatePassword} = this;
-	const $usernameInput = this.$target.querySelector("#signup-username");
-	const $nicknameInput = this.$target.querySelector("#signup-nickname");
-	const $passwordInput = this.$target.querySelector("#signup-password");
-	new Input($usernameInput, {
+
+	new Input($this.$target.querySelector("#signup-username"), {
 		validate: validateUsername,
 		label: "아이디",
 		placeholder: "아이디써줘라 두번써줘라",
 		id: "input-username"
 	})
-	new Input($nicknameInput, {
+	new Input(this.$target.querySelector("#signup-nickname"), {
 		validate: validateNickname,
 		label: "닉네임",
 		placeholder: "너의 닉네임을 겟",
 		id: "input-nickname"
 	})
-	new Input($passwordInput, {
+	new Input(this.$target.querySelector("#signup-password"), {
 		validate: validatePassword,
 		label: "비밀번호",
 		placeholder: "너의 닉네임을 겟",
@@ -62,9 +60,9 @@ export default class Signup extends Component {
 }
 
   registerUser() {
-    this.newUsername = this.$target.querySelector("#input-username").value;
-	this.newNickname = this.$target.querySelector("#input-nickname").value;
-    this.newPassword = this.$target.querySelector("#input-password").value;
+    const newUsername = this.$target.querySelector("#input-username").value;
+	const newNickname = this.$target.querySelector("#input-nickname").value;
+    const newPassword = this.$target.querySelector("#input-password").value;
 
     console.log("Username: " + this.newUsername + "\nPassword: " + this.newPassword);
 
