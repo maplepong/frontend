@@ -5,13 +5,17 @@ input:focus {
   background-color: darkseagreen;
 }
 
+inputlabel {
+	width: 45px;
+}
+
 #login-page {
   background-color: white;
   padding: 20px;
   border-radius: 20px;
 }
 
-#login-id-input, #login-password-input {
+#login-username-input, #login-password-input {
   display: flex;
   justify-content: center;
   margin: 10px;
