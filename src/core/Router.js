@@ -3,6 +3,7 @@ import Login from "../page/Login.js";
 import Landing from "../page/Landing.js";
 import Main from "../page/Main.js";
 import Signup from "../page/Signup.js";
+import testApi from "../page/TestApi.js";
 
 // 라우터 함수
 // link 넣는 방법 : 태그 속성에 "data-route" 지정
@@ -38,7 +39,7 @@ export default function router() {
     //   main.innerHTML = Game();
     //   break;
     default:
-      new Landing(main);
+      new testApi(main);
     //   main.innerHTML = Home(); // 기본 경로
   }
 }

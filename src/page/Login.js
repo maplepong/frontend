@@ -46,6 +46,7 @@ export default class Login extends Component {
       validate: validatePassword,
       label: "PW",
       placeholder: "비밀번호입력구다사이",
+	  type: "password",
     });
   }
 
@@ -82,8 +83,6 @@ export default class Login extends Component {
 
   }
   seeCookie(){
-  	const refreshToken = getCookie('refresh_token');
-	console.log("refreshtoken: " + refreshToken);
-	console.log("just cookie: " + document.cookie);
+	Api.requestUserInfo(localStorage.nickname);
   }
 }

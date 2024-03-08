@@ -12,7 +12,6 @@ export default class Input extends Component {
 	$data;
 	setup() {
 		this.props = this.props == undefined ? {} : this.props;
-		console.log(this.props);
   }
   template() {
 	const $ = this.props;
@@ -23,7 +22,7 @@ export default class Input extends Component {
   }
 	<input
 	type="${$.type == undefined ? 'text' : $.type}"
-  	${$.input == undefined ? '' : 'id="'+ $.id + '"'}
+  	${$.id == undefined ? '' : 'id="'+ $.id + '"'}
 	style="margin: 5px"
 	${($.placeholder == undefined 
     ? ""
@@ -34,22 +33,10 @@ export default class Input extends Component {
   setEvent() {
     const { validate } = this.props;
     const $input = this.$target.querySelector("input");
-    // $input.onfocus = () => {
-    //   $input.style.backgroundColor = "green";
-    // };
     $input.onblur = () => {
-		if ($input.value)
+		if (validate !== undefined && $input.value != "")
 			validate($input.value);
     };
-    // this.addEvent("keyup", "input", ({ key, target }) => {
-    //   if (key != "Enter") return;
-    //   validate(target.value);
-    // });
-    // if (this.$button) {
-    //   this.addEvent("click", "#input-submit", target => {
-    //     validate(target.value);
-    //   });
-    // }
   }
 }
 
