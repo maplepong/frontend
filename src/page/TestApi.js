@@ -1,5 +1,5 @@
 import Component from "../core/Component.js";
-import Api from "../core/Api.js"
+import { requestLogin, requestSignup, requestValidCheck, requestUserInfo} from "../core/Api.js"
 import Input from "../components/Input.js";
 
 export default class testApi extends Component {
@@ -63,10 +63,10 @@ export default class testApi extends Component {
 		this.setup();
 		console.log(this.username);
 		console.log(this.password);
-		Api.requestLogin(this.username, this.password)
+		requestLogin(this.username, this.password)
 	}
 	getUserInfo() {
-		Api.requestUserInfo(this.nickname);
+		requestUserInfo(this.nickname);
 	}
 	setEvent() {
 		this.addEvent("click", "#login", () => {
