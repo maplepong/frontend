@@ -1,7 +1,12 @@
 import Component from "./core/Component.js";
 import router from "../src/core/Router.js";
 
-export default class app extends Component {
+
+const setAxios = () => {
+	axios.defaults.baseURL = "http://localhost:8000/";
+	axios.defaults.timeout = 1000;
+}
+export default class App extends Component {
   setup() {
     this.state = {};
     document.addEventListener("DOMContentLoaded", () => {
@@ -29,7 +34,9 @@ export default class app extends Component {
     `;
   }
 
-  mounted() {}
+  mounted() {
+	setAxios();
+  }
 
   setEvent() {
     this.addEvent("click", "[data-route]", ({ target }) => {
