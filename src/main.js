@@ -1,3 +1,4 @@
-import App from "./app.js";
+import {App} from "./app.js";
 
-new App(document.querySelector("#app"));
+const root = (document.querySelector("#root"));
+root.innerHTML = App();
