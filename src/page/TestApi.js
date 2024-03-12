@@ -1,14 +1,14 @@
 import Component from "../core/Component.js";
-import { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword } from "../core/Api.js"
+import { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword, requestRefresh } from "../core/Api.js"
 import Input from "../components/Input.js";
 
 export default class testApi extends Component {
 	username;
  	password;
 	setup() {
-		// this.username = "test";
-		// this.nickname = "nicknametest";
-		// this.password = "1234";
+		this.username = "test";
+		this.nickname = "nicknametest";
+		this.password = "4545";
 	}
 
 	template () {
@@ -22,6 +22,7 @@ export default class testApi extends Component {
 		
 		<div id="login-status"></div>
 		<button id="get_info">GET 유저정보</button>
+		<button id="refresh">refresh</button>
 		
 		<div style="{border: solid black 1px}">
 		<div id="cur-password"></div>
@@ -54,6 +55,9 @@ export default class testApi extends Component {
 			label: "뉴늎PW",
 			id: "input-new-password",
 		})
+		// document.querySelector("#input-username").createTextNode("test");
+		// document.querySelector("#input-nickname").createTextNode("nicknametest");
+		// document.querySelector("#input-password").createTextNode("4545");
 	}
 	getInput(){
 		const username = document.querySelector("#input-username");
@@ -65,7 +69,7 @@ export default class testApi extends Component {
 	}
 	login() {
 		this.setup();
-		this.getInput();
+		// this.getInput();
 		console.log(this.username);
 		console.log(this.password);
 		const data = requestLogin(this.username, this.password)
@@ -99,6 +103,9 @@ export default class testApi extends Component {
 		this.addEvent("click", "#change-pw", () => {
 			this.changePassword();
 		})
+		this.addEvent("click", "#refresh", () => {
+			this.refresh();
+		})
 	}
 	changePassword(){
 		const curpw = document.querySelector("#input-cur-password").value;
@@ -114,5 +121,9 @@ export default class testApi extends Component {
 	}
 	showUserInfo(data){
 		
+	}
+
+	refresh(){
+		requestRefresh();
 	}
 }
