@@ -1,6 +1,6 @@
 export default function Component($target, props)
 {
-    window.state = {...props};
+    window.state = { ...props };
     window.template;
 
     function setState(newState) {
