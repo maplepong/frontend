@@ -86,5 +86,27 @@ export function requestUserInfo(nickname){
 	});
 }
 
+export function requestChangePassword(username, password, new_password) {
+	axios.defaults.withCredentials = false; //develope
+	const formData = new FormData();
+	formData.append('username', username);
+	formData.append('current_password', password);
+	formData.append('new_password', new_password);
+	axios.request({
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+		method: "PUT",
+		url: baseUrl() + "user/information?nickname=" + nickname,
+	})
+	.then(response => {
+	console.log('Response:', response);
+	})
+	.catch(error => {
+	console.error('Error:', error);
+	});
+}
+
+
 
 export default { requestLogin, requestSignup, requestValidCheck, requestUserInfo}
