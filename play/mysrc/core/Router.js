@@ -9,14 +9,15 @@ export default function Router($target) {
     var dynamicLink = document.getElementById("dynamic-link");
     if (dynamicLink) dynamicLink.parentNode.removeChild(dynamicLink);
 
+    console.log(path);
     switch (path) {
-      case "/home":
+      case "/play/home":
         main.innerHTML = Home();
         break;
-      case "/about":
+      case "/play/about":
         main.innerHTML = About();
         break;
-      case "/contact":
+      case "/play/contact":
         main.innerHTML = Contact();
         break;
     //   case "/login":
