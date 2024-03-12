@@ -3,7 +3,7 @@ import router from "../src/core/Router.js";
 
 
 const setAxios = () => {
-	axios.defaults.baseURL = "http://localhost:8001/";
+	axios.defaults.baseURL = "http://localhost:8002/";
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
 	// axios.defauls.timeout = 1000;
 }
