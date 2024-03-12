@@ -1,4 +1,5 @@
 import { Home, About, Contact } from "../page/simplepage.js";
+import Login from "../page/Login.js";
 
 export default function Router($target) {
     //   route();
@@ -20,9 +21,9 @@ export default function Router($target) {
       case "/play/contact":
         main.innerHTML = Contact();
         break;
-    //   case "/login":
-    //     new Login(main);
-    //     break;
+      case "/play/login":
+        main.innerHTML = Login();
+        break;
     //   case "/main":
     //     new Main(main);
     //     break;
@@ -32,8 +33,9 @@ export default function Router($target) {
       // case "/game":
       //   main.innerHTML = Game();
       //   break;
-    //   default:
+      default:
         // new testApi(main);
-      //   main.innerHTML = Home(); // 기본 경로
+        main.innerHTML = Home(); // 기본 경로
+        break;
     }
   }

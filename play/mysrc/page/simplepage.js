@@ -1,5 +1,4 @@
 //언젠가 지울 페이지
-
 export function Home() {
   return `<div style="background-color: white;
           padding: 20px; border-radius: 20px;">

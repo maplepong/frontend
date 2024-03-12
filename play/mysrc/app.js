@@ -1,13 +1,17 @@
-import Component from "./core/Components.js";
+import Component from "./core/Component.js";
 import Router from "./core/Router.js";
 
 export default function App($target, props)
 {
-    console.log('App 시작!');
+    const state = {}
+    //Component 선언
+    const appComponent = Component($target, props);
 
-    // html
-    window.template = `
-        <div>
+    // 상태변화 및 렌더 함수 초기화
+    appComponent.setState({...props, appValue: 'app 선언'})
+    appComponent.render = () => {
+        $target.innerHTML = `
+        <div data-route="">
             <img src="./mysrc/asset/design/maplepong.png" id="Logo">
         </div>
         <header>
@@ -15,32 +19,32 @@ export default function App($target, props)
             <button data-route="about">About</button>
             <button data-route="contact">Contact</button>
             <button data-route="login" id="LgnContainer">Login</button>
-			<button data-route="main">after login</button>
+            <button data-route="main">after login</button>
         </header>
         <main></main>
-        `;
+    `;
+    }
 
-    // Component 변수 생성
-    const appComponent = Component($target, { someValue: 'Hello, World!' });
-
-    function setupApp() {
+    appComponent.setup = () => {
         document.addEventListener("DOMContentLoaded", () => {
-            // 버튼에 이벤트 리스너 추가
             document.querySelectorAll('[data-route]').forEach(button => {
                 button.addEventListener('click', function() {
                     const pathName = this.getAttribute('data-route');
                     history.pushState({}, "", pathName);
-                    Router(); // 페이지를 다시 렌더링
+                    Router();
                 });
             });
     
+            window.addEventListener("routeChange", Router);
             window.addEventListener("popstate", Router);
             Router(); // 초기 라우트 설정
         });
     }
 
-    setupApp();
-    // appComponent.render();
+    // 초기화 및 렌더
+    appComponent.setup();
+    appComponent.render();
+    console.log(window.state);
 }
 
 
