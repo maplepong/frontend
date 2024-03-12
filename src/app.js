@@ -3,8 +3,9 @@ import router from "../src/core/Router.js";
 
 
 const setAxios = () => {
-	axios.defaults.baseURL = "http://localhost:8000/";
-	axios.defaults.timeout = 1000;
+	axios.defaults.baseURL = "http://localhost:8001/";
+	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
+	// axios.defauls.timeout = 1000;
 }
 export default class App extends Component {
   setup() {
