@@ -1,7 +1,7 @@
 import { Home, About, Contact } from "../page/simplepage.js";
 import Login from "../page/Login.js";
 import Landing from "../page/Landing.js";
-import Main from "../page/Main.js";
+import {Main} from "../page/Main.js";
 import Signup from "../page/Signup.js";
 import testApi from "../page/TestApi.js";
 

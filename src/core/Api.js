@@ -5,9 +5,10 @@ function getCookie(name) {
 }
 
 const baseUrl = () => {
-	// return "http://10.19.247.54:8000/";
+	// return "http://10.19.247.54:8001/";
 	return "http://localhost:8000/";
 }
+
 
 export function requestLogin(username, password){
 	axios.defaults.withCredentials = true;
@@ -26,8 +27,8 @@ export function requestLogin(username, password){
 	)
 	.then(response => {
 		console.log('Response:', response);
-		console.log('Data', response.data);
-		console.log('RequestResponse', response.request);
+		// console.log('Data', response.data);
+		// console.log('RequestResponse', response.request);
 		localStorage.setItem('username', username);
 		console.log(response.data.nickname);
 		localStorage.setItem('nickname', response.data.nickname);
@@ -35,10 +36,11 @@ export function requestLogin(username, password){
 		// localStorage.setItem('refreshToken', response.data.data.refreshToken)
 		// localStorage.setItem('expiredTime', response.data.data.cur_time)
 		axios.defaults.headers.common['Authorization'] = response.data.access_token;
-		console.log(response.headers);
-		})
+		// console.log(response.headers);
+		console.log(document.cookie)
+	})
 	.catch(error => {
-	console.error('Error:', error);
+		console.error('Error:', error);
 	});
 }
 
@@ -69,7 +71,7 @@ export function requestValidCheck(type, value) {
 		console.error('Error:', error);
 		});
 }
-export function requestUserInfo(nickname){
+export  function requestUserInfo(nickname){
 	axios.defaults.withCredentials = false; //develope
 	axios.request({
 		headers: {
@@ -80,6 +82,28 @@ export function requestUserInfo(nickname){
 	})
 	.then(response => {
 	console.log('Response:', response);
+	return response.data;
+	})
+	.catch(error => {
+	console.error('Error:', error);
+	});
+}
+
+export async function requestChangePassword(username, password, new_password) {
+	axios.defaults.withCredentials = false; //develope
+	const formData = new FormData();
+	formData.append('username', username);
+	formData.append('current_password', password);
+	formData.append('new_password', new_password);
+	axios.put(baseUrl() + "user/change-password", formData, {
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+		// url: baseUrl() + "user/change-password",
+		// data: formData,
+	})
+	.then(response => {
+	console.log('Response:', response);
 	})
 	.catch(error => {
 	console.error('Error:', error);
@@ -87,4 +111,33 @@ export function requestUserInfo(nickname){
 }
 
 
-export default { requestLogin, requestSignup, requestValidCheck, requestUserInfo}
+export function requestRefresh(username, password){
+	axios.defaults.withCredentials = true;
+	axios.post(
+		baseUrl() + "user/api/token/refresh", 
+		{
+			headers : {
+			'X-CSRFToken': getCookie('csrftoken'), 
+			}
+		}	
+	)
+	.then(response => {
+		console.log('Response:', response);
+		// console.log('Data', response.data);
+		// console.log('RequestResponse', response.request);
+		// localStorage.setItem('username', username);
+		// console.log(response.data.nickname);
+		// localStorage.setItem('nickname', response.data.nickname);
+		localStorage.setItem('accessToken', response.data.access_token)
+		// localStorage.setItem('refreshToken', response.data.data.refreshToken)
+		// localStorage.setItem('expiredTime', response.data.data.cur_time)
+		axios.defaults.headers.common['Authorization'] = response.data.access_token;
+		// console.log(response.headers);
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
+}
+
+
+export default { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword}

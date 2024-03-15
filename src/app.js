@@ -4,11 +4,12 @@ import router from "../src/core/Router.js";
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
-	axios.defaults.timeout = 1000;
+	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
+	// axios.defauls.timeout = 1000;
 }
-export default class App extends Component {
-  setup() {
-    this.state = {};
+
+export const App = () => {
+	// this.state = {};
     document.addEventListener("DOMContentLoaded", () => {
       window.addEventListener("routeChange", router);
       window.addEventListener("popstate", router);
@@ -16,10 +17,17 @@ export default class App extends Component {
       // 초기 페이지 로드 시 라우터 호출
       router();
     });
-  }
+	setAxios();
 
-  template() {
-    return `
+	// .addEvent("click", "[data-route]", ({ target }) => {
+	// 	const route = target.dataset.route;
+	// 	if (route) {
+	// 	  const newPath = "/" + route;
+	// 	  history.pushState({}, "", newPath);
+	// 	  router();
+	// 	} 
+
+	return `
 		<div data-route="">
       <img src="./src/asset/design/maplepong.png" id="Logo">
     </div>
@@ -32,25 +40,4 @@ export default class App extends Component {
 		</header>
 		<main></main>
     `;
-  }
-
-  mounted() {
-	setAxios();
-  }
-
-  setEvent() {
-    this.addEvent("click", "[data-route]", ({ target }) => {
-      const route = target.dataset.route;
-      if (route) {
-        const newPath = "/" + route;
-        history.pushState({}, "", newPath);
-        router();
-      } 
-	//   else {
-    //     console.log("Invalid or empty data-route attribute");
-    //     history.pushState({}, "", "/");
-    //     router(); // 변경된 URL에 따라 컴포넌트 렌더링
-    //   }
-    });
-  }
 }
