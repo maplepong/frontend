@@ -6,7 +6,7 @@ function getCookie(name) {
 
 const baseUrl = () => {
 	// return "http://10.19.247.54:8001/";
-	return "http://localhost:8002/";
+	return "http://localhost:8000/";
 }
 
 
