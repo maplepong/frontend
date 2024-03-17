@@ -3,10 +3,13 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 //not import: it's node
 const path= require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// ...
+
 
 module.exports = {
 	mode: 'development',
-	entry: './src/app.js', //1파일시작위치-입력
+	entry: './src/index.js', //1파일시작위치-입력
 	output: { //2출력
 		path: path.resolve(__dirname, 'dist'), //__dirname: 현재위치
 		filename: 'bundle.js',
@@ -23,8 +26,12 @@ module.exports = {
 				loader: 'babel-loader',
 				options: {
 					presets: ["@babel/preset-env", "@babel/preset-react"]
-				}
-			}
+					}
+				},
+		},
+		{
+			test: /\.css$/i,
+			use: ['style-loader', 'css-loader'],
 		}
 
 		]

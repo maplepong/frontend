@@ -38,6 +38,29 @@ export default function myReact() {
 		console.log(root)
 		root.setAttribute("class", "root");
 		app.appendChild(root);
+		console.log("render:", renderMain);
+	}
+	function renderMain(node){
+		position = 0;
+		const root = document.querySelector("main");
+		if (prevRoot){
+			const newRoot = document.createElement("main");
+			root.parentNode.appendChild(newRoot);
+			root.parentNode.removeChild(root);
+		}
+		console.log(node);
+		if (!exist(node) && !exist(rootNode)){
+			console.log("render err");
+			console.log("node", node)
+			console.log("node", rootNode)
+			return ;
+		}
+		rootNode = node;
+		
+		const rootChild = createDom(rootNode);
+		console.log(root)
+		root.setAttribute("class", "root");
+		root.appendChild(rootChild);
 	}
 
 	//init state hook
@@ -86,8 +109,7 @@ export default function myReact() {
 		//error
 		if (typeof node === 'number') node = node.toString();
 		if (typeof node === 'string') return document.createTextNode(node);
-		// console.log(node);
-		// if (!exist(node.props)) node.props = {};
+
 		
 		//create each element
 		if (!exist(node.tag)){
@@ -133,5 +155,22 @@ export default function myReact() {
 		});
 	  }
 
-	return {createElement, render, useState, addEvent};
+	return {createElement, render, useState, addEvent, renderMain};
+}
+
+
+//렌더하기 위한 노드를 받아 세팅이 가능한 리액트 돔 API 제공
+class Root {
+	render;
+	constructor(rootNode){
+		if (rootNode == null){
+			console.error("ROOT: no root-node imported")
+			return;
+		}
+		const {render} = R();
+		this.render = render;
+	}
+	render(vDom){
+		this.render(vdom);
+	}
 }
