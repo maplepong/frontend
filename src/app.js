@@ -1,10 +1,15 @@
 /* @jsx createElement */
-import R from "./core/myReact.js";
+import {createElement, render, useState, addEvent} from "./core/myReact.js";
 import router from "../src/core/Router.js";
+import "./css/index.css"
 
-const {createElement, render, useState, addEvent} = R();
-
+const setAxios = () => {
+	axios.defaults.baseURL = "http://localhost:8000/";
+	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
+	// axios.defauls.timeout = 1000;
+}
 const App = () => {
+	  setAxios();
 	return (
 	<div>
 		<div data-route = "">
@@ -19,14 +24,5 @@ const App = () => {
 	</div>
 	)
 }
-console.log(<App />)
 
-render(<App />)
-const app = (document.querySelector("#app"));
-addEvent(app, "click", "[data-route]", ({ target }) => {
-		const route = target.dataset.route;
-		if (route) {
-		  const newPath = "/" + route;
-		  history.pushState({}, "", newPath);
-		  router();
-		}} )
+export default App;

@@ -13,33 +13,12 @@ function isEmpty(para){
 	return true;
 }
 
-
-export default function myReact() {
+function myReact() {
 	const state = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let rootNode;
 	
-	function render(node){
-		position = 0;
-		const prevRoot = document.querySelector(".root");
-		if (prevRoot){
-			prevRoot.parentNode.removeChild(prevRoot);
-		}
-		console.log(node);
-		if (!exist(node) && !exist(rootNode)){
-			console.log("render err");
-			console.log("node", node)
-			console.log("node", rootNode)
-			return ;
-		}
-		rootNode = node;
-		const root = createDom(rootNode);
-		console.log(root)
-		root.setAttribute("class", "root");
-		app.appendChild(root);
-	}
-
 	//init state hook
 	function useState(initValue) {
 		let currPosition = position;
@@ -82,6 +61,34 @@ export default function myReact() {
 		}
 	}
 
+	function addEvent(target, eventType, selector, callback) {
+		const children = [...document.querySelectorAll(selector)];
+		target.addEventListener(eventType, event => {
+		  event.preventDefault();
+		  if (!event.target.closest(selector)) return false;
+		  callback(event);
+		});
+	  }
+	
+	function render(node){
+		position = 0;
+		const prevApp = document.querySelector(".app");
+		if (prevApp){
+			prevApp.parentNode.removeChild(prevApp);
+		}
+		// console.log(node);
+		if (!exist(node) && !exist(rootNode)){
+			console.log("render err");
+			console.log("node", node)
+			console.log("node", rootNode)
+			return ;
+		}
+		rootNode = node;
+		const root = createDom(rootNode);
+		console.log(root)
+		root.setAttribute("class", "app");
+		document.querySelector("#root").appendChild(root);
+	}
 	function createDom(node){
 		//error
 		if (typeof node === 'number') node = node.toString();
@@ -119,19 +126,16 @@ export default function myReact() {
 					return 
 				}
 				const childElement = createDom(child); 
-				if (childElement) element.appendChild(childElement);
+				if (exist(childElement)) 
+					element.appendChild(childElement);
 			})
 		}
 		return element;
 	}
-	function addEvent(target, eventType, selector, callback) {
-		const children = [...document.querySelectorAll(selector)];
-		target.addEventListener(eventType, event => {
-		  event.preventDefault();
-		  if (!event.target.closest(selector)) return false;
-		  callback(event);
-		});
-	  }
 
-	return {createElement, render, useState, addEvent};
+	return {createElement, render, useState, addEvent, createDom};
 }
+
+const  {createElement, render, useState, addEvent, createDom} = myReact();
+
+export {createElement, render, useState, addEvent, createDom}
