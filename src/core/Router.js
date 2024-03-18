@@ -7,14 +7,19 @@ import Login from	"../component/Login.js"
 import App from "../app.js"
 const pathList = {
 	"/" : <App />,
+	"/login" : <Login />,
 	"/home" : <Home />,
-	"/login" : <Login />
-
 }
 
 export default function router() {
-	const path = window.location.pathname;
-	const main = document.querySelector("main");
+	var path = window.location.pathname;
+	if (path === "/" || path === "/login"){
+		//토큰 유무/시간 확인하는 로직으로 바꿔야 함
+		if (localStorage.username !== null){
+			path = "/home";
+			history.pushState({}, "", path);
+		}
+	}
 
 	const route = pathList[path];
 	if (route === undefined)
