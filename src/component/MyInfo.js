@@ -1,5 +1,6 @@
 /* @jsx createElement */
 import {createElement, Link } from "../core/myReact.js";
+import "../css/MyInfo.css"
 
 const MyInfo = () => {
 	return (
