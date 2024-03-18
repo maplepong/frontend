@@ -1,3 +1,5 @@
+import router from "./Router";
+
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
 	const parts = value.split(`; ${name}=`);
@@ -10,13 +12,16 @@ const baseUrl = () => {
 }
 
 
-export function requestLogin(username, password){
+async function requestLogin(getInfo, resultLogin){
+	const [username, password] = getInfo();
+	var status = null;
 	axios.defaults.withCredentials = true;
 	const formData = new FormData();
+	console.log(username, password);
 	formData.append('username', username); 
 	formData.append('password', password);
-	axios.post(
-		baseUrl() + "user/login", 
+	const response = await axios.post(
+		baseUrl() + "user/login",
 		formData, 
 		{
 			headers : {
@@ -25,26 +30,32 @@ export function requestLogin(username, password){
 			}
 		}	
 	)
-	.then(response => {
-		console.log('Response:', response);
-		// console.log('Data', response.data);
-		// console.log('RequestResponse', response.request);
-		localStorage.setItem('username', username);
-		console.log(response.data.nickname);
-		localStorage.setItem('nickname', response.data.nickname);
-		localStorage.setItem('accessToken', response.data.access_token)
-		// localStorage.setItem('refreshToken', response.data.data.refreshToken)
-		// localStorage.setItem('expiredTime', response.data.data.cur_time)
-		axios.defaults.headers.common['Authorization'] = response.data.access_token;
-		// console.log(response.headers);
-		console.log(document.cookie)
-	})
+	// .then(response => {
+	// 	console.log('Response:', response);
+	// 	localStorage.setItem('username', username);
+	// 	localStorage.setItem('nickname', response.data.nickname);
+	// 	localStorage.setItem('accessToken', response.data.access_token)
+	// 	localStorage.setItem('expiredTime', response.data.data.cur_time)
+	// 	axios.defaults.headers.common['Authorization'] = response.data.access_token;
+	// 	console.log("status", response.status);
+	// 	status = response.status;
+	// })
 	.catch(error => {
 		console.error('Error:', error);
+		return ;
 	});
+	if (status === 200){
+		localStorage.setItem('username', username);
+		localStorage.setItem('nickname', response.data.nickname);
+		localStorage.setItem('accessToken', response.data.access_token)
+		axios.defaults.headers.common['Authorization'] = response.data.access_token;
+	}
+	console.log("status", response.status);
+	status = response.status;
+	resultLogin(status);
 }
 
-export function requestSignup(username, password, nickname) {
+function requestSignup(username, password, nickname) {
 	const formData = new FormData();
 	formData.append('username', username);
 	formData.append('password', password);
@@ -61,7 +72,7 @@ export function requestSignup(username, password, nickname) {
 		});
 }
 
-export function requestValidCheck(type, value) {
+function requestValidCheck(type, value) {
 	axios.get(baseUrl() + "user/valid-check" + 
 	"?type=" + type + "&value=" + value)
 	.then(response => {
@@ -71,7 +82,7 @@ export function requestValidCheck(type, value) {
 		console.error('Error:', error);
 		});
 }
-export  function requestUserInfo(nickname){
+function requestUserInfo(nickname){
 	axios.defaults.withCredentials = false; //develope
 	axios.request({
 		headers: {
@@ -82,14 +93,14 @@ export  function requestUserInfo(nickname){
 	})
 	.then(response => {
 	console.log('Response:', response);
-	return response.data;
 	})
 	.catch(error => {
 	console.error('Error:', error);
 	});
+	return response.data;
 }
 
-export async function requestChangePassword(username, password, new_password) {
+async function requestChangePassword(username, password, new_password) {
 	axios.defaults.withCredentials = false; //develope
 	const formData = new FormData();
 	formData.append('username', username);
@@ -111,7 +122,7 @@ export async function requestChangePassword(username, password, new_password) {
 }
 
 
-export function requestRefresh(username, password){
+function requestRefresh(username, password){
 	axios.defaults.withCredentials = true;
 	axios.post(
 		baseUrl() + "user/api/token/refresh", 
@@ -140,4 +151,4 @@ export function requestRefresh(username, password){
 }
 
 
-export default { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword}
+export { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword}

@@ -67,6 +67,8 @@ function myReact() {
 		if (!exist(props)) props = {};
 		if (!exist(children)) children = [];
 		if (typeof tag === 'function'){
+			console.log("tag:",tag);
+			console.log(props, children);
 			if (children.length > 0){
 				return tag(makeProps(props, children))
 			}
