@@ -22,7 +22,6 @@ function Link(props){
 		delete props["to"];
 	props["href"] = href;
 	if (exist(props.children)){
-		console.log("props children", props.children);
 		var children = props["children"];
 		if (Array.isArray(children) === false)
 			children = [props["children"]];

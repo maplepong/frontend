@@ -30,29 +30,22 @@ async function requestLogin(getInfo, resultLogin){
 			}
 		}	
 	)
-	// .then(response => {
-	// 	console.log('Response:', response);
-	// 	localStorage.setItem('username', username);
-	// 	localStorage.setItem('nickname', response.data.nickname);
-	// 	localStorage.setItem('accessToken', response.data.access_token)
-	// 	localStorage.setItem('expiredTime', response.data.data.cur_time)
-	// 	axios.defaults.headers.common['Authorization'] = response.data.access_token;
-	// 	console.log("status", response.status);
-	// 	status = response.status;
-	// })
 	.catch(error => {
 		console.error('Error:', error);
 		return ;
 	});
-	if (status === 200){
-		localStorage.setItem('username', username);
-		localStorage.setItem('nickname', response.data.nickname);
-		localStorage.setItem('accessToken', response.data.access_token)
-		axios.defaults.headers.common['Authorization'] = response.data.access_token;
+	if (typeof response !== "undefined"){
+		if (response.status === 200){
+			localStorage.setItem('username', username);
+			localStorage.setItem('nickname', response.data.nickname);
+			localStorage.setItem('accessToken', response.data.access_token)
+			axios.defaults.headers.common['Authorization'] = response.data.access_token;
+		}
+		console.log("status", response.status);
+		status = response.status;
+		resultLogin(status);
+
 	}
-	console.log("status", response.status);
-	status = response.status;
-	resultLogin(status);
 }
 
 function requestSignup(username, password, nickname) {
@@ -97,7 +90,6 @@ function requestUserInfo(nickname){
 	.catch(error => {
 	console.error('Error:', error);
 	});
-	return response.data;
 }
 
 async function requestChangePassword(username, password, new_password) {
