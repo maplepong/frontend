@@ -11,7 +11,7 @@ const setAxios = () => {
 const App = () => {
 	  setAxios();
 	return (
-	<div>
+	<div class="app">
 		<div data-route = "">
 			<img src ="./asset/design/maplepong.png"></img>
 		</div>
