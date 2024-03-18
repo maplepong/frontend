@@ -103,7 +103,7 @@ function myReact() {
 		const root = createDom(rootNode);
 		// console.log(root)
 		root.setAttribute("class", "app");
-		document.querySelector("#root").appendChild(root);
+		document.querySelector("#root").prepend(root);
 	}
 	function createDom(node){
 		//error
