@@ -1,7 +1,7 @@
 /* @jsx createElement */
-import {createElement, render, useState, addEvent} from "./core/myReact.js";
-import router from "../src/core/Router.js";
-import "./css/index.css"
+import Login from "./component/Login.js";
+import { createElement } from "./core/myReact.js";
+import "./css/index.css";
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
@@ -18,9 +18,9 @@ const App = () => {
 		<h1>
 			Merancendance
 		</h1>
-		<div> main 위치</div>
-		<main></main>
+		<Login />
 		<button data-route="home">Home</button>
+		<button data-route="login">login</button>
 	</div>
 	)
 }
