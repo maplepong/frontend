@@ -3,7 +3,7 @@ import {createElement, Link } from "../core/myReact.js";
 
 const Home = () => {
 	return (
-		<Link to="/" id="akl"> </Link>
+		<Link to="/" id=""> </Link>
 	)
 }
 
