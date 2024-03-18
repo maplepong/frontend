@@ -1,5 +1,6 @@
 /* @jsx createElement */
 import Login from "./component/Login.js";
+import MyInfo from "./component/MyInfo.js";
 import { createElement } from "./core/myReact.js";
 import "./css/index.css";
 
@@ -19,6 +20,7 @@ const App = () => {
 			Merancendance
 		</h1>
 		<Login />
+		<MyInfo />
 		<button data-route="home">Home</button>
 		<button data-route="login">login</button>
 	</div>

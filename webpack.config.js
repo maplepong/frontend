@@ -16,7 +16,7 @@ module.exports = {
 	},
 	devServer:{
 		compress: true,
-		port: 8080,
+		port: 5050,
 	},
 	module: { //3트랜스파일러
 		rules: [{

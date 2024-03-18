@@ -32,6 +32,12 @@ class Root{
 			history.pushState({}, "", newPath);
 			router();
 		}} )
+	addEvent(this._rootElement, "click", "a", ({ target }) => {
+		const route = target.closest("a").href;
+		if (route) {
+			history.pushState({}, "", route);
+			router();
+		}} )
 	}
 };
 

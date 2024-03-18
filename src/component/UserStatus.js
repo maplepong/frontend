@@ -1,16 +1,17 @@
 /* @jsx createElement */
+import { requestUserStatus } from "../core/Api.js";
 import {createElement} from "../core/myReact.js";
-import '../css/UserInfo.css';
+import '../css/UserStatus.css';
 
-const UserInfo = (props, ...children) => {
+const UserStatus = (props, ...children) => {
 	if (props.username === undefined)
 		props.username = localStorage.username;
 	return (
-		<div id="container-userinfo">
+		<div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>
 				<div class="level">14</div>
-				<div class="usernickname">내닉네임</div>
+				<div class="usernickname">{}</div>
 			</div>
 			<div id="status-line" style="background-color: #f1f1f1">
 				<div id="stat-name">HP</div>
@@ -30,4 +31,4 @@ const UserInfo = (props, ...children) => {
 	)	
 }
 
-export default UserInfo;
+export default UserStatus;
