@@ -22,7 +22,10 @@ function Link(props){
 		delete props["to"];
 	props["href"] = href;
 	if (exist(props.children)){
-		var children = [...props["children"]];
+		console.log("props children", props.children);
+		var children = props["children"];
+		if (Array.isArray(children) === false)
+			children = [props["children"]];
 		delete props["children"]
 		return {tag, props, children};
 	}
@@ -41,7 +44,6 @@ function myReact() {
 		if (state.length == position) {
 			state.push(undefined);
 		}
-		
 		if (state[currPosition] === undefined) {
 			state[currPosition] = initValue;
 		}

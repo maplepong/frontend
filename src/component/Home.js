@@ -3,7 +3,10 @@ import {createElement, Link } from "../core/myReact.js";
 
 const Home = () => {
 	return (
-		<Link to="/" id=""> </Link>
+		<div id="home">
+			<Link to="/" id=""> </Link>
+			<div id="character"></div>
+		</div>
 	)
 }
 
