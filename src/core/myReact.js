@@ -15,7 +15,7 @@ function isEmpty(para){
 	return true;
 }
 function Link(props){
-	console.log(props)
+	// console.log(props)
 	const tag = "a"
 	const href = props["to"];
 	if (exist(href))
@@ -101,7 +101,7 @@ function myReact() {
 		}
 		rootNode = node;
 		const root = createDom(rootNode);
-		console.log(root)
+		// console.log(root)
 		root.setAttribute("class", "app");
 		document.querySelector("#root").appendChild(root);
 	}
@@ -117,7 +117,7 @@ function myReact() {
 			// console.log(node)
 		}
 		const element = document.createElement(node.tag);
-		console.log(node);
+		// console.log(node);
 		//adding props to element
 		if (exist(node.props)){
 			Object.entries(node.props).forEach(([key, value]) => {
@@ -125,15 +125,15 @@ function myReact() {
 					element.onclick = value;
 				}
 				else {
-					console.log("props: ", key, value);
+					// console.log("props: ", key, value);
 					element.setAttribute(key, value);
 				}
 			})
 		}
 
 		//add children element
-		console.log("children", node.children);
-		console.log(typeof (node.children));
+		// console.log("children", node.children);
+		// console.log(typeof (node.children));
 		if (exist(node.children) && isEmpty(node.children)){
 			node.children.forEach(child => {
 				if (typeof child === 'function') {

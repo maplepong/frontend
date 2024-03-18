@@ -3,8 +3,9 @@ import {createElement, render, useState, addEvent} from "./myReact.js";
 import Home from "../component/Home.js"
 import Undefined from "../component/Undefined.js"
 import Welcome from	"../component/Welcome.js"
+import App from "../app.js"
 const pathList = {
-	"/" : <Welcome />,
+	"/" : <App />,
 	"/home" : <Home />
 }
 
