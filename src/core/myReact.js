@@ -2,6 +2,8 @@ function exist(para) {
 	if (typeof para === "undefined" || para === null || para === undefined){
 		return false;
 	}
+	if (typeof para === "string" && para.isEmpty)
+		return false;
 	return true;
 }	
 
@@ -11,6 +13,20 @@ function isEmpty(para){
 			{return false;}
 	}
 	return true;
+}
+function Link(props){
+	console.log(props)
+	const tag = "a"
+	const href = props["to"];
+	if (exist(href))
+		delete props["to"];
+	props["href"] = href;
+	if (exist(props.children)){
+		var children = [...props["children"]];
+		delete props["children"]
+		return {tag, props, children};
+	}
+	return {tag, props};
 }
 
 function myReact() {
@@ -109,16 +125,15 @@ function myReact() {
 					element.onclick = value;
 				}
 				else {
+					console.log("props: ", key, value);
 					element.setAttribute(key, value);
 				}
 			})
-			// node.children.forEach(child => element.appendChild(createDom(child)))
-			// return element;
-			// Object.entries(node.props)
-			// .forEach(([name, value]) => element.setAttribute(name, value));
 		}
 
 		//add children element
+		console.log("children", node.children);
+		console.log(typeof (node.children));
 		if (exist(node.children) && isEmpty(node.children)){
 			node.children.forEach(child => {
 				if (typeof child === 'function') {
@@ -138,4 +153,4 @@ function myReact() {
 
 const  {createElement, render, useState, addEvent, createDom} = myReact();
 
-export {createElement, render, useState, addEvent, createDom}
+export {createElement, render, useState, addEvent, createDom, Link}
