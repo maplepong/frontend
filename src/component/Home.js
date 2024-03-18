@@ -1,9 +1,9 @@
 /* @jsx createElement */
-import {createElement, render, useState, addEvent} from "../core/myReact.js";
+import {createElement, Link } from "../core/myReact.js";
 
 const Home = () => {
 	return (
-		<h1>Home</h1>
+		<Link to="/" id="akl"> </Link>
 	)
 }
 
