@@ -7,15 +7,25 @@ function getCookie(name) {
 }
 
 const baseUrl = () => {
-	// return "http://10.19.247.54:8001/";
+	// return "http://10.19.247.54:8000/";
 	return "http://localhost:8000/";
 }
 
+const redirect = (page) => {
+	history.pushState({}, "", "/");
+	if (page === "/"){
+		localStorage.removeItem("username");
+		localStorage.removeItem("nickname");
+		localStorage.removeItem("in");
+		localStorage.removeItem("");
+	}
+	router();
+}
 
 async function requestLogin(getInfo, resultLogin){
 	const [username, password] = getInfo();
 	var status = null;
-	axios.defaults.withCredentials = true;
+	axios.defaults.withCredentials = false;
 	const formData = new FormData();
 	console.log(username, password);
 	formData.append('username', username); 
@@ -48,6 +58,24 @@ async function requestLogin(getInfo, resultLogin){
 	}
 }
 
+async function request42ApiLogin() {
+	console.log("api login")
+	// window.open("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code");
+
+	const response = await axios.get("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code", 		{
+		headers : {
+		'X-CSRFToken': getCookie('csrftoken'), 
+		'Content-Type': 'multipart/form-data'
+		}
+	})
+	.catch(error => {
+		console.error('Error:', error);
+		return ;
+	});
+	console.log(response);
+	// location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code";
+}
+
 function requestSignup(username, password, nickname) {
 	const formData = new FormData();
 	formData.append('username', username);
@@ -75,21 +103,22 @@ function requestValidCheck(type, value) {
 		console.error('Error:', error);
 		});
 }
-function requestUserInfo(nickname){
+async function requestUserInfo(nickname){
 	axios.defaults.withCredentials = false; //develope
-	axios.request({
+	const response = await axios.request({
 		headers: {
 			Authorization: `Bearer ${localStorage.accessToken}`,
 		},
 		method: "GET",
 		url: baseUrl() + "user/information?nickname=" + nickname,
 	})
-	.then(response => {
-	console.log('Response:', response);
-	})
 	.catch(error => {
 	console.error('Error:', error);
 	});
+	if (typeof response === "undefined"){
+
+	}
+	return 
 }
 
 async function requestChangePassword(username, password, new_password) {
@@ -143,4 +172,4 @@ function requestRefresh(username, password){
 }
 
 
-export { requestLogin, requestSignup, requestValidCheck, requestUserInfo, requestChangePassword}
+export { requestLogin, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}

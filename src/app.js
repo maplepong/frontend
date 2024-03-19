@@ -22,7 +22,6 @@ const App = () => {
 		<Login />
 		<MyInfo />
 		<button data-route="home">Home</button>
-		<button data-route="login">login</button>
 	</div>
 	)
 }
