@@ -1,16 +1,17 @@
-import Component from "../core/Component.js";
+/* @jsx createElement */
+import { requestUserStatus } from "../core/Api.js";
+import {createElement} from "../core/myReact.js";
+import '../css/UserStatus.css';
 
-export default class WidgetUserInfo extends Component {
-	setup() {
-		this.setCss("WidgetUserInfo.css");
-	}
-	template () {
-		return`
-		<div id="container">
+const UserStatus = (props, ...children) => {
+	if (props.username === undefined)
+		props.username = localStorage.username;
+	return (
+		<div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>
 				<div class="level">14</div>
-				<div class="usernickname">내닉네임</div>
+				<div class="usernickname">{}</div>
 			</div>
 			<div id="status-line" style="background-color: #f1f1f1">
 				<div id="stat-name">HP</div>
@@ -18,7 +19,6 @@ export default class WidgetUserInfo extends Component {
 					<div id="stat-value-text">25/50</div>
 					<div id="stat-value-bar" class="red" data-value="25" />
 				</div>
-			</div>
 			</div>
 			<div id="status-line" style="background-color: #DADADA">
 				<div id="stat-name">MP</div>
@@ -28,6 +28,7 @@ export default class WidgetUserInfo extends Component {
 				</div>
 			</div>
 		</div>
-		`
-	}
+	)	
 }
+
+export default UserStatus;
