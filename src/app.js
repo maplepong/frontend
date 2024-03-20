@@ -10,7 +10,7 @@ const setAxios = () => {
 	// axios.defauls.timeout = 1000;
 }
 const App = () => {
-	  setAxios();
+	setAxios();
 	return (
 	<div class="app">
 		<div data-route = "">
