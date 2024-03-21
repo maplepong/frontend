@@ -103,7 +103,7 @@ function requestValidCheck(type, value) {
 		console.error('Error:', error);
 		});
 }
-async function requestUserInfo(nickname){
+async function requestUserInfo(nickname, resultInfo){
 	axios.defaults.withCredentials = false; //develope
 	const response = await axios.request({
 		headers: {
@@ -115,10 +115,17 @@ async function requestUserInfo(nickname){
 	.catch(error => {
 	console.error('Error:', error);
 	});
-	if (typeof response === "undefined"){
-
+	if (typeof response === "undefined" || response.status != 200){
+		console.log("UserInfo request Error")
+		return ;
 	}
-	return 
+	//response.status == 200
+	else {
+		console.log("UserInfo request ok")
+		// resultInfo(response.data);
+		console.log(response);
+		return response.data;
+	} 
 }
 
 async function requestChangePassword(username, password, new_password) {
