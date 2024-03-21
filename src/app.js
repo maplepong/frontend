@@ -21,7 +21,7 @@ const App = () => {
 		</h1>
 		<Login />
 		{/* checking code below this line*/}
-		<MyInfo />
+		{/* <MyInfo /> */}
 	</div>
 	)
 }
