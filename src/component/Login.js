@@ -7,7 +7,6 @@ const Login = () => {
 	const getInfo = () => {
 		const username = document.querySelector("#input-username").value;
 		const password = document.querySelector("#input-password").value;
-		console.log("f");
 		return ([username, password]);
 	};
 

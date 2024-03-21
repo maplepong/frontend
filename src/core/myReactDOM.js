@@ -16,28 +16,30 @@ class Root{
 	}
 	//first render
 	render(jsxNode) {
-	console.log(jsxNode);
-	if (!exist(jsxNode)){
-		console.log("render err");
-		console.log("node", jsxNode)
-		return ;
-	}
-	const node = createDom(jsxNode);
-	this._rootElement.appendChild(node);
+		// console.log(jsxNode);
+		if (!exist(jsxNode)) {
+			// console.log("render err");
+			// console.log("node", jsxNode)
+			return ;
+		}
 
-	addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
-		const route = target.dataset.route;
-		if (route) {
-			const newPath = "/" + route;
-			history.pushState({}, "", newPath);
-			router();
-		}} )
-	addEvent(this._rootElement, "click", "a", ({ target }) => {
-		const route = target.closest("a").href;
-		if (route) {
-			history.pushState({}, "", route);
-			router();
-		}} )
+		const node = createDom(jsxNode);
+		this._rootElement.appendChild(node);
+
+		addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
+			const route = target.dataset.route;
+			if (route) {
+				const newPath = "/" + route;
+				history.pushState({}, "", newPath);
+				router();
+			}} )
+			
+		addEvent(this._rootElement, "click", "a", ({ target }) => {
+			const route = target.closest("a").href;
+			if (route) {
+				history.pushState({}, "", route);
+				router();
+			}} )
 	}
 };
 

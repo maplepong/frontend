@@ -6,11 +6,14 @@ import Welcome from	"../component/Welcome.js"
 import Login from	"../component/Login.js"
 import App from "../app.js"
 import MyInfo from "../component/MyInfo.js"
+import SignUp from "../component/SignUp.js"
+
 const pathList = {
 	"/" : <App />,
 	"/login" : <Login />,
 	"/home" : <Home />,
 	"/myinfo": <MyInfo />,
+	"/signup": <SignUp />,
 }
 
 export default function router() {
