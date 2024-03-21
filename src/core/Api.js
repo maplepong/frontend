@@ -13,7 +13,7 @@ const baseUrl = () => {
 
 const redirect = (page) => {
 	history.pushState({}, "", "/");
-	if (page === "/"){
+	if (page === "/") {
 		localStorage.removeItem("username");
 		localStorage.removeItem("nickname");
 		localStorage.removeItem("in");
@@ -22,30 +22,30 @@ const redirect = (page) => {
 	router();
 }
 
-async function requestLogin(getInfo, resultLogin){
+async function requestLogin(getInfo, resultLogin) {
 	const [username, password] = getInfo();
 	var status = null;
 	axios.defaults.withCredentials = false;
 	const formData = new FormData();
 	console.log(username, password);
-	formData.append('username', username); 
+	formData.append('username', username);
 	formData.append('password', password);
 	const response = await axios.post(
 		baseUrl() + "user/login",
-		formData, 
+		formData,
 		{
-			headers : {
-			'X-CSRFToken': getCookie('csrftoken'), 
-			'Content-Type': 'multipart/form-data'
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data'
 			}
-		}	
+		}
 	)
-	.catch(error => {
-		console.error('Error:', error);
-		return ;
-	});
-	if (typeof response !== "undefined"){
-		if (response.status === 200){
+		.catch(error => {
+			console.error('Error:', error);
+			return;
+		});
+	if (typeof response !== "undefined") {
+		if (response.status === 200) {
 			localStorage.setItem('username', username);
 			localStorage.setItem('nickname', response.data.nickname);
 			localStorage.setItem('accessToken', response.data.access_token)
@@ -54,26 +54,61 @@ async function requestLogin(getInfo, resultLogin){
 		console.log("status", response.status);
 		status = response.status;
 		resultLogin(status);
-
 	}
 }
 
-async function request42ApiLogin() {
-	console.log("api login")
-	// window.open("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code");
+const urlCheck = (location) => {
 
-	const response = await axios.get("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code", 		{
-		headers : {
-		'X-CSRFToken': getCookie('csrftoken'), 
-		'Content-Type': 'multipart/form-data'
+	let getParameter = (key) => {
+		return new URLSearchParams(location.search).get(key);
+	};
+
+	const name = getParameter("code");
+	console.log('code: ', code);
+}
+
+async function request42ApiLogin(code) {
+	var status = null;
+	axios.defaults.withCredentials = false;
+
+	console.log("api login");
+	if (code == null) {
+		console.log("code is null");
+		return;
+	}
+	const formData = new FormData();
+	console.log(code);
+	formData.append('code', code);
+	const response = await axios.post(
+		baseUrl() + "user/api-login",
+		formData,
+		{
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data'
+			}
 		}
-	})
-	.catch(error => {
-		console.error('Error:', error);
-		return ;
-	});
-	console.log(response);
-	// location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fuser%2Fapi-login&response_type=code";
+	)
+		.catch(error => {
+			console.error('Error:', error);
+			return;
+		});
+	if (typeof response !== "undefined") {
+		if (response.status === 200) {
+			username = response.data.username;
+			localStorage.setItem('username', username);
+			localStorage.setItem('nickname', response.data.nickname);
+			localStorage.setItem('accessToken', response.data.access_token)
+			axios.defaults.headers.common['Authorization'] = response.data.access_token;
+		}
+		else if (response.status === 409) {
+			console.log("회원가입 필요");
+			return;
+		}
+		console.log("status", response.status);
+		status = response.status;
+		resultLogin(status);
+	}
 }
 
 function requestSignup(username, password, nickname) {
@@ -81,29 +116,31 @@ function requestSignup(username, password, nickname) {
 	formData.append('username', username);
 	formData.append('password', password);
 	formData.append('nickname', nickname);
-	axios.post(baseUrl() + "users/sign-up", formData, {headers : {
-		'X-CSRFToken': getCookie('csrftoken'), 
-		'Content-Type': 'application/json'
-	}})
-	.then(response => {
-		console.log('Response:', response);
+	axios.post(baseUrl() + "users/sign-up", formData, {
+		headers: {
+			'X-CSRFToken': getCookie('csrftoken'),
+			'Content-Type': 'application/json'
+		}
+	})
+		.then(response => {
+			console.log('Response:', response);
 		})
 		.catch(error => {
-		console.error('Error:', error);
+			console.error('Error:', error);
 		});
 }
 
 function requestValidCheck(type, value) {
-	axios.get(baseUrl() + "user/valid-check" + 
-	"?type=" + type + "&value=" + value)
-	.then(response => {
-		console.log('Response:', response);
+	axios.get(baseUrl() + "user/valid-check" +
+		"?type=" + type + "&value=" + value)
+		.then(response => {
+			console.log('Response:', response);
 		})
 		.catch(error => {
-		console.error('Error:', error);
+			console.error('Error:', error);
 		});
 }
-async function requestUserInfo(nickname){
+async function requestUserInfo(nickname) {
 	axios.defaults.withCredentials = false; //develope
 	const response = await axios.request({
 		headers: {
@@ -112,13 +149,13 @@ async function requestUserInfo(nickname){
 		method: "GET",
 		url: baseUrl() + "user/information?nickname=" + nickname,
 	})
-	.catch(error => {
-	console.error('Error:', error);
-	});
-	if (typeof response === "undefined"){
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	if (typeof response === "undefined") {
 
 	}
-	return 
+	return
 }
 
 async function requestChangePassword(username, password, new_password) {
@@ -134,42 +171,42 @@ async function requestChangePassword(username, password, new_password) {
 		// url: baseUrl() + "user/change-password",
 		// data: formData,
 	})
-	.then(response => {
-	console.log('Response:', response);
-	})
-	.catch(error => {
-	console.error('Error:', error);
-	});
+		.then(response => {
+			console.log('Response:', response);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
 }
 
 
-function requestRefresh(username, password){
+function requestRefresh(username, password) {
 	axios.defaults.withCredentials = true;
 	axios.post(
-		baseUrl() + "user/api/token/refresh", 
+		baseUrl() + "user/api/token/refresh",
 		{
-			headers : {
-			'X-CSRFToken': getCookie('csrftoken'), 
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
 			}
-		}	
+		}
 	)
-	.then(response => {
-		console.log('Response:', response);
-		// console.log('Data', response.data);
-		// console.log('RequestResponse', response.request);
-		// localStorage.setItem('username', username);
-		// console.log(response.data.nickname);
-		// localStorage.setItem('nickname', response.data.nickname);
-		localStorage.setItem('accessToken', response.data.access_token)
-		// localStorage.setItem('refreshToken', response.data.data.refreshToken)
-		// localStorage.setItem('expiredTime', response.data.data.cur_time)
-		axios.defaults.headers.common['Authorization'] = response.data.access_token;
-		// console.log(response.headers);
-	})
-	.catch(error => {
-		console.error('Error:', error);
-	});
+		.then(response => {
+			console.log('Response:', response);
+			// console.log('Data', response.data);
+			// console.log('RequestResponse', response.request);
+			// localStorage.setItem('username', username);
+			// console.log(response.data.nickname);
+			// localStorage.setItem('nickname', response.data.nickname);
+			localStorage.setItem('accessToken', response.data.access_token)
+			// localStorage.setItem('refreshToken', response.data.data.refreshToken)
+			// localStorage.setItem('expiredTime', response.data.data.cur_time)
+			axios.defaults.headers.common['Authorization'] = response.data.access_token;
+			// console.log(response.headers);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
 }
 
 
-export { requestLogin, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
+export { requestLogin, requestSignup, requestValidCheck, requestUserInfo, request42ApiLogin, requestChangePassword }
