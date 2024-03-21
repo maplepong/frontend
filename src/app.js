@@ -1,7 +1,8 @@
 /* @jsx createElement */
 import Login from "./component/Login.js";
 import MyInfo from "./component/MyInfo.js";
-import { createElement } from "./core/myReact.js";
+import { createElement,Link } from "./core/myReact.js";
+import SignUp from "./component/SignUp.js";
 import "./css/index.css";
 
 const setAxios = () => {
@@ -10,18 +11,21 @@ const setAxios = () => {
 	// axios.defauls.timeout = 1000;
 }
 const App = () => {
-	  setAxios();
+	setAxios();
 	return (
 	<div class="app">
-		<div data-route = "">
+		<Link to= "">
 			<img src ="./asset/design/maplepong.png"></img>
-		</div>
+		</Link>
 		<h1>
 			Merancendance
 		</h1>
 		<Login />
 		<MyInfo />
+		<SignUp />
 		<button data-route="home">Home</button>
+		<button data-route="login">login</button>
+		<button data-route="signup">SignUp</button>
 	</div>
 	)
 }

@@ -47,9 +47,7 @@ function myReact() {
 			state[currPosition] = initValue;
 		}
 		position++;
-		const _state = () => {
-			return state[currPosition];
-		}
+		const _state = state[currPosition];
 		const _setState = (nextValue) => {
 			state[currPosition] = nextValue;
 			render(rootNode);
@@ -83,11 +81,11 @@ function myReact() {
 	function addEvent(target, eventType, selector, callback) {
 		const children = [...document.querySelectorAll(selector)];
 		target.addEventListener(eventType, event => {
-		  event.preventDefault();
-		  if (!event.target.closest(selector)) return false;
-		  callback(event);
+			event.preventDefault();
+			if (!event.target.closest(selector)) return false;
+			callback(event);
 		});
-	  }
+	}
 	
 	function render(node){
 		position = 0;
@@ -97,9 +95,9 @@ function myReact() {
 		}
 		// console.log(node);
 		if (!exist(node) && !exist(rootNode)){
-			console.log("render err");
-			console.log("node", node)
-			console.log("node", rootNode)
+			// console.log("render err");
+			// console.log("node", node)
+			// console.log("node", rootNode)
 			return ;
 		}
 		rootNode = node;
@@ -108,6 +106,7 @@ function myReact() {
 		root.setAttribute("class", "app");
 		document.querySelector("#root").prepend(root);
 	}
+	
 	function createDom(node){
 		//error
 		if (typeof node === 'number') node = node.toString();

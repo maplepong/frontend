@@ -7,6 +7,7 @@ import Login from "../component/Login.js"
 import App from "../app.js"
 import MyInfo from "../component/MyInfo.js"
 import ApiLogin from "../component/ApiLogin.js"
+import SignUp from "../component/SignUp.js"
 
 const pathList = {
 	"/": <App />,
@@ -14,6 +15,7 @@ const pathList = {
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
+	"/signup": <SignUp />,
 }
 
 export default function router() {
