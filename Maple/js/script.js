@@ -17,7 +17,7 @@ changeNick.addEventListener('click', () => {
 const statusName = document.querySelector('.nickname');
 
 function changeStatusName(newNick) {
-    console.log(statusName);
+    // console.log(statusName);
     statusName.innerText = ` ${newNick}`;
 }
 
