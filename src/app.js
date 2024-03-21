@@ -1,8 +1,8 @@
 /* @jsx createElement */
 import Login from "./component/Login.js";
 import MyInfo from "./component/MyInfo.js";
+import { createElement,Link } from "./core/myReact.js";
 import SignUp from "./component/SignUp.js";
-import { createElement } from "./core/myReact.js";
 import "./css/index.css";
 
 const setAxios = () => {
@@ -14,9 +14,9 @@ const App = () => {
 	setAxios();
 	return (
 	<div class="app">
-		<div data-route = "">
+		<Link to= "">
 			<img src ="./asset/design/maplepong.png"></img>
-		</div>
+		</Link>
 		<h1>
 			Merancendance
 		</h1>
