@@ -22,7 +22,7 @@ const redirect = (page) => {
 	router();
 }
 
-async function requestLogin(getInfo, resultLogin){
+function requestLogin(getInfo, resultLogin){
 	const [username, password] = getInfo();
 	var status = null;
 	axios.defaults.withCredentials = false;
@@ -30,7 +30,7 @@ async function requestLogin(getInfo, resultLogin){
 	console.log(username, password);
 	formData.append('username', username); 
 	formData.append('password', password);
-	const response = await axios.post(
+	const response = axios.post(
 		baseUrl() + "user/login",
 		formData, 
 		{
@@ -40,22 +40,25 @@ async function requestLogin(getInfo, resultLogin){
 			}
 		}	
 	)
-	.catch(error => {
+	.then(response=>{
+		console.log(response);
+		if (typeof response !== "undefined"){
+			if (response.status === 200){
+				localStorage.setItem('username', username);
+				localStorage.setItem('nickname', response.data.nickname);
+				localStorage.setItem('accessToken', response.data.access_token)
+				axios.defaults.headers.common['Authorization'] = response.data.access_token;
+			}
+			// console.log("status", response.status);
+			status = response.status;
+			resultLogin(status);
+	
+		}
+	}).catch(error => {
 		console.error('Error:', error);
 		return ;
 	});
-	if (typeof response !== "undefined"){
-		if (response.status === 200){
-			localStorage.setItem('username', username);
-			localStorage.setItem('nickname', response.data.nickname);
-			localStorage.setItem('accessToken', response.data.access_token)
-			axios.defaults.headers.common['Authorization'] = response.data.access_token;
-		}
-		console.log("status", response.status);
-		status = response.status;
-		resultLogin(status);
 
-	}
 }
 
 async function request42ApiLogin() {
@@ -77,43 +80,49 @@ async function request42ApiLogin() {
 }
 
 function requestSignup(username, password, nickname) {
+	axios.defaults.withCredentials = false;
 	const formData = new FormData();
+	console.log(username,password,nickname);
 	formData.append('username', username);
 	formData.append('password', password);
 	formData.append('nickname', nickname);
-	axios.post(baseUrl() + "users/sign-up", formData, {headers : {
+	axios.post(baseUrl() + "user/sign-up", formData, {headers : {
 		'X-CSRFToken': getCookie('csrftoken'), 
-		'Content-Type': 'application/json'
+		'Content-Type': 'multipart/form-data'
 	}})
 	.then(response => {
 		console.log('Response:', response);
-		})
-		.catch(error => {
+	}).catch(error => {
 		console.error('Error:', error);
-		});
+	});
 }
 
 function requestValidCheck(type, value) {
 	axios.get(baseUrl() + "user/valid-check" + 
 	"?type=" + type + "&value=" + value)
 	.then(response => {
-		console.log('Response:', response);
+		// console.log('Response:', response);
 		})
 		.catch(error => {
 		console.error('Error:', error);
 		});
 }
+
 async function requestUserInfo(nickname, resultInfo){
 	axios.defaults.withCredentials = false; //develope
 	const response = await axios.request({
+
 		headers: {
 			Authorization: `Bearer ${localStorage.accessToken}`,
 		},
 		method: "GET",
 		url: baseUrl() + "user/information?nickname=" + nickname,
 	})
+	.then(response => {
+		console.log('Response:', response);
+	})
 	.catch(error => {
-	console.error('Error:', error);
+		console.error('Error:', error);
 	});
 	if (typeof response === "undefined" || response.status != 200){
 		console.log("UserInfo request Error")
@@ -142,13 +151,12 @@ async function requestChangePassword(username, password, new_password) {
 		// data: formData,
 	})
 	.then(response => {
-	console.log('Response:', response);
+	// console.log('Response:', response);
 	})
 	.catch(error => {
 	console.error('Error:', error);
 	});
 }
-
 
 function requestRefresh(username, password){
 	axios.defaults.withCredentials = true;
@@ -161,7 +169,7 @@ function requestRefresh(username, password){
 		}	
 	)
 	.then(response => {
-		console.log('Response:', response);
+		// console.log('Response:', response);
 		// console.log('Data', response.data);
 		// console.log('RequestResponse', response.request);
 		// localStorage.setItem('username', username);
@@ -180,3 +188,4 @@ function requestRefresh(username, password){
 
 
 export { requestLogin, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
+
