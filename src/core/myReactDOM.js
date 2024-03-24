@@ -1,5 +1,5 @@
 /* @jsx createElement */
-import {createDom, addEvent} from "./myReact.js";
+import {createDom, addEvent, renderVirtual} from "./myReact.js";
 import router  from "./Router.js";
 
 function exist(para) {
@@ -25,6 +25,8 @@ class Root{
 
 		const node = createDom(jsxNode);
 		this._rootElement.appendChild(node);
+		// renderVirtual(jsxNode);
+
         
 		addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
 			const route = target.dataset.route;
