@@ -1,5 +1,5 @@
 /* @jsx createElement */
-import { createElement, render, useState, addEvent } from "./myReact.js";
+import { createElement, renderVirtual, useState, addEvent } from "./myReact.js";
 import Home from "../component/Home.js"
 import Undefined from "../component/Undefined.js"
 import Welcome from "../component/Welcome.js"
@@ -23,9 +23,9 @@ export default function router() {
 
 	const route = pathList[path];
 	if (route === undefined) {
-		render(<Undefined />);
+		renderVirtual(<Undefined />);
 	}
 	else {
-		render(route);
+		renderVirtual(route);
 	}
 }

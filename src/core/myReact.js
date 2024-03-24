@@ -37,7 +37,7 @@ function myReact() {
     const depsArray = [];
 	let position = 0;
 	const app = document.getElementById("app");
-	let rootNode;
+	let oldNode;
 
 	//init state hook
 	function useState(initValue) {
@@ -50,8 +50,8 @@ function myReact() {
             if (states[currPosition] === nextValue)
                 return ;
             states[currPosition] = nextValue;
-            const root = createDom(rootNode);
-			render(rootNode);
+            const root = createDom(oldNode);
+			renderVirtual(oldNode);
 		}
         position++;
 		return [state, setState];
@@ -109,54 +109,134 @@ function myReact() {
 		});
 	}
 	
-	function render(node){
+	function renderVirtual(node){
 		position = 0;
-		const prevApp = document.querySelector(".app");
+		const rootNode = document.querySelector("#root");
+		const prevApp = rootNode.children[0];
 		if (prevApp){
 			prevApp.parentNode.removeChild(prevApp);
 		}
 		// console.log(node);
-		if (!exist(node) && !exist(rootNode)){
-			// console.log("render err");
+		if (!exist(node) && !exist(oldNode)){
+			// console.log("renderVirtual err");
 			// console.log("node", node)
-			// console.log("node", rootNode)
+			// console.log("node", oldNode)
 			return ;
 		}
-		rootNode = node;
-		const root = createDom(rootNode);
-		root.setAttribute("class", "app");
-		document.querySelector("#root").prepend(root);
-    }
-	
-	function createDom(node){
-		//error
-		if (typeof node === 'number') node = node.toString();
-		if (typeof node === 'string') return document.createTextNode(node);
-		// console.log(node);
-		// if (!exist(node.props)) node.props = {};
-		
-		//create each element
-		if (!exist(node.tag)){
-			// console.log(node)
+		if (!exist(oldNode)){
+			const dom = createDom(node);
+			rootNode.appendChild(dom);
+			oldNode = node;
+			// return;
 		}
-		const element = document.createElement(node.tag);
-		// console.log(node);
-		//adding props to element
+
+		diffIndex = 0;
+		diffDom(oldNode, node, rootNode);
+		oldNode = node;
+		const root = createDom(node);
+		root.setAttribute("class", "app");
+		rootNode.prepend(root);
+    }
+
+	var diffIndex = 0;
+	function diffDom(oldNode, newNode, parentNode){
+		console.log("parentNode", parentNode,  diffIndex);
+		console.log("oldNode", oldNode);
+		console.log("newNode", newNode);
+		var index = diffIndex;
+		var element;
+		// error :: 
+		if (!oldNode && !newNode) return;
+		
+		// removed :: newNode No longer exist
+		if (oldNode && !newNode){
+			//NEED :::: remove eventListner??
+			parentNode.removeChild(parentNode.children[index]);
+			index--;
+			return;
+		}
+
+		// created :: no oldNode
+		else if (!oldNode && newNode) {
+			element = document.createElement(newNode.tag);
+			parentNode.appendChild(element);
+			index++;
+			addProps(element, newNode);
+			return ;
+		}
+
+		else if (oldNode && newNode ) {
+			// changed tag ::
+			if (oldNode.tag !== newNode.tag) {
+				element = document.createElement(newNode.tag);
+				parentNode.replaceChild(element, parentNode.children[index]);
+				addProps(element, newNode);
+			}
+			// same tag ::
+			else {
+				element = parentNode.children[index];
+				// diff props
+				if (oldNode.props)
+				{
+					var propIndex = 0;
+					console.log(oldNode.props);
+					const oldKeys = Object.keys(oldNode.props);
+					const newKeys = Object.keys(newNode.props);
+					while (oldNode.props[oldKeys[propIndex]] || newNode.props[newKeys[propIndex]]) {
+						// created
+						if (!oldNode.props[oldKeys[propIndex]]){
+							element.setAttribute(newKeys[propIndex], newNode.props[newKeys[propIndex]]);
+						}
+						// deleted
+						else if (!newNode.props[newKeys[propIndex]]){
+							element.removeAttribute(oldKeys[propIndex]);
+						}
+						// same key / diffrent value
+						else if (oldKeys[propIndex] === newKeys[propIndex]){
+							if (oldNode.props[oldKeys[propIndex]] !== newNode.props[newKeys[propIndex]]){
+								element.getAttributeNode(oldKeys[propIndex]).value = newNode.props[propIndex];
+							}
+						}
+						// diffrent key
+						else {
+							element.removeAttribute(oldKeys[propIndex]);
+							element.setAttribute(newKeys[propIndex], newNode.props[newKeys[propIndex]]);
+						}
+						propIndex++;
+					}
+				}
+			}
+		}
+		var childrenIndex = 0;
+		if (!oldNode.children){
+			addChildren(element, newNode);
+		}
+		else if (oldNode.children && newNode.children){
+			while (oldNode.children[childrenIndex] || newNode.children[childrenIndex]) {
+				diffIndex = childrenIndex;
+				diffDom(oldNode.children[childrenIndex], newNode.children[childrenIndex], element);
+				childrenIndex = diffIndex;
+				childrenIndex++;
+			}
+		}
+		index++;
+		diffIndex = index;
+	}
+
+	function addProps(element, node){
 		if (exist(node.props)){
 			Object.entries(node.props).forEach(([key, value]) => {
 				if (key.slice(0, 2) === 'on') {
 					element.onclick = value;
 				}
 				else {
-					// console.log("props: ", key, value);
 					element.setAttribute(key, value);
 				}
 			})
 		}
-
-		// add children element
-		// console.log("children", node.children);
-		// console.log(typeof (node.children));
+	}
+	
+	function addChildren(element, node){
 		if (exist(node.children) && isEmpty(node.children)) {
 			node.children.forEach(child => {
 				if (typeof child === 'function') {
@@ -168,12 +248,25 @@ function myReact() {
 					element.appendChild(childElement);
 			})
 		}
+	}
+	
+	function createDom(node){
+		if (typeof node === 'number') node = node.toString();
+		if (typeof node === 'string') return document.createTextNode(node);
+		
+		//create each element
+		const element = document.createElement(node.tag);
+		//adding props to element
+		addProps(element, node);
+
+		// add children element
+		addChildren(element, node);
 		return element;
 	}
 
-	return {createElement, render, useState, useEffect, addEvent, createDom};
+	return {createElement, renderVirtual, useState, useEffect, addEvent, createDom};
 }
 
-const  {createElement, render, useState, useEffect, addEvent, createDom} = myReact();
+const  {createElement, renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
 
-export {createElement, render, useState, useEffect, addEvent, createDom, Link}
+export {createElement, renderVirtual, useState, useEffect, addEvent, createDom, Link}
