@@ -34,6 +34,7 @@ function Link(props){
 
 function myReact() {
 	const states = [];
+    const depsArray = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let rootNode;
@@ -41,27 +42,40 @@ function myReact() {
 	//init state hook
 	function useState(initValue) {
 		let currPosition = position;
-		// if (state.length == position) {
-		// 	state.push(undefined);
-		// }
-		// if (state[currPosition] === undefined) {
-		// 	state[currPosition] = initValue;
-		// }
 		states[currPosition] = states[currPosition] || initValue;
         const state = () => {
             return states[currPosition];
         }
 		const setState = (nextValue) => {
-            console.log(nextValue);
-            if (state === nextValue)
+            if (states[currPosition] === nextValue)
                 return ;
             states[currPosition] = nextValue;
-            console.log('rootNode', rootNode);
+            const root = createDom(rootNode);
 			render(rootNode);
 		}
         position++;
 		return [state, setState];
 	}
+
+    function useEffect(callback, deps) {
+        let currPosition = position;
+        const oldDeps = states[currPosition];
+        let hasChange = true;
+
+        console.log('oldDeps', oldDeps);
+
+        if (oldDeps) {
+            hasChange = deps.some(
+              (dep, i) => !Object.is(dep, oldDeps[i])
+            );
+        }
+
+        if (hasChange) {
+            callback();
+            states[currPosition] = deps;
+        }
+        position++;
+    }
 
 	function makeProps(props, children){
 		return {
@@ -108,13 +122,10 @@ function myReact() {
 			// console.log("node", rootNode)
 			return ;
 		}
-
-        console.log('node', node)
 		rootNode = node;
 		const root = createDom(rootNode);
 		root.setAttribute("class", "app");
 		document.querySelector("#root").prepend(root);
-        console.log('root', root);
     }
 	
 	function createDom(node){
@@ -160,9 +171,9 @@ function myReact() {
 		return element;
 	}
 
-	return {createElement, render, useState, addEvent, createDom};
+	return {createElement, render, useState, useEffect, addEvent, createDom};
 }
 
-const  {createElement, render, useState, addEvent, createDom} = myReact();
+const  {createElement, render, useState, useEffect, addEvent, createDom} = myReact();
 
-export {createElement, render, useState, addEvent, createDom, Link}
+export {createElement, render, useState, useEffect, addEvent, createDom, Link}
