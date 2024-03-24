@@ -16,11 +16,9 @@ const App = () => {
     const [ count, setCount ] = useState(1);
     
 	const incre = () => {
-		// console.log(typeof count);
 		setCount(count() + 1);
 	}
 	const decre = () => {
-		// console.log(typeof count);
 		setCount(count() - 1);
 	}
 
@@ -29,9 +27,9 @@ const App = () => {
             <Link to= "">
                 <img src ="./asset/design/maplepong.png"></img>
             </Link>
-            <p>Test UseState: {count()}
-                <button onClick={() => incre()}>증가</button>
-                <button onClick={() => decre()}>감소</button>
+            <p>Test UseState: {count}
+                <button onClick={incre}>증가</button>
+                <button onClick={decre}>감소</button>
             </p>
             <h1>
                 Merancendance
