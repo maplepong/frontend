@@ -25,7 +25,7 @@ class Root{
 
 		const node = createDom(jsxNode);
 		this._rootElement.appendChild(node);
-
+        
 		addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
 			const route = target.dataset.route;
 			if (route) {
@@ -40,7 +40,12 @@ class Root{
 				history.pushState({}, "", route);
 				router();
 			}} )
-	}
+            
+        addEvent(this._rootElement, "click", null, ({ target }) => {
+            console.log(target, '123');
+        })
+    
+    }
 };
 
 class MyReactDOM{

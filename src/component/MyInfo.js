@@ -1,7 +1,5 @@
 /* @jsx createElement */
 import { requestUserInfo } from "../core/Api.js";
-
-
 import {createElement, Link } from "../core/myReact.js";
 import "../css/MyInfo.css"
 

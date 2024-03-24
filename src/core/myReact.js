@@ -14,6 +14,7 @@ function isEmpty(para){
 	}
 	return true;
 }
+
 function Link(props){
 	// console.log(props)
 	const tag = "a"
@@ -32,27 +33,34 @@ function Link(props){
 }
 
 function myReact() {
-	const state = [];
+	const states = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let rootNode;
-	
+
 	//init state hook
 	function useState(initValue) {
 		let currPosition = position;
-		if (state.length == position) {
-			state.push(undefined);
-		}
-		if (state[currPosition] === undefined) {
-			state[currPosition] = initValue;
-		}
-		position++;
-		const _state = state[currPosition];
-		const _setState = (nextValue) => {
-			state[currPosition] = nextValue;
+		// if (state.length == position) {
+		// 	state.push(undefined);
+		// }
+		// if (state[currPosition] === undefined) {
+		// 	state[currPosition] = initValue;
+		// }
+		states[currPosition] = states[currPosition] || initValue;
+        const state = () => {
+            return states[currPosition];
+        }
+		const setState = (nextValue) => {
+            console.log(nextValue);
+            if (state === nextValue)
+                return ;
+            states[currPosition] = nextValue;
+            console.log('rootNode', rootNode);
 			render(rootNode);
 		}
-		return [_state, _setState];
+        position++;
+		return [state, setState];
 	}
 
 	function makeProps(props, children){
@@ -66,8 +74,8 @@ function myReact() {
 		if (!exist(props)) props = {};
 		if (!exist(children)) children = [];
 		if (typeof tag === 'function'){
-			// console.log("tag:",tag);
-			// console.log(props, children);
+            // console.log("tag:",tag);
+            // console.log(props, children);
 			if (children.length > 0){
 				return tag(makeProps(props, children))
 			}
@@ -100,12 +108,14 @@ function myReact() {
 			// console.log("node", rootNode)
 			return ;
 		}
+
+        console.log('node', node)
 		rootNode = node;
 		const root = createDom(rootNode);
-		// console.log(root)
 		root.setAttribute("class", "app");
 		document.querySelector("#root").prepend(root);
-	}
+        console.log('root', root);
+    }
 	
 	function createDom(node){
 		//error
@@ -133,10 +143,10 @@ function myReact() {
 			})
 		}
 
-		//add children element
+		// add children element
 		// console.log("children", node.children);
 		// console.log(typeof (node.children));
-		if (exist(node.children) && isEmpty(node.children)){
+		if (exist(node.children) && isEmpty(node.children)) {
 			node.children.forEach(child => {
 				if (typeof child === 'function') {
 					element.appendChild(createDom(child()));
