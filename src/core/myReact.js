@@ -32,34 +32,49 @@ function Link(props){
 	return {tag, props};
 }
 
-function myReact() {
+function updateProps(target, newProps, oldProps){
+	for (const [key, value] of Object.entries(newProps)){
+		if (oldProps[key] === newProps[key]) continue;
+		target.setAttribute(key, value);
+	}
+	for (const [key, value] of Object.entries(oldProps)){
+		if (newProps[key] === undefined) continue;
+		target.removeAttribute(key);
+	}
+}
+
+function myReact(firstnode) {
 	const states = [];
     const depsArray = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let oldNode;
+	const obj = {states: []};
 
 	//init state hook
 	function useState(initValue) {
-		let currPosition = position;
-		states[currPosition] = states[currPosition] || initValue;
+		states[position] = states[position] || initValue;
+		console.log("cuur", position)
+		console.log(states[position])
         const state = () => {
-            return states[currPosition];
+			return states[position];
         }
 		const setState = (nextValue) => {
-            if (states[currPosition] === nextValue)
+			console.log("cuur", position)
+			console.log(nextValue)
+            if (states[position] === nextValue)
                 return ;
-            states[currPosition] = nextValue;
+            states[position] = nextValue;
             const root = createDom(oldNode);
 			renderVirtual(oldNode);
 		}
         position++;
-		return [state, setState];
+		return [states[position - 1], setState];
 	}
 
     function useEffect(callback, deps) {
-        let currPosition = position;
-        const oldDeps = states[currPosition];
+        let position = position;
+        const oldDeps = states[position];
         let hasChange = true;
 
         console.log('oldDeps', oldDeps);
@@ -72,7 +87,7 @@ function myReact() {
 
         if (hasChange) {
             callback();
-            states[currPosition] = deps;
+            states[position] = deps;
         }
         position++;
     }
@@ -112,100 +127,64 @@ function myReact() {
 	function renderVirtual(node){
 		position = 0;
 		const rootNode = document.querySelector("#root");
-		const prevApp = rootNode.children[0];
-		if (prevApp){
-			prevApp.parentNode.removeChild(prevApp);
-		}
-		// console.log(node);
 		if (!exist(node) && !exist(oldNode)){
-			// console.log("renderVirtual err");
-			// console.log("node", node)
-			// console.log("node", oldNode)
+			console.log("renderVirtual err");
+			console.log("node", node)
+			console.log("node", oldNode)
 			return ;
 		}
 		if (!exist(oldNode)){
 			const dom = createDom(node);
 			rootNode.appendChild(dom);
 			oldNode = node;
-			// return;
+			return;
 		}
-
 		diffIndex = 0;
 		diffDom(oldNode, node, rootNode);
 		oldNode = node;
-		const root = createDom(node);
-		root.setAttribute("class", "app");
-		rootNode.prepend(root);
     }
 
 	var diffIndex = 0;
 	function diffDom(oldNode, newNode, parentNode){
-		console.log("parentNode", parentNode,  diffIndex);
-		console.log("oldNode", oldNode);
-		console.log("newNode", newNode);
 		var index = diffIndex;
+		console.log("oldNode",oldNode)
+		console.log("newNode",newNode)
+		console.log(index);
+
 		var element;
 		// error :: 
 		if (!oldNode && !newNode) return;
 		
-		// removed :: newNode No longer exist
+		// removed :: index --;
 		if (oldNode && !newNode){
+			if (parentNode.children.length < index)
+				return;
 			//NEED :::: remove eventListner??
 			parentNode.removeChild(parentNode.children[index]);
 			index--;
 			return;
 		}
 
-		// created :: no oldNode
+		// created :: index++;
 		else if (!oldNode && newNode) {
-			element = document.createElement(newNode.tag);
-			parentNode.appendChild(element);
+			parentNode.appendChild(createElement(newNode));
 			index++;
-			addProps(element, newNode);
 			return ;
 		}
 
-		else if (oldNode && newNode ) {
-			// changed tag ::
-			if (oldNode.tag !== newNode.tag) {
-				element = document.createElement(newNode.tag);
-				parentNode.replaceChild(element, parentNode.children[index]);
-				addProps(element, newNode);
-			}
-			// same tag ::
-			else {
-				element = parentNode.children[index];
-				// diff props
-				if (oldNode.props)
-				{
-					var propIndex = 0;
-					console.log(oldNode.props);
-					const oldKeys = Object.keys(oldNode.props);
-					const newKeys = Object.keys(newNode.props);
-					while (oldNode.props[oldKeys[propIndex]] || newNode.props[newKeys[propIndex]]) {
-						// created
-						if (!oldNode.props[oldKeys[propIndex]]){
-							element.setAttribute(newKeys[propIndex], newNode.props[newKeys[propIndex]]);
-						}
-						// deleted
-						else if (!newNode.props[newKeys[propIndex]]){
-							element.removeAttribute(oldKeys[propIndex]);
-						}
-						// same key / diffrent value
-						else if (oldKeys[propIndex] === newKeys[propIndex]){
-							if (oldNode.props[oldKeys[propIndex]] !== newNode.props[newKeys[propIndex]]){
-								element.getAttributeNode(oldKeys[propIndex]).value = newNode.props[propIndex];
-							}
-						}
-						// diffrent key
-						else {
-							element.removeAttribute(oldKeys[propIndex]);
-							element.setAttribute(newKeys[propIndex], newNode.props[newKeys[propIndex]]);
-						}
-						propIndex++;
-					}
-				}
-			}
+		// changed tag ::
+		if (oldNode.tag !== newNode.tag) {
+			parentNode.replaceChild(
+				createElement(newNode), 
+				parentNode.children[index]);
+		}
+		// same tag ::
+		else {
+			updateProps(
+				parent.childNodes[index],
+				newNode.props || {},
+				oldNode.props || {});
+
 		}
 		var childrenIndex = 0;
 		if (!oldNode.children){
@@ -269,4 +248,4 @@ function myReact() {
 
 const  {createElement, renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
 
-export {createElement, renderVirtual, useState, useEffect, addEvent, createDom, Link}
+export {createElement, renderVirtual, useState, useEffect, addEvent, createDom, Link, myReact}

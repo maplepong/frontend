@@ -5,6 +5,7 @@ import { createElement, Link } from "./core/myReact.js";
 import SignUp from "./component/SignUp.js";
 import "./css/index.css";
 import { useState, useEffect } from "./core/myReact.js";
+import Test from "./component/Test.js"
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
@@ -13,28 +14,12 @@ const setAxios = () => {
 }
 const App = () => {
 	setAxios();
-    const [ count, setCount ] = useState(0);
-    
-	const incre = () => {
-		setCount(count() + 1);
-	}
-	const decre = () => {
-		setCount(count() - 1);
-	}
-
-    useEffect(() => {
-        console.log("count has been changed into", count());
-      }, [count()]);
-
 	return (
         <div class="app">
             <Link to= "">
                 <img src ="./asset/design/maplepong.png"></img>
             </Link>
-            <p>Test UseState: {count}
-                <button onClick={incre}>증가</button>
-                <button onClick={decre}>감소</button>
-            </p>
+			<Test />
             <h1>
                 Merancendance
             </h1>
