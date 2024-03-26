@@ -6,8 +6,7 @@ import '../css/UserStatus.css';
 const UserStatus = (props, ...children) => {
 	if (props.username === undefined)
 		props.username = localStorage.username;
-	return (
-		<div id="container-UserStatus">
+	return <div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>
 				<div class="level">14</div>
@@ -28,7 +27,6 @@ const UserStatus = (props, ...children) => {
 				</div>
 			</div>
 		</div>
-	)	
 }
 
 export default UserStatus;

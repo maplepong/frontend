@@ -32,7 +32,7 @@ function Link(props){
 	return {tag, props};
 }
 
-function myReact() {
+function myReact(firstNode) {
 	const states = [];
     const depsArray = [];
 	let position = 0;
@@ -40,6 +40,7 @@ function myReact() {
 	let oldNode;
 	const obj = {states: []};
 
+	console.log(firstNode);
 	//init state hook
 	function useState(initValue) {
 		states[position] = states[position] || initValue;
@@ -89,15 +90,18 @@ function myReact() {
 	}
 
 	function createElement(tag, props, ...children){
-		if (!exist(props)) props = {};
-		if (!exist(children)) children = [];
+		props = props || {};
+		children = children || [];
 		if (typeof tag === 'function'){
 			if (children.length > 0){
+				// console.log(tag(props));
 				return tag(makeProps(props, children))
 			}
+			// console.log(tag(props));
 			return tag(props);
 		}
 		else{
+			// console.log({tag, props, children});
 			return ({tag, props, children});
 		}
 	}
@@ -126,6 +130,7 @@ function myReact() {
 			oldNode = newNode;
 			return;
 		}
+		console.log("calling diffdom");
 		diffDom(rootNode, newNode, oldNode, 0);
 		oldNode = newNode;
     }
@@ -133,11 +138,10 @@ function myReact() {
 	function updateProps(target, newProps, oldProps){
 		for (const [key, value] of Object.entries(newProps)){
 			if (oldProps[key] === newProps[key]) continue;
-			console.log(target, key, value)
 			target.setAttribute(key, value);
 		}
 		for (const [key, value] of Object.entries(oldProps)){
-			if (newProps[key] === undefined) continue;
+			if (oldProps[key] === newProps[key]) continue;
 			target.removeAttribute(key);
 		}
 	}
@@ -146,17 +150,25 @@ function myReact() {
 	function updateChildren(target, newChildren, oldChildren){
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
 		for (let i = maxLength - 1; i >= 0; i--){
-			// console.log("diffdom",target.children[i], target)
+			if (typeof oldChildren[i] === "string" && typeof newChildren[i] === "string"){
+				target.replaceChild = (
+					document.createTextNode(newChildren[i]),
+					target.childNodes[i]);
+				return ;
+			}
+			// else if (typeof oldChildren[i] === string) {
+			// 	target.childNodes[i] 
+			// }
 			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 	}
 
 	//diff on target.children[index]
 	function diffDom(parent, newNode, oldNode, index){
-		console.log("parent index",index, parent.children[index])
-		console.log("parent", parent)
-		console.log("oldNode",oldNode)
-		console.log("newNode",newNode)
+		// console.log("parent index",index, parent ? parent.childNodes[index] : "undefined")
+		// console.log("parent", parent)
+		// console.log("oldNode",oldNode)
+		// console.log("newNode",newNode)
 
 		var element;
 		// error :: 
@@ -165,7 +177,7 @@ function myReact() {
 		// removed :: index --;
 		if (oldNode && !newNode){
 			//NEED :::: remove eventListner??
-			return parent.removeChild(parent.children[index]);
+			return parent.removeChild(parent.childNodes[index]);
 		}
 
 		// created :: index++;
@@ -177,19 +189,19 @@ function myReact() {
 		if (oldNode.tag !== newNode.tag) {
 			parent.replaceChild(
 				createDom(newNode), 
-				parent.children[index]);
+				parent.childNodes[index]);
 		}
 		// same tag ::
 		else {
 			updateProps(
-				parent.children[index],
+				parent.childNodes[index],
 				newNode.props || {},
 				oldNode.props || {});
+			updateChildren(
+				parent.childNodes[index], 
+				newNode.children || [], 
+				oldNode.children || []);
 		}
-		updateChildren(
-			parent.children[index], 
-			newNode.children || [], 
-			oldNode.children || []);
 		return ;
 	}
 
