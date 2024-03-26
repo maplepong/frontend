@@ -32,7 +32,7 @@ function Link(props){
 	return {tag, props};
 }
 
-function myReact(firstnode) {
+function myReact() {
 	const states = [];
     const depsArray = [];
 	let position = 0;
@@ -92,8 +92,6 @@ function myReact(firstnode) {
 		if (!exist(props)) props = {};
 		if (!exist(children)) children = [];
 		if (typeof tag === 'function'){
-            // console.log("tag:",tag);
-            // console.log(props, children);
 			if (children.length > 0){
 				return tag(makeProps(props, children))
 			}
@@ -147,17 +145,16 @@ function myReact(firstnode) {
 	//고쳐줘,,,,
 	function updateChildren(target, newChildren, oldChildren){
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
-		let removed = 0;
-		for (let i = 0; i < maxLength; i++){
-			console.log("diffdom",target.children[i + removed], target)
-			removed += diffDom(target.children[i + removed], newChildren[i + removed], oldChildren[i + removed], i + removed);
+		for (let i = maxLength - 1; i >= 0; i--){
+			// console.log("diffdom",target.children[i], target)
+			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 	}
 
 	//diff on target.children[index]
-	function diffDom(target, newNode, oldNode, index){
-		console.log("target",target)
-		console.log(index);
+	function diffDom(parent, newNode, oldNode, index){
+		console.log("parent index",index, parent.children[index])
+		console.log("parent", parent)
 		console.log("oldNode",oldNode)
 		console.log("newNode",newNode)
 
@@ -168,34 +165,32 @@ function myReact(firstnode) {
 		// removed :: index --;
 		if (oldNode && !newNode){
 			//NEED :::: remove eventListner??
-			target.removeChild(target.children[index]);
-			return 1;
+			return parent.removeChild(parent.children[index]);
 		}
 
 		// created :: index++;
 		else if (!oldNode && newNode) {
-			target.appendChild(createElement(newNode));
-			return 0;
+			return parent.prepend(createDom(newNode));
 		}
 
 		// changed tag ::
 		if (oldNode.tag !== newNode.tag) {
-			target.replaceChild(
-				createElement(newNode), 
-				target.children[index]);
+			parent.replaceChild(
+				createDom(newNode), 
+				parent.children[index]);
 		}
 		// same tag ::
 		else {
-			console.log(target);
 			updateProps(
-				target.children[index],
+				parent.children[index],
 				newNode.props || {},
 				oldNode.props || {});
 		}
-		updateChildren(target, 
+		updateChildren(
+			parent.children[index], 
 			newNode.children || [], 
 			oldNode.children || []);
-		return 0;
+		return ;
 	}
 
 	function addProps(element, node){
@@ -215,8 +210,7 @@ function myReact(firstnode) {
 		if (exist(node.children) && isEmpty(node.children)) {
 			node.children.forEach(child => {
 				if (typeof child === 'function') {
-					element.appendChild(createDom(child()));
-					return 
+					return element.appendChild(createDom(child()));
 				}
 				const childElement = createDom(child); 
 				if (exist(childElement)) 
