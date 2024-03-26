@@ -65,7 +65,7 @@ function myReact() {
 
         if (oldDeps) {
             hasChange = deps.some(
-              (dep, i) => !Object.is(dep, oldDeps[i])
+            	(dep, i) => !Object.is(dep, oldDeps[i])
             );
         }
 
@@ -90,11 +90,9 @@ function myReact() {
 		if (typeof tag === 'function'){
             // console.log("tag:",tag);
             // console.log(props, children);
-			if (children.length > 0){
+			if (children.length > 0)
 				return tag(makeProps(props, children))
-			}
-            else
-			    return tag(props);
+			return tag(props);
 		}
 		else {
 			return ({tag, props, children});
@@ -118,9 +116,6 @@ function myReact() {
 		}
 		// console.log(node);
 		if (!exist(node) && !exist(rootNode)){
-			// console.log("render err");
-			// console.log("node", node)
-			// console.log("node", rootNode)
 			return ;
 		}
 		rootNode = node;
