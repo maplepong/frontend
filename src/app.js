@@ -14,23 +14,21 @@ const setAxios = () => {
 }
 const App = () => {
 	setAxios();
-	return (
-        <div class="app">
+	return <div class="app">
             <Link to= "">
                 <img src ="./asset/design/maplepong.png"></img>
             </Link>
 			<Test />
-            <h1>
+            {/* <h1>
                 Merancendance
             </h1>
             <Login />
             <MyInfo />
-            <SignUp />
-            <button data-route="home">Home</button>
+            <SignUp /> */}
+            {/* <button data-route="home">Home</button>
             <button data-route="login">login</button>
-            <button data-route="signup">SignUp</button>
+            <button data-route="signup">SignUp</button> */}
 	    </div>
-	)
 }
 
 export default App;
