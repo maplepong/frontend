@@ -32,17 +32,6 @@ function Link(props){
 	return {tag, props};
 }
 
-function updateProps(target, newProps, oldProps){
-	for (const [key, value] of Object.entries(newProps)){
-		if (oldProps[key] === newProps[key]) continue;
-		target.setAttribute(key, value);
-	}
-	for (const [key, value] of Object.entries(oldProps)){
-		if (newProps[key] === undefined) continue;
-		target.removeAttribute(key);
-	}
-}
-
 function myReact(firstnode) {
 	const states = [];
     const depsArray = [];
@@ -124,82 +113,89 @@ function myReact(firstnode) {
 		});
 	}
 	
-	function renderVirtual(node){
+	function renderVirtual(newNode){
 		position = 0;
 		const rootNode = document.querySelector("#root");
-		if (!exist(node) && !exist(oldNode)){
+		if (!exist(newNode) && !exist(oldNode)){
 			console.log("renderVirtual err");
-			console.log("node", node)
+			console.log("node", newNode)
 			console.log("node", oldNode)
 			return ;
 		}
 		if (!exist(oldNode)){
-			const dom = createDom(node);
+			const dom = createDom(newNode);
 			rootNode.appendChild(dom);
-			oldNode = node;
+			oldNode = newNode;
 			return;
 		}
-		diffIndex = 0;
-		diffDom(oldNode, node, rootNode);
-		oldNode = node;
+		diffDom(rootNode, newNode, oldNode, 0);
+		oldNode = newNode;
     }
 
-	var diffIndex = 0;
-	function diffDom(oldNode, newNode, parentNode){
-		var index = diffIndex;
+	function updateProps(target, newProps, oldProps){
+		for (const [key, value] of Object.entries(newProps)){
+			if (oldProps[key] === newProps[key]) continue;
+			console.log(target, key, value)
+			target.setAttribute(key, value);
+		}
+		for (const [key, value] of Object.entries(oldProps)){
+			if (newProps[key] === undefined) continue;
+			target.removeAttribute(key);
+		}
+	}
+
+	//고쳐줘,,,,
+	function updateChildren(target, newChildren, oldChildren){
+		const maxLength = Math.max(newChildren.length , oldChildren.length);
+		let removed = 0;
+		for (let i = 0; i < maxLength; i++){
+			console.log("diffdom",target.children[i + removed], target)
+			removed += diffDom(target.children[i + removed], newChildren[i + removed], oldChildren[i + removed], i + removed);
+		}
+	}
+
+	//diff on target.children[index]
+	function diffDom(target, newNode, oldNode, index){
+		console.log("target",target)
+		console.log(index);
 		console.log("oldNode",oldNode)
 		console.log("newNode",newNode)
-		console.log(index);
 
 		var element;
 		// error :: 
-		if (!oldNode && !newNode) return;
+		if (!oldNode && !newNode ) return 0;
 		
 		// removed :: index --;
 		if (oldNode && !newNode){
-			if (parentNode.children.length < index)
-				return;
 			//NEED :::: remove eventListner??
-			parentNode.removeChild(parentNode.children[index]);
-			index--;
-			return;
+			target.removeChild(target.children[index]);
+			return 1;
 		}
 
 		// created :: index++;
 		else if (!oldNode && newNode) {
-			parentNode.appendChild(createElement(newNode));
-			index++;
-			return ;
+			target.appendChild(createElement(newNode));
+			return 0;
 		}
 
 		// changed tag ::
 		if (oldNode.tag !== newNode.tag) {
-			parentNode.replaceChild(
+			target.replaceChild(
 				createElement(newNode), 
-				parentNode.children[index]);
+				target.children[index]);
 		}
 		// same tag ::
 		else {
+			console.log(target);
 			updateProps(
-				parent.childNodes[index],
+				target.children[index],
 				newNode.props || {},
 				oldNode.props || {});
-
 		}
-		var childrenIndex = 0;
-		if (!oldNode.children){
-			addChildren(element, newNode);
-		}
-		else if (oldNode.children && newNode.children){
-			while (oldNode.children[childrenIndex] || newNode.children[childrenIndex]) {
-				diffIndex = childrenIndex;
-				diffDom(oldNode.children[childrenIndex], newNode.children[childrenIndex], element);
-				childrenIndex = diffIndex;
-				childrenIndex++;
-			}
-		}
-		index++;
-		diffIndex = index;
+		updateChildren(target, 
+			newNode.children || [], 
+			oldNode.children || []);
+		return 0;
 	}
 
 	function addProps(element, node){
