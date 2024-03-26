@@ -16,15 +16,18 @@ const App = () => {
     const [ count, setCount ] = useState(0);
     
 	const incre = () => {
-		setCount(count() + 1);
+        console.log(count);
+		setCount(count + 1);
 	}
+    
 	const decre = () => {
-		setCount(count() - 1);
+        console.log(count);
+		setCount(count - 1);
 	}
 
     useEffect(() => {
-        console.log("count has been changed into", count());
-      }, [count()]);
+        console.log("count has been changed into", count);
+        }, [count]);
 
 	return (
         <div class="app">
@@ -44,7 +47,7 @@ const App = () => {
             <button data-route="home">Home</button>
             <button data-route="login">login</button>
             <button data-route="signup">SignUp</button>
-	    </div>
+        </div>
 	)
 }
 

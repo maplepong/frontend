@@ -34,7 +34,6 @@ function Link(props){
 
 function myReact() {
 	const states = [];
-    const depsArray = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let rootNode;
@@ -43,16 +42,15 @@ function myReact() {
 	function useState(initValue) {
 		let currPosition = position;
 		states[currPosition] = states[currPosition] || initValue;
-        const state = () => {
-            return states[currPosition];
-        }
+        const state = states[currPosition];
 		const setState = (nextValue) => {
-            if (states[currPosition] === nextValue)
-                return ;
-            states[currPosition] = nextValue;
+			const retVal = nextValue;
+            states[currPosition] = retVal;
+			console.log('new val: ', states[currPosition]);
+			position++;
 			render(rootNode);
 		}
-        position++;
+		position++;
 		return [state, setState];
 	}
 
@@ -61,12 +59,8 @@ function myReact() {
         const oldDeps = states[currPosition];
         let hasChange = true;
 
-        console.log('oldDeps', oldDeps);
-
         if (oldDeps) {
-            hasChange = deps.some(
-            	(dep, i) => !Object.is(dep, oldDeps[i])
-            );
+            hasChange = deps.some((dep, i) => !Object.is(dep, oldDeps[i]));
         }
 
         if (hasChange) {
@@ -114,10 +108,10 @@ function myReact() {
 		if (prevApp){
 			prevApp.parentNode.removeChild(prevApp);
 		}
-		// console.log(node);
 		if (!exist(node) && !exist(rootNode)){
 			return ;
 		}
+		console.log('root', rootNode, 'node', node);
 		rootNode = node;
 		const root = createDom(rootNode);
 		root.setAttribute("class", "app");
