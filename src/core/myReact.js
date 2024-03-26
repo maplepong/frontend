@@ -33,6 +33,7 @@ function Link(props){
 }
 
 function myReact() {
+	let renderInfo = {root:undefined, rootComponent:undefined};
 	const states = [];
 	let position = 0;
 	const app = document.getElementById("app");
@@ -46,7 +47,7 @@ function myReact() {
 		const setState = (nextValue) => {
 			const retVal = nextValue;
             states[currPosition] = retVal;
-			console.log('new val: ', states[currPosition]);
+			console.log(typeof states[currPosition], states[currPosition]);
 			position++;
 			render(rootNode);
 		}
@@ -111,8 +112,8 @@ function myReact() {
 		if (!exist(node) && !exist(rootNode)){
 			return ;
 		}
-		console.log('root', rootNode, 'node', node);
 		rootNode = node;
+		console.log('root', rootNode, 'node', node);
 		const root = createDom(rootNode);
 		root.setAttribute("class", "app");
 		document.querySelector("#root").prepend(root);
