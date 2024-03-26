@@ -50,7 +50,6 @@ function myReact() {
             if (states[currPosition] === nextValue)
                 return ;
             states[currPosition] = nextValue;
-            const root = createDom(rootNode);
 			render(rootNode);
 		}
         position++;
@@ -84,7 +83,8 @@ function myReact() {
 		}
 	}
 
-	function createElement(tag, props, ...children){
+    // virtual DOM을 만듬
+	function createElement(tag, props, ...children){ 
 		if (!exist(props)) props = {};
 		if (!exist(children)) children = [];
 		if (typeof tag === 'function'){
@@ -93,9 +93,10 @@ function myReact() {
 			if (children.length > 0){
 				return tag(makeProps(props, children))
 			}
-			return tag(props);
+            else
+			    return tag(props);
 		}
-		else{
+		else {
 			return ({tag, props, children});
 		}
 	}
@@ -128,6 +129,7 @@ function myReact() {
 		document.querySelector("#root").prepend(root);
     }
 	
+    // virtual DOM Real DOM으로 바꿈
 	function createDom(node){
 		//error
 		if (typeof node === 'number') node = node.toString();
@@ -140,6 +142,7 @@ function myReact() {
 			// console.log(node)
 		}
 		const element = document.createElement(node.tag);
+
 		// console.log(node);
 		//adding props to element
 		if (exist(node.props)){
