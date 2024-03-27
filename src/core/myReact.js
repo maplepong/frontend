@@ -32,6 +32,13 @@ function Link(props){
 	return {tag, props};
 }
 
+function isEqualFunc(func1, func2) {
+	if (typeof func2 !== "function" ||
+		typeof func1 !== "function" )
+		return false;
+    return func1.toString() === func2.toString();
+}
+
 function myReact(firstNode) {
 	const states = [];
     const depsArray = [];
@@ -43,23 +50,29 @@ function myReact(firstNode) {
 	console.log(firstNode);
 	//init state hook
 	function useState(initValue) {
-		states[position] = states[position] || initValue;
-		console.log("cuur", position)
-		console.log(states[position])
-        const state = () => {
-			return states[position];
-        }
-		const setState = (nextValue) => {
-			console.log("cuur", position)
-			console.log(nextValue)
-            if (states[position] === nextValue)
-                return ;
-            states[position] = nextValue;
-            const root = createDom(oldNode);
+		//need to check
+
+		var index = states.length;
+		var currValue = initValue;
+		function func (nextValue){
+			console.log(state.currValue);
+			if (nextValue === currValue) return;
+			currValue = nextValue;
 			renderVirtual(oldNode);
 		}
-        position++;
-		return [states[position - 1], setState];
+
+		const state = {
+			index: states.length,
+			currValue : initValue,
+			newValue  : null,
+			isChanged : false,
+			setState  : func,
+		}
+		states.push(state);
+		console.log(initValue)
+		if (!state) return [null, null];
+		return [state.currValue, state.setState];
+		// return [states[position - 1], setState];
 	}
 
     function useEffect(callback, deps) {
