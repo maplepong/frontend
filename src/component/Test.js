@@ -1,18 +1,19 @@
 /* @jsx createElement */
-import { createElement, Link } from "../core/myReact.js";
-import { useState, useEffect } from "../core/myReact.js";
+import { createElement,  useState } from "../core/myReact.js";
 
 const Test = () => {
+	console.log("type", useState);
     const [ count, setCount ] = useState(0);
     
 	const incre = () => {
-		console.log(count);
+		console.log("count incre" , count + 1);
 		setCount(count + 1);
-		console.log("count" , count);
+		console.log("count incre" , count);
 	}
 	const decre = () => {
+		console.log("count decre" , count - 1);
 		setCount(count - 1);
-		console.log("count" , count);
+		console.log("count decre" , count);
 	}
 
 	return <div class="test">

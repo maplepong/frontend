@@ -1,3 +1,19 @@
+/* @jsx createElement */
+import createElement from "./Element.js"
+import pathList from "./PathList.js"
+
+function router() {
+	var path = window.location.pathname;
+
+	const route = pathList[path];
+	if (route === undefined) {
+		renderVirtual(<Undefined />);
+	}
+	else {
+		renderVirtual(route);
+	}
+}
+
 function exist(para) {
 	if (typeof para === "undefined" || para === null || para === undefined){
 		return false;
@@ -39,36 +55,33 @@ function isEqualFunc(func1, func2) {
     return func1.toString() === func2.toString();
 }
 
-function myReact(firstNode) {
+function myReact(firstNode, root) {
 	const states = [];
     const depsArray = [];
 	let position = 0;
 	const app = document.getElementById("app");
 	let oldNode;
-	const obj = {states: []};
+	
 
 	console.log(firstNode);
 	//init state hook
 	function useState(initValue) {
 		//need to check
-
-		var index = states.length;
-		var currValue = initValue;
-		function func (nextValue){
-			console.log(state.currValue);
-			if (nextValue === currValue) return;
-			currValue = nextValue;
-			renderVirtual(oldNode);
-		}
-
-		const state = {
+		states.push({
 			index: states.length,
 			currValue : initValue,
 			newValue  : null,
 			isChanged : false,
-			setState  : func,
-		}
-		states.push(state);
+			setState  : function func (nextValue){
+				if (nextValue === state.currValue) return;
+				console.log("cuurVal",state.currValue, nextValue);
+				state.currValue = nextValue;
+				console.log("cuurVal",state.currValue, nextValue);
+				router();
+			}
+		});
+		const state = states[states.length - 1];
+		console.log(state);
 		console.log(initValue)
 		if (!state) return [null, null];
 		return [state.currValue, state.setState];
@@ -95,38 +108,6 @@ function myReact(firstNode) {
         position++;
     }
 
-	function makeProps(props, children){
-		return {
-			...props,
-			children: children.length === 1 ? children[0] : children
-		}
-	}
-
-	function createElement(tag, props, ...children){
-		props = props || {};
-		children = children || [];
-		if (typeof tag === 'function'){
-			if (children.length > 0){
-				// console.log(tag(props));
-				return tag(makeProps(props, children))
-			}
-			// console.log(tag(props));
-			return tag(props);
-		}
-		else{
-			// console.log({tag, props, children});
-			return ({tag, props, children});
-		}
-	}
-
-	function addEvent(target, eventType, selector, callback) {
-		const children = [...document.querySelectorAll(selector)];
-		target.addEventListener(eventType, event => {
-			event.preventDefault();
-			if (!event.target.closest(selector)) return false;
-			callback(event);
-		});
-	}
 	
 	function renderVirtual(newNode){
 		position = 0;
@@ -257,10 +238,9 @@ function myReact(firstNode) {
 		addChildren(element, node);
 		return element;
 	}
-
-	return {createElement, renderVirtual, useState, useEffect, addEvent, createDom};
+	return {renderVirtual, useState, useEffect, createDom};
 }
 
-const  {createElement, renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
+const  {renderVirtual, useState, useEffect, createDom} = myReact();
 
-export {createElement, renderVirtual, useState, useEffect, addEvent, createDom, Link, myReact}
+export {createElement, renderVirtual, useState, useEffect, createDom, Link, myReact}

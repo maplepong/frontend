@@ -1,6 +1,3 @@
-/* @jsx createElement */
-import createElement from "./Element.js"
-import {renderVirtual, useState} from "./myReact.js";
 import Home from "../component/Home.js"
 import Undefined from "../component/Undefined.js"
 import Welcome from "../component/Welcome.js"
@@ -17,16 +14,9 @@ const pathList = {
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
 	"/signup": <SignUp />,
+	"/undefined": <Undefined />,
+	"/welcome": <Welcome />,
 }
 
-export default function router() {
-	var path = window.location.pathname;
 
-	const route = pathList[path];
-	if (route === undefined) {
-		renderVirtual(<Undefined />);
-	}
-	else {
-		renderVirtual(route);
-	}
-}
+export default pathList;

@@ -1,5 +1,5 @@
 /* @jsx createElement */
-import {createDom, addEvent, renderVirtual, myReact} from "./myReact.js";
+import {createDom, renderVirtual, myReact} from "./myReact.js";
 import router  from "./Router.js";
 
 function exist(para) {
@@ -7,7 +7,16 @@ function exist(para) {
 		return false;
 	}
 	return true;
-}	
+}
+
+function addEvent(target, eventType, selector, callback) {
+	const children = [...document.querySelectorAll(selector)];
+	target.addEventListener(eventType, event => {
+		event.preventDefault();
+		if (!event.target.closest(selector)) return false;
+		callback(event);
+	});
+}
 
 class Root{
 	_rootElement;
@@ -18,10 +27,9 @@ class Root{
 	render(jsxNode) {
 		myReact(jsxNode);
 		if (!exist(jsxNode)) {
-			// console.log("render err");
-			// console.log("node", jsxNode)
 			return ;
 		}
+		console.log("this Root", root);
 		addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
 			const route = target.dataset.route;
 			if (route) {
@@ -36,10 +44,6 @@ class Root{
 				history.pushState({}, "", route);
 				router();
 			}} )
-
-        // addEvent(this._rootElement, "click", null, ({ target }) => {
-        //     console.log(target, '123');
-        // })
     
     }
 };
