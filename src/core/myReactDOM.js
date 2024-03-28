@@ -7,12 +7,16 @@ function exist(para) {
 		return false;
 	}
 	return true;
-}	
+}
+const renderEvent = () => {
+	router();
+}
 
 class Root{
 	_rootElement;
 	constructor(rootElement){
 		this._rootElement = rootElement;
+		window.renderEvent = renderEvent;
 	}
 	//first render
 	render(jsxNode) {
@@ -31,11 +35,12 @@ class Root{
 			}} )
 			
 		addEvent(this._rootElement, "click", "a", ({ target }) => {
-			const route = target.closest("a").href;
+			const route = target.dataset.route;
 			if (route) {
-				history.pushState({}, "", route);
+				const newPath = "/" + route;
+				history.pushState({}, "", newPath);
 				router();
-			}} )
+			}})
 
         // addEvent(this._rootElement, "click", null, ({ target }) => {
         //     console.log(target, '123');

@@ -21,6 +21,8 @@ const pathList = {
 export default function router() {
 	var path = window.location.pathname;
 
+	console.log("router called")
+	console.log("app", pathList["/"]);
 	const route = pathList[path];
 	if (route === undefined) {
 		renderVirtual(<Undefined />);
