@@ -15,11 +15,23 @@ const Test = () => {
 		sCount.view();
 	}
 
+	const sText = new useState("test");
+	const testChange = (e) => {
+		e.preventDefault();
+		console.log(textInput);
+		sText.set(document.querySelector("#textInput").value);
+	}
+
 	return <div class="test">
             <p>Test UseState: {sCount}
                 <button onClick={incre}>증가</button>
                 <button onClick={decre}>감소</button>
             </p>
+			<div>
+				<input id="textInput"></input>
+				<button onCilck={testChange}></button>
+				<p>Text is {sText}</p>
+			</div>
 	    </div>
 }
 
