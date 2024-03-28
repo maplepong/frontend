@@ -68,7 +68,7 @@ function myReact(firstNode) {
 		this.changed = false;
 		this._changedValue = this.state;
         const setState = (nextValue) => {
-			if (nextValue === states[index]) return;
+			if (typeof nextValue === "undefined" || nextValue === states[index]) return;
             this._states[this._index] = nextValue;
 			this._changedValue = states[index];
 			this.changed = true;
@@ -89,6 +89,7 @@ function myReact(firstNode) {
 		}
 		this.render = renderState;
 
+		this.callback = undefined;
         // return [states[index], setState];
     }
 
