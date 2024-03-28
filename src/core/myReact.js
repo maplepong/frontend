@@ -1,3 +1,5 @@
+import createElement from "./createElement";
+
 function exist(para) {
 	if (typeof para === "undefined" || para === null || para === undefined){
 		return false;
@@ -39,41 +41,56 @@ function isEqualFunc(func1, func2) {
     return func1.toString() === func2.toString();
 }
 
+// function updateNode(node, state){
+// 	//check by setState
+// 	for (const [key, value] in Object.entries(node.props)){
+// 		if ()
+// 	}
+// }
+
 function myReact(firstNode) {
-	const states = [];
-    const depsArray = [];
-	let position = 0;
-	const app = document.getElementById("app");
-	let oldNode;
-	const obj = {states: []};
+    const states = [];
+	const Effects = [];
+    let position = 0;
+    let oldVNode;
 
-	console.log(firstNode);
-	//init state hook
-	function useState(initValue) {
-		//need to check
+    function useState(initValue) {
+        const index = position;
+        const currentValue = initValue;
+		position++;
 
-		var index = states.length;
-		var currValue = initValue;
-		function func (nextValue){
-			console.log(state.currValue);
-			if (nextValue === currValue) return;
-			currValue = nextValue;
-			renderVirtual(oldNode);
+		if (typeof states[index] === 'undefined') {
+			states[index] = initValue;
 		}
+		this._states = states;
+		this._index = index;
+		this.state = states[index];
+		this.changed = false;
+		this._changedValue = this.state;
+        const setState = (nextValue) => {
+			if (nextValue === states[index]) return;
+            this._states[this._index] = nextValue;
+			this._changedValue = states[index];
+			this.changed = true;
+			// renderVirtual(oldNode, this);
+			window.renderEvent();
+        };
+		console.log(setState);
+		this.set = setState;
 
-		const state = {
-			index: states.length,
-			currValue : initValue,
-			newValue  : null,
-			isChanged : false,
-			setState  : func,
+		const viewState = () => {
+			console.log("state is", this.state);
 		}
-		states.push(state);
-		console.log(initValue)
-		if (!state) return [null, null];
-		return [state.currValue, state.setState];
-		// return [states[position - 1], setState];
-	}
+		this.view = viewState;
+
+		const renderState = () => {
+			this.state = this._changedValue;
+			this.changed = false;
+		}
+		this.render = renderState;
+
+        // return [states[index], setState];
+    }
 
     function useEffect(callback, deps) {
         let position = position;
@@ -95,29 +112,6 @@ function myReact(firstNode) {
         position++;
     }
 
-	function makeProps(props, children){
-		return {
-			...props,
-			children: children.length === 1 ? children[0] : children
-		}
-	}
-
-	function createElement(tag, props, ...children){
-		props = props || {};
-		children = children || [];
-		if (typeof tag === 'function'){
-			if (children.length > 0){
-				// console.log(tag(props));
-				return tag(makeProps(props, children))
-			}
-			// console.log(tag(props));
-			return tag(props);
-		}
-		else{
-			// console.log({tag, props, children});
-			return ({tag, props, children});
-		}
-	}
 
 	function addEvent(target, eventType, selector, callback) {
 		const children = [...document.querySelectorAll(selector)];
@@ -128,24 +122,27 @@ function myReact(firstNode) {
 		});
 	}
 	
-	function renderVirtual(newNode){
+	function renderVirtual(newVNode){
 		position = 0;
 		const rootNode = document.querySelector("#root");
-		if (!exist(newNode) && !exist(oldNode)){
+		// if (state) {
+		// 	checkDiff(oldNode, state);
+		// }
+		if (!exist(newVNode) && !exist(oldVNode)){
 			console.log("renderVirtual err");
-			console.log("node", newNode)
-			console.log("node", oldNode)
+			console.log("node", newVNode)
+			console.log("node", oldVNode)
 			return ;
 		}
-		if (!exist(oldNode)){
-			const dom = createDom(newNode);
+		if (!exist(oldVNode)){
+			const dom = createDom(newVNode);
 			rootNode.appendChild(dom);
-			oldNode = newNode;
+			oldVNode = newVNode;
 			return;
 		}
-		console.log("calling diffdom");
-		diffDom(rootNode, newNode, oldNode, 0);
-		oldNode = newNode;
+		console.log("calling diffdom", newVNode);
+		diffDom(rootNode, newVNode, oldVNode, 0);
+		oldVNode = newVNode;
     }
 
 	function updateProps(target, newProps, oldProps){
@@ -158,31 +155,39 @@ function myReact(firstNode) {
 			target.removeAttribute(key);
 		}
 	}
+	function checkState (target){
+		if (typeof target === 'object' && Object.getPrototypeOf(target).constructor === useState) return true;
+		return false;
+	}
 
 	//고쳐줘,,,,
 	function updateChildren(target, newChildren, oldChildren){
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
 		for (let i = maxLength - 1; i >= 0; i--){
-			if (typeof oldChildren[i] === "string" && typeof newChildren[i] === "string"){
-				target.replaceChild = (
-					document.createTextNode(newChildren[i]),
-					target.childNodes[i]);
-				return ;
+			let newChild;
+			if (checkState(newChildren[i])){
+				if (newChildren[i].changed) newChildren[i].render();
+				newChild = newChildren[i].state;
+				if (checkState(oldChildren[i])){
+					target.replaceChild(
+						document.createTextNode(newChild),
+						target.childNodes[i]);
+					return;
+					}
 			}
-			// else if (typeof oldChildren[i] === string) {
-			// 	target.childNodes[i] 
-			// }
+			else newChild = newChildren[i];
+			if (typeof oldChildren[i] === "string" && typeof newChild === "string"){
+					target.replaceChild(
+						document.createTextNode(newChildren[i]),
+						target.childNodes[i]);
+					return ;
+				}
 			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 	}
 
 	//diff on target.children[index]
 	function diffDom(parent, newNode, oldNode, index){
-		// console.log("parent index",index, parent ? parent.childNodes[index] : "undefined")
-		// console.log("parent", parent)
-		// console.log("oldNode",oldNode)
-		// console.log("newNode",newNode)
-
 		var element;
 		// error :: 
 		if (!oldNode && !newNode ) return 0;
@@ -237,7 +242,14 @@ function myReact(firstNode) {
 				if (typeof child === 'function') {
 					return element.appendChild(createDom(child()));
 				}
-				const childElement = createDom(child); 
+				let childElement;
+				if (checkState(child)){
+					if (child.changed)
+						child.render();
+					childElement = document.createTextNode(child.state);
+				}
+				else 
+					childElement = createDom(child); 
 				if (exist(childElement)) 
 					element.appendChild(childElement);
 			})
@@ -248,7 +260,7 @@ function myReact(firstNode) {
 		if (typeof node === 'number') node = node.toString();
 		if (typeof node === 'string') return document.createTextNode(node);
 		
-		//create each element
+		//create each vnode
 		const element = document.createElement(node.tag);
 		//adding props to element
 		addProps(element, node);
@@ -258,9 +270,9 @@ function myReact(firstNode) {
 		return element;
 	}
 
-	return {createElement, renderVirtual, useState, useEffect, addEvent, createDom};
+	return {renderVirtual, useState, useEffect, addEvent, createDom};
 }
 
-const  {createElement, renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
+const  { renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
 
-export {createElement, renderVirtual, useState, useEffect, addEvent, createDom, Link, myReact}
+export {renderVirtual, useState, useEffect, addEvent, createDom, createElement, Link, myReact}
