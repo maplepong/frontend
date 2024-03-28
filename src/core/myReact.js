@@ -50,38 +50,35 @@ function isEqualFunc(func1, func2) {
 
 function myReact(firstNode) {
     const states = [];
-	const Effects = [];
     let position = 0;
+	const newStates = [];
+	const callbacks = [];
+	const renderQueue = [];
     let oldVNode;
 
     function useState(initValue) {
         const index = position;
         const currentValue = initValue;
 		position++;
-
+		console.log("state");
+		console.trace();
 		if (typeof states[index] === 'undefined') {
 			states[index] = initValue;
+			newStates[index] = initValue;
 		}
-		this._states = states;
-		this._index = index;
 		this.state = states[index];
 		this.changed = false;
 		this._changedValue = this.state;
         const setState = (nextValue) => {
 			if (typeof nextValue === "undefined" || nextValue === states[index]) return;
-            this._states[this._index] = nextValue;
+            states[index] = nextValue;
 			this._changedValue = states[index];
 			this.changed = true;
 			// renderVirtual(oldNode, this);
 			window.renderEvent();
         };
-		console.log(setState);
 		this.set = setState;
 
-		const viewState = () => {
-			console.log("state is", this.state);
-		}
-		this.view = viewState;
 
 		const renderState = () => {
 			this.state = this._changedValue;
@@ -90,13 +87,9 @@ function myReact(firstNode) {
 		this.render = renderState;
 
 		this.callback = undefined;
-        // return [states[index], setState];
     }
 
     function useEffect(callback, deps) {
-        let position = position;
-        const oldDeps = states[position];
-        let hasChange = true;
 
         console.log('oldDeps', oldDeps);
 
@@ -144,6 +137,7 @@ function myReact(firstNode) {
 		console.log("calling diffdom", newVNode);
 		diffDom(rootNode, newVNode, oldVNode, 0);
 		oldVNode = newVNode;
+		console.log(states);
     }
 
 	function updateProps(target, newProps, oldProps){

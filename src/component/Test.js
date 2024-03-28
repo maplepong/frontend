@@ -7,12 +7,9 @@ const Test = () => {
     
 	const incre = () => {
 		sCount.set(sCount.state + 1);
-		sCount.view();
 	}
 	const decre = () => {
-		console.log(sCount)
 		sCount.set(sCount.state - 1);
-		sCount.view();
 	}
 
 	const sText = new useState("test");
