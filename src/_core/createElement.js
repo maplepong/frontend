@@ -23,4 +23,4 @@ function createElement(tag, props, ...children){
 	}
 }
 
-export default createElement
+export default createElement;
