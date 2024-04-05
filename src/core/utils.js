@@ -11,9 +11,9 @@ export function exist(para) {
 //for object check is empty?
 export function isEmptyObj(para){
 	if (typeof para === "object"){
-		if (para.length === 0 || typeof para[0] === "undefined")
-			{return false;}
+		if (para.length === 0)
+			{return true;}
 	}
-	return true;
+	return false;
 }
 

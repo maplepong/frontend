@@ -8,7 +8,7 @@ import "./css/index.css";
 import Test from "./component/Test.js"
 
 const setAxios = () => {
-	axios.defaults.baseURL = "http://localhost:8000/";
+	// axios.defaults.baseURL = "http://localhost:8000/";
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
 	// axios.defauls.timeout = 1000;
 }

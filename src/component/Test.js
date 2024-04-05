@@ -11,7 +11,7 @@ const Test = () => {
 		console.log(count);
 	}
 	const decre = () => {
-		console.log(count);
+		console.log(count -1);
 		setCount(count - 1);
 		console.log(count);
 	}
