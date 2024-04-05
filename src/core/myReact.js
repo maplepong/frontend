@@ -1,23 +1,7 @@
-import createElement from "./createElement";
+import fiberNode from "./fiberNode.js";
+import { exist } from "./utils.js"
 
-function exist(para) {
-	if (typeof para === "undefined" || para === null || para === undefined){
-		return false;
-	}
-	if (typeof para === "string" && para.isEmpty)
-		return false;
-	return true;
-}	
-
-function isEmpty(para){
-	if (typeof para === "object"){
-		if (para.length === 0 || typeof para[0] === "undefined")
-			{return false;}
-	}
-	return true;
-}
-
-function Link(props){
+export function Link(props){
 	// console.log(props)
 	const tag = "a"
 	const href = props["to"];
@@ -34,240 +18,64 @@ function Link(props){
 	return {tag, props};
 }
 
-function isEqualFunc(func1, func2) {
-	if (typeof func2 !== "function" ||
-		typeof func1 !== "function" )
-		return false;
-    return func1.toString() === func2.toString();
+function makeProps(props, children){
+	return {
+		...props,
+		children: children.length === 1 ? children[0] : children
+	}
 }
 
-// function updateNode(node, state){
-// 	//check by setState
-// 	for (const [key, value] in Object.entries(node.props)){
-// 		if ()
-// 	}
-// }
+const myReact = {
+	enrenderComponent : [], //component to render, added when useState/setState calls.
+	enrenderQueue : [], // 
+	callback : [], // 
+	virtualDOM : null,  //root of fiberNode
+	currentFiberNode : null,
 
-function myReact(firstNode) {
-    const states = [];
-    let position = 0;
-	const newStates = [];
-	const callbacks = [];
-	const renderQueue = [];
-    let oldVNode;
-
-    function useState(initValue) {
-        const index = position;
-        const currentValue = initValue;
-		position++;
-		console.log("state");
-		console.trace();
-		if (typeof states[index] === 'undefined') {
-			states[index] = initValue;
-			newStates[index] = initValue;
-		}
-		this.state = states[index];
-		this.changed = false;
-		this._changedValue = this.state;
-        const setState = (nextValue) => {
-			if (typeof nextValue === "undefined" || nextValue === states[index]) return;
-            states[index] = nextValue;
-			this._changedValue = states[index];
-			this.changed = true;
-			// renderVirtual(oldNode, this);
-			window.renderEvent();
-        };
-		this.set = setState;
-
-
-		const renderState = () => {
-			this.state = this._changedValue;
-			this.changed = false;
-		}
-		this.render = renderState;
-
-		this.callback = undefined;
-    }
-
-    function useEffect(callback, deps) {
-
-        console.log('oldDeps', oldDeps);
-
-        if (oldDeps) {
-            hasChange = deps.some(
-              (dep, i) => !Object.is(dep, oldDeps[i])
-            );
-        }
-
-        if (hasChange) {
-            callback();
-            states[position] = deps;
-        }
-        position++;
-    }
-
-
-	function addEvent(target, eventType, selector, callback) {
-		const children = [...document.querySelectorAll(selector)];
-		target.addEventListener(eventType, event => {
-			event.preventDefault();
-			if (!event.target.closest(selector)) return false;
-			callback(event);
-		});
-	}
-	
-	function renderVirtual(newVNode){
+	render : async function render(newVirtualDOM){
 		position = 0;
-		const rootNode = document.querySelector("#root");
-		// if (state) {
-		// 	checkDiff(oldNode, state);
-		// }
-		if (!exist(newVNode) && !exist(oldVNode)){
-			console.log("renderVirtual err");
-			console.log("node", newVNode)
-			console.log("node", oldVNode)
-			return ;
+		if (!this.VirtualDOM) { //first Render
+			this.virtualDOM = newfiberNode.render();
+			await myReactDOM.render(this.virtualDOM);
 		}
-		if (!exist(oldVNode)){
-			const dom = createDom(newVNode);
-			rootNode.appendChild(dom);
-			oldVNode = newVNode;
-			return;
-		}
-		console.log("calling diffdom", newVNode);
-		diffDom(rootNode, newVNode, oldVNode, 0);
-		oldVNode = newVNode;
-		console.log(states);
-    }
-
-	function updateProps(target, newProps, oldProps){
-		for (const [key, value] of Object.entries(newProps)){
-			if (oldProps[key] === newProps[key]) continue;
-			target.setAttribute(key, value);
-		}
-		for (const [key, value] of Object.entries(oldProps)){
-			if (oldProps[key] === newProps[key]) continue;
-			target.removeAttribute(key);
-		}
-	}
-	function checkState (target){
-		if (typeof target === 'object' && Object.getPrototypeOf(target).constructor === useState) return true;
-		return false;
-	}
-
-	//고쳐줘,,,,
-	function updateChildren(target, newChildren, oldChildren){
-		const maxLength = Math.max(newChildren.length , oldChildren.length);
-		for (let i = maxLength - 1; i >= 0; i--){
-			let newChild;
-			if (checkState(newChildren[i])){
-				if (newChildren[i].changed) newChildren[i].render();
-				newChild = newChildren[i].state;
-				if (checkState(oldChildren[i])){
-					target.replaceChild(
-						document.createTextNode(newChild),
-						target.childNodes[i]);
-					return;
-					}
-			}
-			else newChild = newChildren[i];
-			if (typeof oldChildren[i] === "string" && typeof newChild === "string"){
-					target.replaceChild(
-						document.createTextNode(newChildren[i]),
-						target.childNodes[i]);
-					return ;
-				}
-			diffDom(target, newChildren[i], oldChildren[i], i);
-		}
-	}
-
-	//diff on target.children[index]
-	function diffDom(parent, newNode, oldNode, index){
-		var element;
-		// error :: 
-		if (!oldNode && !newNode ) return 0;
-		
-		// removed :: index --;
-		if (oldNode && !newNode){
-			//NEED :::: remove eventListner??
-			return parent.removeChild(parent.childNodes[index]);
-		}
-
-		// created :: index++;
-		else if (!oldNode && newNode) {
-			return parent.prepend(createDom(newNode));
-		}
-
-		// changed tag ::
-		if (oldNode.tag !== newNode.tag) {
-			parent.replaceChild(
-				createDom(newNode), 
-				parent.childNodes[index]);
-		}
-		// same tag ::
 		else {
-			updateProps(
-				parent.childNodes[index],
-				newNode.props || {},
-				oldNode.props || {});
-			updateChildren(
-				parent.childNodes[index], 
-				newNode.children || [], 
-				oldNode.children || []);
+			diffDOM(newVirtualDOM, this.virtualDOM);
+			await myReactDOM.reconciliation(this.enrenderQueue);
+			this.enrenderQueue = [];
 		}
-		return ;
-	}
-
-	function addProps(element, node){
-		if (exist(node.props)){
-			Object.entries(node.props).forEach(([key, value]) => {
-				if (key.slice(0, 2) === 'on') {
-					element.onclick = value;
-				}
-				else {
-					element.setAttribute(key, value);
-				}
-			})
-		}
-	}
+		this.callback.forEach((f) => f());
+	},
 	
-	function addChildren(element, node){
-		if (exist(node.children) && isEmpty(node.children)) {
-			node.children.forEach(child => {
-				if (typeof child === 'function') {
-					return element.appendChild(createDom(child()));
-				}
-				let childElement;
-				if (checkState(child)){
-					if (child.changed)
-						child.render();
-					childElement = document.createTextNode(child.state);
-				}
-				else 
-					childElement = createDom(child); 
-				if (exist(childElement)) 
-					element.appendChild(childElement);
-			})
+	createElement : function createElement(tag, props, ...children){
+		const vNode = new fiberNode();
+		this.currentFiberNode = vNode; //tracking which Fiber is on rendering
+		props = props || {};
+		children = children || [];
+		if (typeof tag === 'function'){
+			if (children.length > 0){
+				props = makeProps(props, children)
+			}
+			vNode.instance = (tag(props));
 		}
-	}
-	
-	function createDom(node){
-		if (typeof node === 'number') node = node.toString();
-		if (typeof node === 'string') return document.createTextNode(node);
-		
-		//create each vnode
-		const element = document.createElement(node.tag);
-		//adding props to element
-		addProps(element, node);
-
-		// add children element
-		addChildren(element, node);
-		return element;
-	}
-
-	return {renderVirtual, useState, useEffect, addEvent, createDom};
+		else{
+			vNode.instance = {tag, props, children};
+		}
+		this.currentFiberNode = null;
+		return vNode;
+	},
 }
 
-const  { renderVirtual, useState, useEffect, addEvent, createDom} = myReact();
+export function useState(initValue){
+	const fiber = myReact.currentFiberNode;
+	const i = fiber.position;
+	fiber.position++;
+	fiber.state[i] = fiber.state[i] || initValue; 
+	const setState = (value) => {
+		if (fiber.state[i] === value)
+			return console.log("setState err-value same-",value);
+		fiber.state[i] = value;
+	}
+	return [fiber.state[i], setState];
+}
 
-export {renderVirtual, useState, useEffect, addEvent, createDom, createElement, Link, myReact}
+export default myReact

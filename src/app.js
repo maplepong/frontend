@@ -1,10 +1,10 @@
-/* @jsx createElement */
-import Login from "./component/Login.js";
-import MyInfo from "./component/MyInfo.js";
-import { createElement, Link } from "./core/myReact.js";
-import SignUp from "./component/SignUp.js";
+/* @jsx React.createElement */
+// import Login from "./component/Login.js";
+// import MyInfo from "./component/MyInfo.js";
+import React, { Link } from "./core/myReact.js";
+import myReactDOM from "./core/myReactDOM.js";
+// import SignUp from "./component/SignUp.js";
 import "./css/index.css";
-import { useState, useEffect } from "./core/myReact.js";
 import Test from "./component/Test.js"
 
 const setAxios = () => {

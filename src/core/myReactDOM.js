@@ -1,71 +1,69 @@
-/* @jsx createElement */
-import {createDom, addEvent, renderVirtual, myReact} from "./myReact.js";
-import router  from "./Router.js";
+import myReact from "./myReact";
+import { exist, isEmptyObj } from "./utils.js"
 
-function exist(para) {
-	if (typeof para === "undefined" || para === null || para === undefined){
-		return false;
+
+function addProps(node, fNode){
+	if (exist(fNode.props)){
+		Object.entries(fNode.props).forEach(([key, value]) => {
+			if (key.slice(0, 2) === 'on') {
+				node.onclick = value;
+			}
+			else {
+				node.setAttribute(key, value);
+			}
+		})
 	}
-	return true;
-}
-const renderEvent = () => {
-	router();
 }
 
-class Root{
-	_rootElement;
-	constructor(rootElement){
-		this._rootElement = rootElement;
-		window.renderEvent = renderEvent;
+function addChildren(node, fNode){
+	if (exist(fNode.children) && isEmptyObj(fNode.children)) {
+		fNode.children.forEach(child => {
+			if (typeof child === 'function') {
+				return node.appendChild(createDOM(child()));
+			}
+			let childNode;
+			if (checkState(child)){
+				if (child.changed)
+					child.render();
+				childNode = document.createTextNode(child.state);
+			}
+			else 
+				childNode = createDOM(child); 
+			if (exist(childNode)) 
+				node.appendChild(childNode);
+		})
 	}
-	//first render
-	render(jsxNode) {
-		myReact(jsxNode);
-		if (!exist(jsxNode)) {
-			// console.log("render err");
-			// console.log("node", jsxNode)
-			return ;
-		}
-		addEvent(this._rootElement, "click", "[data-route]", ({ target }) => {
-			const route = target.dataset.route;
-			if (route) {
-				const newPath = "/" + route;
-				history.pushState({}, "", newPath);
-				router();
-			}} )
-			
-		addEvent(this._rootElement, "click", "a", ({ target }) => {
-			const route = target.dataset.route;
-			if (route) {
-				const newPath = "/" + route;
-				history.pushState({}, "", newPath);
-				router();
-			}})
+}
 
-        // addEvent(this._rootElement, "click", null, ({ target }) => {
-        //     console.log(target, '123');
-        // })
-    
-    }
-};
 
-class MyReactDOM{
+
+function createDOM(fNode) {
+	if (typeof fNode === 'number') fNode = fNode.toString();
+	if (typeof fNode === 'string') return document.createTextNode(node);
+	console.log(fNode.instance);
+	const node = document.createElement(fNode.instance.tag);
+
+	addProps(node, fNode);
+
+	addChildren(node, fNode);
+	
+	return node;
+}
+
+export class Root {
+	rootNode;
+	app;
+	render(fNode){ //first Render
+		const DOM = createDOM(fNode);
+	}
+	reconciliate(changed){} // changed 어떻게 전달할지?
+}
+export default class myReactDOM {
 	root;
-	static createRoot(rootElement){
-		// 초기 페이지 로드 시 라우터 호출
-		document.addEventListener("DOMContentLoaded", () => {
-			window.addEventListener("routeChange", router);
-			window.addEventListener("popstate", router);
-			router();
-		});
-		this.root = new Root(rootElement);
-		if (!exist(this.root)){
-			console.error("ROOT: cannot find");
-			return undefined;
-		}
+	static createRoot(rootNode){
+		this.root = new Root;
+		this.root.rootNode = rootNode;
+		this.myReact = myReact;
 		return this.root;
 	}
-	
 }
-
-export {MyReactDOM, Root};

@@ -1,6 +1,6 @@
-/* @jsx React.createElement */
-
-import React, { useState } from "../core/myReact.js";
+/* @jsx createElement */
+import { createElement, Link } from "../core/myReact.js";
+import { useState, useEffect } from "../core/myReact.js";
 
 const Test = () => {
     const [count, setCount] = useState(0);
