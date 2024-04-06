@@ -12,6 +12,8 @@ export default class fiberNode {
 		this.instance = null;
 		this.changed = false;
 		this.changedState = [];
+
+		this.isEvent = false
     }
 	getInfo(oldFiber){
 		this.stateNode = oldFiber.stateNode;
@@ -24,6 +26,9 @@ export default class fiberNode {
 		oldFiber.changedState = [];
 		this.changed = oldFiber.changed;
 		oldFiber.changed = false;
+		
+
+		this.isEvent = oldFiber.isEvent;
 	}
 
     render(parentNode) { // setting fiberNode values, not real rendering
