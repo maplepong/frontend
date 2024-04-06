@@ -15,8 +15,8 @@ function addProps(node, fNode){
 	if (exist(fNode.props) && !isEmptyObj(fNode.props)){
 		Object.entries(fNode.props).forEach(([key, value]) => {
 			if (key.slice(0, 2) === 'on') {
-				// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-				addEvent(node,"click",null, value)
+				node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
+				// addEvent(node,"click",null, value)
 			}
 			else {
 				node.setAttribute(key, value);
@@ -52,35 +52,22 @@ function createDOM(fNode) {
 	return node;
 }
 
-/*
-	queue: 바뀐 fNode들의 array
- */
-// function locateDOM(node, queue){
-// 	for (fNode in queue){
-// 		if (fNode.stateNode === node){
-// 			diffDOM(node, fNode);
-// 			queue.remove(fNode);
-// 		}
-// 	}
-// 	for (child in node.children){
-// 		locateDOM(child, queue);
-// 	}
-// }
-
-// function diffDOM(node, fNode){
-// 	if (node.type !== fNode.tag) {
-		
-// 		node = document.createElement(fNode.tag);
-// 	}
-// }
 function updateProps(target, newProps, oldProps){
 	for (const [key, value] of Object.entries(newProps)){
-		if (oldProps[key] === newProps[key]) continue;
-		target.setAttribute(key, value);
+		if (key.slice(0, 2) === 'on') {
+			target.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
+			// addEvent(target,"click",null, value);
+		}
+		else if (oldProps[key] === newProps[key]) continue;
+		else target.setAttribute(key, value);
 	}
 	for (const [key, value] of Object.entries(oldProps)){
+		// if (key.slice(0, 2) === 'on') {
+		// 	// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
+		// 	target.removeEventListener("click", value);
+		// }
 		if (oldProps[key] === newProps[key]) continue;
-		target.removeAttribute(key);
+		else target.removeAttribute(key);
 	}
 }
 function updateChildren(target, newChildren, oldChildren){
@@ -107,6 +94,14 @@ function diffDom(parent, newfNode, oldfNode, index){
 	// removed :: index --;
 	if (oldfNode && !newfNode){
 		//NEED :::: remove eventListner??
+		if (oldfNode.isEvent){
+			// Object.entries(oldfNode.props).forEach(([key, value]) => {
+			// 	if (key.slice(0, 2) === 'on') {
+			// 		// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
+			// 		parent.childNodes[index].removeEventListener("click", value);
+			// 	}
+			// })
+		}
 		return parent.removeChild(parent.childNodes[index]);
 	}
 
@@ -123,6 +118,8 @@ function diffDom(parent, newfNode, oldfNode, index){
 	}
 	// same tag ::
 	else {
+		if (newfNode.tag === "button" )
+			console.log(newfNode.props);
 		updateProps(
 			parent.childNodes[index],
 			newfNode.props || {},
@@ -152,7 +149,7 @@ export class Root {
 	// 	diffDOM(this.DOM, enrenderQueue);
 	// }
 	updateDOM(newFiberRoot){
-		console.log("HEEHEH", newFiberRoot);
+		// console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
 	}
 	erase(){
