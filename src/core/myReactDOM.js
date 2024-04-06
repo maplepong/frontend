@@ -11,7 +11,7 @@ function addEvent(target, eventType, selector, callback) {
 }
 
 function addProps(node, fNode){
-	console.log("tag", fNode.tag, exist(fNode.props), !isEmptyObj(fNode.props))
+	//console.log("tag", fNode.tag, exist(fNode.props), !isEmptyObj(fNode.props))
 	if (exist(fNode.props) && !isEmptyObj(fNode.props)){
 		Object.entries(fNode.props).forEach(([key, value]) => {
 			if (key.slice(0, 2) === 'on') {
@@ -28,7 +28,7 @@ function addProps(node, fNode){
 function addChildren(node, fNode){
 	if (exist(fNode.children) && !isEmptyObj(fNode.children)) {
 		fNode.children.forEach(child => {
-			console.log(child);
+			//console.log(child);
 			if (typeof child === 'number') 
 				child = child.toString();
 			if (typeof child === 'string'){
@@ -44,7 +44,7 @@ function addChildren(node, fNode){
 
 
 function createDOM(fNode) {
-	// console.log(fNode);
+	// //console.log(fNode);
 	const node = document.createElement(fNode.tag);
 	fNode.stateNode = node;
 	addProps(node, fNode);
@@ -119,7 +119,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 	// same tag ::
 	else {
 		if (newfNode.tag === "button" )
-			console.log(newfNode.props);
+			//console.log(newfNode.props);
 		updateProps(
 			parent.childNodes[index],
 			newfNode.props || {},
@@ -149,7 +149,7 @@ export class Root {
 	// 	diffDOM(this.DOM, enrenderQueue);
 	// }
 	updateDOM(newFiberRoot){
-		// console.log("HEEHEH", newFiberRoot);
+		// //console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
 	}
 	erase(){

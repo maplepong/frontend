@@ -3,7 +3,7 @@ import myReactDOM from "./myReactDOM.js";
 import { exist, isEmptyObj } from "./utils.js"
 
 export function Link(props){
-	// console.log(props)
+	// //console.log(props)
 	const tag = "a"
 	const href = props["to"];
 	if (exist(href))
@@ -48,6 +48,7 @@ const myReact = {
 		this.fiberRoot = newFiberRoot;
 		this.enrenderQueue = [];
 		}
+		console.log(this.callback);
 		this.callback.forEach((f) => f());
 	},
 
@@ -105,14 +106,14 @@ const myReact = {
 		const fiber = new fiberNode();
 		//new fiber state value update && copy values of old fiber
 		//if fiber changed? call instance
-		console.log("state", fiber.state);
+		//console.log("state", fiber.state);
 		fiber.getInfo(oldfiber);
 		if (fiber.changed){
-			console.log("changedState", fiber.changedState)
+			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
-				console.log(d)
+				//console.log(d)
 				fiber.state[d.i] = d.value;
-				console.log("fiber updated state" , fiber.state);
+				//console.log("fiber updated state" , fiber.state);
 			})
 			fiber.changedState = [];
 			fiber.changed = false;
@@ -134,7 +135,7 @@ const myReact = {
 
 			})
 		}
-		console.log(fiber);
+		//console.log(fiber);
 		return fiber;
 	},
 
@@ -152,20 +153,27 @@ export function useState(initValue){
 	const fiber = window.currentFiberNode;
 	const i = fiber.position;
 	fiber.position++;
-	// console.log("useState", fiber.state[i]);
+	// //console.log("useState", fiber.state[i]);
 	fiber.state[i] = fiber.state[i] || initValue;
 	const setState = (value) => {
 		if (fiber.state[i] === value)
-			return console.log("setState err-value same-",value);
+			return //console.log("setState err-value same-",value);
 		fiber.changedState.push({i, value});
 		myReact.enrenderComponent.push(fiber);
 		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
 		fiber.changed = true;
 		myReact.render();
 		//render, how I can get the infomation of current page?
-		// console.log("setState", fiber);
+		// //console.log("setState", fiber);
 	}
 	return [fiber.state[i], setState];
+}
+
+export function useEffect(callback, deps){
+	const fiber = window.currentFiberNode;
+	if (!deps || isEmptyObj(deps)){
+		return myReact.callback.push(callback);
+	}
 }
 
 export default myReact
