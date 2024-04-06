@@ -1,6 +1,6 @@
 /* @jsx React.createElement */
 
-import React, { useState } from "../core/myReact.js";
+import React, { useState, useEffect } from "../core/myReact.js";
 
 const Test = () => {
     const [count, setCount] = useState(0);
@@ -22,6 +22,11 @@ const Test = () => {
 		console.log("textInput", document.querySelector("#textInput").value);
 		setText(document.querySelector("#textInput").value);
 	}
+
+	const callbackTest = () => {
+		console.log("callllllllbackkkkkkk");
+	}
+	useEffect(callbackTest);
 
 	return <div class="test">
             <p>Test UseState: {count}
