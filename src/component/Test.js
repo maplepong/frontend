@@ -16,23 +16,23 @@ const Test = () => {
 		console.log(count);
 	}
 
-	// const sText = new useState("test");
-	// const testChange = (e) => {
-	// 	e.preventDefault();
-	// 	console.log(textInput);
-	// 	sText.set(document.querySelector("#textInput").value);
-	// }
+	const [text, setText] = useState("test");
+	const testChange = (e) => {
+		e.preventDefault();
+		console.log("textInput", document.querySelector("#textInput").value);
+		setText(document.querySelector("#textInput").value);
+	}
 
 	return <div class="test">
             <p>Test UseState: {count}
                 <button onClick={incre}>증가</button>
                 <button onClick={decre}>감소</button>
             </p>
-			{/* <div>
+			<div>
 				<input id="textInput"></input>
 				<button onCilck={testChange}></button>
-				<p>Text is {sText}</p>
-			</div> */}
+				<p>Text is{text}</p>
+			</div>
 	    </div>
 }
 
