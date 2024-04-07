@@ -1,6 +1,6 @@
 import fiberNode from "./fiberNode.js";
 import myReactDOM from "./myReactDOM.js";
-import { exist, isEmptyObj } from "./utils.js"
+import { exist, isEmptyObj, isEqualArray } from "./utils.js"
 
 export function Link(props){
 	// //console.log(props)
@@ -29,7 +29,7 @@ function makeProps(props, children){
 const myReact = {
 	enrenderComponent : [],
 	enrenderQueue : [], //what is changed {changedhow, component, props}
-	callback : [], // 
+	callback : [], // will be called after reRender
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
 
@@ -49,7 +49,17 @@ const myReact = {
 		this.enrenderQueue = [];
 		}
 		console.log(this.callback);
-		this.callback.forEach((f) => f());
+		// 1. call callback
+		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
+		// 3. empty the callback arr
+		// f ->  {callback, fiber.willUnmount} 
+		this.callback.forEach((f) => {
+			f.willUnmount.forEach((cleanup) => cleanup());
+			f.willUnmount = [];
+			console.log(f);
+			const cleanup = f.callback();
+			cleanup ? f.willUnmount.push(cleanup) : null });
+		this.callback = [];
 	},
 
 	erase : function erase() {
@@ -82,26 +92,6 @@ const myReact = {
 		return fiber;
 	},
 
-	// code: updates fiber by call instance function
-	// reRender : function (fiber) {
-	// 	if (fiber === undefined) return;
-	// 	if (fiber.changed === true){
-	// 		window.currentFiberNode = fiber;
-	// 		fiber.position = 0;
-	// 		const instance = fiber.instance(fiber.props);
-	// 		//삭제해야하는거 챙겨야할수도??
-	// 		fiber.tag = instance.tag;
-	// 		fiber.props = instance.props;
-	// 		fiber.children = instance.children;
-	// 		fiber.changed = false;
-	// 		window.currentFiberNode = null;
-	// 	}
-	// 	else {
-	// 		fiber.children.forEach((child) => {
-	// 			this.reRender(child);
-	// 		})
-	// 	}
-	// },
 	reRender : function (oldfiber) {
 		const fiber = new fiberNode();
 		//new fiber state value update && copy values of old fiber
@@ -151,8 +141,9 @@ const myReact = {
 
 export function useState(initValue){
 	const fiber = window.currentFiberNode;
-	const i = fiber.position;
-	fiber.position++;
+	console.log(fiber);
+	const i = fiber.statePosition;
+	fiber.statePosition++;
 	// //console.log("useState", fiber.state[i]);
 	fiber.state[i] = fiber.state[i] || initValue;
 	const setState = (value) => {
@@ -169,11 +160,50 @@ export function useState(initValue){
 	return [fiber.state[i], setState];
 }
 
+/*
+	callback -> return f is cleanup function, use carefully
+	cleanup calls when :
+	1. idk..... will update this later
+*/
 export function useEffect(callback, deps){
 	const fiber = window.currentFiberNode;
-	if (!deps || isEmptyObj(deps)){
-		return myReact.callback.push(callback);
+	console.log(fiber);
+	const i = fiber.effectPosition;
+	fiber.effectPosition++;
+	fiber.useEffect[i] = fiber.useEffect[i] || {};
+	//check if fiber has this callback as use
+	if (!fiber.useEffect[i]){ //first call of this useState
+		fiber.useEffect[i].callback = callback;
+		fiber.useEffect[i].deps = deps;
+		fiber.useEffect[i].cleanup = null;
 	}
+	//if cleanup exist -> runs at
+	// 1. before reRender 
+	// 2. before unMount this component
+	else if (fiber.useEffect[i].cleanup) {
+		fiber.useEffect[i].cleanup();
+	}
+
+	/* 	
+	
+	check if callback need to queue
+	1. no deps -> call for one time, erase useEffect
+	2. dep || func change -> enqueue callback,
+	if return(cleanup) exist, add to fiber obj...
+	
+	after calling callback, if cleanUp exist,
+	save cleanUp as a 3rd value.
+	
+	*/
+
+	if (!deps || isEmptyObj(deps)){
+		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+	}
+	else if (!isEqualArray(fiber.useEffect, deps))
+	//after first call, check if dep has changed
+		myReact.callback.push({callback, willUnmount: fiber.willUnmount});	
+	
+	fiber.useEffect = {callback, deps, cleanup : null};
 }
 
 export default myReact

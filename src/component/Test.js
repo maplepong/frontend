@@ -26,7 +26,7 @@ const Test = () => {
 	const callbackTest = () => {
 		console.log("callllllllbackkkkkkk");
 	}
-	useEffect(callbackTest);
+	useEffect(callbackTest, [count]);
 
 	return <div class="test">
             <p>Test UseState: {count}
