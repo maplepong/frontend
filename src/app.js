@@ -12,6 +12,7 @@ const setAxios = () => {
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
 	// axios.defauls.timeout = 1000;
 }
+
 const App = () => {
 	setAxios();
 	return <div class="app">

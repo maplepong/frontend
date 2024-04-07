@@ -9,6 +9,7 @@ import Home from "../component/Home.js"
 // import MyInfo from "../component/MyInfo.js"
 // import ApiLogin from "../component/ApiLogin.js"
 // import SignUp from "../component/SignUp.js"
+import GameContainer from "../component/GameContainer.js"
 
 const pathList = {
 	"/": <App />,
@@ -17,6 +18,7 @@ const pathList = {
 	// "/myinfo": <MyInfo />,
 	// "/api-login": <ApiLogin />,
 	// "/signup": <SignUp />,
+	"/game" : <GameContainer />,
 }
 
 export default function router() {
