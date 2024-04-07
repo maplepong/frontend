@@ -1,4 +1,5 @@
-import myReact from "./myReact";
+import myReact from "./myReact.js";
+import router from "./Router.js";
 import { exist, isEmptyObj } from "./utils.js"
 
 function addEvent(target, eventType, selector, callback) {
@@ -129,39 +130,53 @@ function diffDom(parent, newfNode, oldfNode, index){
 	return ;
 }
 
-export class Root {
-	rootNode;
-	DOM;
-	fiberRoot;
-	render(fNode){ //just send fNode to myReact
-		myReact.render(fNode);
-	}
-	initDOM(fNode){
+function createMyReactDOM (){
+	return {
+	rootNode : document.querySelector("#root"),
+	DOM : null,
+	fiberRoot: null,
+
+	initDOM : function initDOM(fNode){
+		document.addEventListener("DOMContentLoaded", () => {
+			window.addEventListener("routeChange", router);
+			window.addEventListener("popstate", router);
+		});
+		if (!exist(this.rootNode)){
+			return console.error("ROOT: cannot find");
+		}
+		addEvent(this.rootNode, "click", "[data-route]", ({ target }) => {
+			const route = target.dataset.route;
+			if (route) {
+				const newPath = "/" + route;
+				history.pushState({}, "", newPath);
+				router();
+			}} )
+			
+		addEvent(this.rootNode, "click", "a", ({ target }) => {
+			const route = target.closest("a");
+			console.log("routing?",target)
+			if (route) {
+				const newPath = "/" + route;
+				history.pushState({}, "", newPath);
+				router();
+			}})
+
 		this.fiberRoot = fNode;
 		this.DOM = createDOM(fNode);
 		this.rootNode.appendChild(this.DOM);
-	}
-		// updateDOM(enrenderQueue){
-	// 	diffDOM(this.DOM, enrenderQueue);
-	// }
-	updateDOM(newFiberRoot){
+	},
+	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
-	}
+	},
 	erase(){
 		this.rootNode.removeChild(this.DOM);
 		this.DOM = null;
 		myReact.erase();
+	},
+	reconciliate(){}, // changed 어떻게 전달할지?
 	}
 }
-export default class myReactDOM {
-	root;
-	static createRoot(rootNode){
-		this.root = new Root;
-		this.root.rootNode = rootNode;
-		return this.root;
-	}
-	
 
-	reconciliate(){} // changed 어떻게 전달할지?
-}
+const myReactDOM = createMyReactDOM();
+export default myReactDOM;
