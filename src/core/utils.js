@@ -10,7 +10,7 @@ export function exist(para) {
 
 //for object check is empty?
 export function isEmptyObj(para){
-	if (typeof para === "object"){
+	if (typeof para === "object" || Array.isArray(para)){
 		if (para.length === 0)
 			{return true;}
 	}
@@ -21,4 +21,11 @@ export function isEmptyObj(para){
 export function isEqualArray (a, b) {
 	return a.length && b.length &&
 		a.every((v, i) => v === b[i]); 
+}
+
+export function makeProps(props, children){
+	return {
+		...props,
+		children: children.length === 1 ? children[0] : children
+	}
 }
