@@ -17,3 +17,8 @@ export function isEmptyObj(para){
 	return false;
 }
 
+//equal test for array 
+export function isEqualArray (a, b) {
+	return a.length && b.length &&
+		a.every((v, i) => v === b[i]); 
+}

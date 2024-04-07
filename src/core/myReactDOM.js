@@ -91,16 +91,12 @@ function diffDom(parent, newfNode, oldfNode, index){
 	// error :: 
 	if (!oldfNode && !newfNode ) return 0;
 	
-	// removed :: index --;
+	// removed :: unmount
 	if (oldfNode && !newfNode){
-		//NEED :::: remove eventListner??
-		if (oldfNode.isEvent){
-			// Object.entries(oldfNode.props).forEach(([key, value]) => {
-			// 	if (key.slice(0, 2) === 'on') {
-			// 		// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-			// 		parent.childNodes[index].removeEventListener("click", value);
-			// 	}
-			// })
+		// Need to remove EventListner or onClick;
+		if (oldfNode.isEvent){}; 
+		if (!isEmptyObj(oldfNode.willUnmount)){
+			oldfNode.willUnmount.forEach((c) => { c() })
 		}
 		return parent.removeChild(parent.childNodes[index]);
 	}

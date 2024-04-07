@@ -7,13 +7,16 @@ export default class fiberNode {
 		this.sibling = []; // Sibling component
         this.return = null; // Parent component
         this.stateNode = null; // Associated DOM node or component state
-		this.state = [];
-		this.position = 0;
+		this.state = []; //useState state
+		this.statePosition = 0; //useState position
 		this.instance = null;
 		this.changed = false;
 		this.changedState = [];
-
-		this.isEvent = false
+		
+		this.isEvent = false; // eventListner added?
+		this.useEffect = []; //useEffect state : {callback f, deps []};
+		this.willUnmount = []; // cleanup arr;
+		this.effectPosition = 0; //useEffect position
     }
 	getInfo(oldFiber){
 		this.stateNode = oldFiber.stateNode;
@@ -21,7 +24,7 @@ export default class fiberNode {
 		this.instance = oldFiber.instance;
 		this.tag = oldFiber.tag;
 		this.props = oldFiber.props;
-		this.position = 0;
+
 		this.changedState = oldFiber.changedState;
 		oldFiber.changedState = [];
 		this.changed = oldFiber.changed;
@@ -29,6 +32,8 @@ export default class fiberNode {
 		
 
 		this.isEvent = oldFiber.isEvent;
+		this.useEffect = oldFiber.useEffect;
+		this.willUnmount = oldFiber.willUnmount;
 	}
 
     render(parentNode) { // setting fiberNode values, not real rendering
