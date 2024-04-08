@@ -3,8 +3,12 @@
 // import MyInfo from "./component/MyInfo.js";
 import myReact, { Link } from "./core/myReact.js";
 import myReactDOM from "./core/myReactDOM.js";
+import { requestLogin, requestFriendList, requestUserInfo } from "./core/Api.js";
+import FriendList from "./component/FriendList.js"
+import { useState, useEffect } from "./core/myReact.js"
 // import SignUp from "./component/SignUp.js";
 import "./css/index.css";
+import "./css/friend.css";
 import Test from "./component/Test.js"
 
 const setAxios = () => {
@@ -20,6 +24,7 @@ const App = () => {
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
 			<Test />
+            <FriendList />
 			<Link to="home" id="home"><button>Home</button></Link>
             {/* <h1>
                 Merancendance
@@ -30,7 +35,7 @@ const App = () => {
             {/* <button data-route="home">Home</button>
             <button data-route="login">login</button>
             <button data-route="signup">SignUp</button> */}
-	    </div>
+    s</div>
 }
 
 export default App;
