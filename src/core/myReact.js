@@ -62,6 +62,7 @@ function createMyReact() {
 			console.log(f);
 			const cleanup = f.callback();
 			cleanup ? f.willUnmount.push(cleanup) : null });
+		console.log("Render finished, callback arr is ", this.callback)
 		this.callback = [];
 	},
 
@@ -83,7 +84,6 @@ function createMyReact() {
 		//if fiber changed? call instance
 		//console.log("state", fiber.state);
 		fiber.getInfo(oldfiber);
-		console.log("reRender", fiber, oldfiber)
 		if (fiber.changed){
 			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
@@ -190,11 +190,15 @@ export function useEffect(callback, deps){
 	save cleanUp as a 3rd value.
 	
 	*/
+	if (fiber.useEffect[i])
+		console.log("useEffect deps old", fiber.useEffect[i].deps)
+	console.log("useEffect deps new", deps)
 	if (!deps || isEmptyObj(deps)){
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	}
-	else if (!isEqualArray(fiber.useEffect[i].deps, deps))
-	//after first call, check if dep has changed
+	else if (!isEqualArray(fiber.useEffect[i].deps, deps)){
+		//after first call, check if dep has changed
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 		fiber.useEffect[i].deps = deps;
+	}
 }
