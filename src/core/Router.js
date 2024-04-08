@@ -4,7 +4,7 @@ import myReact from "../core/myReact.js";
 import App from "../app.js"
 import Undefined from "../component/Undefined.js"
 import Home from "../component/Home.js"
-// import Welcome from "../component/Welcome.js"
+import Welcome from "../component/Welcome.js"
 // import Login from "../component/Login.js"
 // import MyInfo from "../component/MyInfo.js"
 // import ApiLogin from "../component/ApiLogin.js"
@@ -20,19 +20,17 @@ const pathList = {
 	// "/api-login": <ApiLogin />,
 	// "/signup": <SignUp />,
 	"/game" : <GameContainer />,
+	"/welcome" : <Welcome/>,
 }
 
-export default function router() {
+export default function router(param) {
 	var path = window.location.pathname;
-
-	console.log("router called")
+	console.log("router called: path: ", path);
 	const component = pathList[path];
-	console.log("app", path, component);
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
 	}
 	else {
-		console.log("???")
 		myReact.render(component, "newPage");
 	}
 }

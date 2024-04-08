@@ -2,6 +2,7 @@ import fiberNode from "./fiberNode.js";
 import myReactDOM from "./myReactDOM.js";
 import createElement from "./createElement.js";
 import { makeProps, exist, isEmptyObj, isEqualArray } from "./utils.js"
+import router from "./Router.js";
 
 export function Link(props){
 	// //console.log(props)
@@ -13,7 +14,6 @@ export function Link(props){
 		console.error("Link but no path provided");
 	}
 	props["href"] = href;
-	console.log("Link making href is", href);
 	if (exist(props.children)){
 		var children = props["children"];
 		if (Array.isArray(children) === false)
@@ -48,10 +48,8 @@ function createMyReact() {
 			this.erase();
 			myReactDOM.erase();
 		}
-		console.log("myReact", newVirtualDOM, eventType)
 		if (!this.fiberRoot) { //first Render, called by DOM
 			this.fiberRoot = newVirtualDOM;
-			console.log("???????")
 			await myReactDOM.initDOM(this.fiberRoot);
 		}
 		// 1. call callback
@@ -65,11 +63,6 @@ function createMyReact() {
 			const cleanup = f.callback();
 			cleanup ? f.willUnmount.push(cleanup) : null });
 		this.callback = [];
-	},
-	newPage(newVirtualDOM) {
-		this.erase();
-		myReactDOM.erase();
-		this.render(newVirtualDOM);
 	},
 
 	erase : function erase() {
@@ -90,6 +83,7 @@ function createMyReact() {
 		//if fiber changed? call instance
 		//console.log("state", fiber.state);
 		fiber.getInfo(oldfiber);
+		console.log("reRender", fiber, oldfiber)
 		if (fiber.changed){
 			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
@@ -100,7 +94,7 @@ function createMyReact() {
 			fiber.changedState = [];
 			fiber.changed = false;
 			window.currentFiberNode = fiber;
-			const instance = fiber.instance(fiber.props);
+			const instance = fiber.instance(fiber.props); //함수형 컴포넌트 실행
 			fiber.tag = instance.tag;
 			fiber.props = instance.props;
 			fiber.children = instance.children;
@@ -128,8 +122,19 @@ function createMyReact() {
 	*/
 	diffRoot : function (newFiberRoot) {
 		this.fiberRoot = newFiberRoot;
+	},
+	redirect: function (param) {
+		if (!param){
+			console.error("redirect err: no path");
+			return
+		}
+		console.log("redirect call")
+		const path = "/" + param;
+		console.log(path);
+		history.pushState({}, "", path);
+		router();
 	}
-	}
+}
 }
 
 const myReact = createMyReact();
@@ -138,7 +143,6 @@ export default myReact;
 
 export function useState(initValue){
 	const fiber = window.currentFiberNode;
-	console.log(fiber);
 	const i = fiber.statePosition;
 	fiber.statePosition++;
 	fiber.state[i] = fiber.state[i] || initValue;
@@ -162,7 +166,6 @@ export function useState(initValue){
 */
 export function useEffect(callback, deps){
 	const fiber = window.currentFiberNode;
-	console.log(fiber);
 	const i = fiber.effectPosition;
 	fiber.effectPosition++;
 	//check if fiber has this callback as use
@@ -187,13 +190,11 @@ export function useEffect(callback, deps){
 	save cleanUp as a 3rd value.
 	
 	*/
-
 	if (!deps || isEmptyObj(deps)){
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	}
 	else if (!isEqualArray(fiber.useEffect[i].deps, deps))
 	//after first call, check if dep has changed
-		myReact.callback.push({callback, willUnmount: fiber.willUnmount});	
-	
-	fiber.useEffect = {callback, deps, cleanup : null};
+		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+		fiber.useEffect[i].deps = deps;
 }
