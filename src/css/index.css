@@ -43,6 +43,7 @@ body {
   color: hsl(0, 0%, 20%);
   background-image: url("../../public/asset/background/bg0.jpg");
   background-size: cover;
+  scroll-behavior: auto;
 }
 
 /* 헤더 및 버튼 스타일 */

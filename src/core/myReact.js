@@ -9,7 +9,11 @@ export function Link(props){
 	const href = props["to"];
 	if (exist(href))
 		delete props["to"];
+	else {
+		console.error("Link but no path provided");
+	}
 	props["href"] = href;
+	console.log("Link making href is", href);
 	if (exist(props.children)){
 		var children = props["children"];
 		if (Array.isArray(children) === false)
@@ -28,22 +32,28 @@ function createMyReact() {
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
 
-	render : async function render(newVirtualDOM){
-		if (!this.fiberRoot) { //first Render, called by DOM
-			this.fiberRoot = newVirtualDOM;
-			await myReactDOM.initDOM(this.fiberRoot);
-		}
-		else {//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
+	render : async function render(newVirtualDOM, eventType){
+		if (eventType === "reRender")
+		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
 			//re-render....
 			//is it reRender or 
-		const newFiberRoot = this.reRender(this.fiberRoot);
-		// this.diffRoot(this.FiberRoot); //enrenderQueue를 통해 바뀐 부분 찾기
-		// await myReactDOM.updateDOM(this.enrenderQueue); //나중에 바뀐 부분만 보낼 수 있게...업데이트 할 수 있으면...좋고...
-		await myReactDOM.updateDOM(newFiberRoot);
-		this.fiberRoot = newFiberRoot;
-		this.enrenderQueue = [];
+			const newFiberRoot = this.reRender(this.fiberRoot);
+			// this.diffRoot(this.FiberRoot); //enrenderQueue를 통해 바뀐 부분 찾기
+			// await myReactDOM.updateDOM(this.enrenderQueue); //나중에 바뀐 부분만 보낼 수 있게...업데이트 할 수 있으면...좋고...
+			await myReactDOM.updateDOM(newFiberRoot);
+			this.fiberRoot = newFiberRoot;
+			this.enrenderQueue = [];
 		}
-		console.log(this.callback);
+		else if (eventType === "newPage"){
+			this.erase();
+			myReactDOM.erase();
+		}
+		console.log("myReact", newVirtualDOM, eventType)
+		if (!this.fiberRoot) { //first Render, called by DOM
+			this.fiberRoot = newVirtualDOM;
+			console.log("???????")
+			await myReactDOM.initDOM(this.fiberRoot);
+		}
 		// 1. call callback
 		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
 		// 3. empty the callback arr
@@ -56,11 +66,19 @@ function createMyReact() {
 			cleanup ? f.willUnmount.push(cleanup) : null });
 		this.callback = [];
 	},
+	newPage(newVirtualDOM) {
+		this.erase();
+		myReactDOM.erase();
+		this.render(newVirtualDOM);
+	},
 
 	erase : function erase() {
-		removeFiberRoot();
+		this.fiberRoot = null;
 		this.enrenderComponent = []
 		this.enrenderQueue = []
+		this.callback.forEach((f) => {
+			f.willUnmount.forEach((cleanup) => cleanup());
+		})
 		this.callback = []
 	},
 	
@@ -123,7 +141,6 @@ export function useState(initValue){
 	console.log(fiber);
 	const i = fiber.statePosition;
 	fiber.statePosition++;
-	// //console.log("useState", fiber.state[i]);
 	fiber.state[i] = fiber.state[i] || initValue;
 	const setState = (value) => {
 		if (fiber.state[i] === value)
@@ -132,9 +149,8 @@ export function useState(initValue){
 		myReact.enrenderComponent.push(fiber);
 		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
 		fiber.changed = true;
-		myReact.render();
+		myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
-		// //console.log("setState", fiber);
 	}
 	return [fiber.state[i], setState];
 }
@@ -173,12 +189,10 @@ export function useEffect(callback, deps){
 	*/
 
 	if (!deps || isEmptyObj(deps)){
-		console.log("case 1", deps);
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	}
 	else if (!isEqualArray(fiber.useEffect[i].deps, deps))
 	//after first call, check if dep has changed
-		console.log("case 2", fiber.useEffect.deps, deps);
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});	
 	
 	fiber.useEffect = {callback, deps, cleanup : null};
