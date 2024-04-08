@@ -35,7 +35,7 @@ const Test = () => {
 	const re = () => {
 		myReact.redirect("welcome");
 	}
-	useEffect (callback, [text]); // 텍스트 변수 변경시 실행
+	useEffect (callback); // 텍스트 변수 변경시 실행
 	return <div class="test">
             <p>Test UseState: {count}
                 <button onClick={incre}>증가</button>

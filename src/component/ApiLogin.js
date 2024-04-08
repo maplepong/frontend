@@ -8,10 +8,7 @@ const ApiLogin = () => {
 	const redirect = () => {
 		window.location.href = api_link;
 	}
-	useEffect(() => {
-		console.log("useEffect");
-		redirect();
-	}, []);
+	//useEffect(redirect, []);
 
 	const getCode = () => {
 		const url = window.location.pathname;
@@ -44,6 +41,7 @@ const ApiLogin = () => {
 	return (
 		<div id="api-login-container">
 			<p>42 login</p>
+			<button onclick={redirect}>버튼입니둥</button>
 		</div>
 	)
 }
