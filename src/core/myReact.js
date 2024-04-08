@@ -33,6 +33,7 @@ function createMyReact() {
 	currentFiberNode : null,
 
 	render : async function render(newVirtualDOM, eventType){
+		console.log(this.callback);
 		if (eventType === "reRender")
 		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
 			//re-render....
@@ -45,7 +46,7 @@ function createMyReact() {
 			this.enrenderQueue = [];
 		}
 		else if (eventType === "newPage"){
-			this.erase();
+			this.erase(); ///처음 등록한 콜백 지워짐
 			myReactDOM.erase();
 		}
 		if (!this.fiberRoot) { //first Render, called by DOM
@@ -56,6 +57,7 @@ function createMyReact() {
 		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
 		// 3. empty the callback arr
 		// f ->  {callback, fiber.willUnmount} 
+		console.log(this.callback);
 		this.callback.forEach((f) => {
 			f.willUnmount.forEach((cleanup) => cleanup());
 			f.willUnmount = [];
@@ -195,6 +197,7 @@ export function useEffect(callback, deps){
 	console.log("useEffect deps new", deps)
 	if (!deps || isEmptyObj(deps)){
 		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+		console.log(myReact.callback);
 	}
 	else if (!isEqualArray(fiber.useEffect[i].deps, deps)){
 		//after first call, check if dep has changed
