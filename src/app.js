@@ -16,8 +16,8 @@ const setAxios = () => {
 const App = () => {
 	setAxios();
 	return <div class="app">
-            <Link to= "">
-                <img src ="./asset/design/maplepong.png"></img>
+            <Link to="" >
+                <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
 			<Test />
 			<Link to="home" id="home"><button>Home</button></Link>

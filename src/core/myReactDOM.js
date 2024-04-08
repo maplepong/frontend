@@ -137,40 +137,37 @@ function createMyReactDOM (){
 	fiberRoot: null,
 
 	initDOM : function initDOM(fNode){
+		console.log("initDOM")
 		document.addEventListener("DOMContentLoaded", () => {
 			window.addEventListener("routeChange", router);
 			window.addEventListener("popstate", router);
 		});
 		if (!exist(this.rootNode)){
 			return console.error("ROOT: cannot find");
-		}
-		addEvent(this.rootNode, "click", "[data-route]", ({ target }) => {
-			const route = target.dataset.route;
-			if (route) {
-				const newPath = "/" + route;
-				history.pushState({}, "", newPath);
-				router();
-			}} )
-			
-		addEvent(this.rootNode, "click", "a", ({ target }) => {
-			const route = target.closest("a");
-			console.log("routing?",target)
-			if (route) {
-				const newPath = "/" + route;
-				history.pushState({}, "", newPath);
-				router();
-			}})
-
+		}	
 		this.fiberRoot = fNode;
 		this.DOM = createDOM(fNode);
+		console.log("this DOM", this.diffDom)
 		this.rootNode.appendChild(this.DOM);
+		addEvent(this.rootNode, "click", "a", ({ target }) => {
+			const route = target.closest("a").getAttribute('href');
+			console.log("routing?", route)
+			if (typeof route === "string") {
+				const newPath = "/" + route;
+				console.log(newPath);
+				history.pushState({}, "", newPath);
+				router();
+			}}
+		)
 	},
 	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
 	},
 	erase(){
-		this.rootNode.removeChild(this.DOM);
+		console.log(this.DOM)
+		if(this.DOM)
+			this.rootNode.removeChild(this.DOM);
 		this.DOM = null;
 		myReact.erase();
 	},
