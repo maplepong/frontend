@@ -1,6 +1,7 @@
-/* @jsx React.createElement */
+/* @jsx myReact.createElement */
 
-import React, { useState, useEffect } from "../core/myReact.js";
+import myReact, { useState, useEffect, Link } from "../core/myReact.js";
+import router from "../core/Router.js"
 
 const Test = () => {
     const [count, setCount] = useState(0);
@@ -26,8 +27,15 @@ const Test = () => {
 	const callbackTest = () => {
 		console.log("callllllllbackkkkkkk");
 	}
-	useEffect(callbackTest, [count]);
+	useEffect(callbackTest, [count]); //count 변수 변경시 실행
 
+	const callback = () => {
+		console.log("text change")
+	}
+	const re = () => {
+		myReact.redirect("welcome");
+	}
+	useEffect (callback, [text]); // 텍스트 변수 변경시 실행
 	return <div class="test">
             <p>Test UseState: {count}
                 <button onClick={incre}>증가</button>
@@ -38,6 +46,7 @@ const Test = () => {
 				<button onCilck={testChange}></button>
 				<p>Text is{text}</p>
 			</div>
+			<button onClick={re}>Test redirect</button>
 	    </div>
 }
 
