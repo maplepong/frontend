@@ -2,9 +2,8 @@ import fiberNode from "./fiberNode";
 import {makeProps} from "./utils"
 
 export default function createElement(tag, props, ...children){
-	const fiber = new fiberNode();
+	const fiber = window.currentFiberNode;
 	var instance;
-	window.currentFiberNode = fiber; //tracking which Fiber is on rendering
 	props = props || {};
 	children = children || [];
 	if (typeof tag === 'function'){
