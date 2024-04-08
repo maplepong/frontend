@@ -107,15 +107,17 @@ function createMyReact() {
 			window.currentFiberNode = null;
 		}
 		else {
-			oldfiber.children.forEach((child) => {
-				if (typeof child === "number" || typeof child === "string"){
-					fiber.children.push(child);
-				}
-				else {
-					fiber.children.push(this.reRender(child));
-				}
 
-			})
+			if (oldfiber.children && Array.isArray(oldfiber.children)) {
+				oldfiber.children.forEach((child) => {
+					if (typeof child === "number" || typeof child === "string"){
+						fiber.children.push(child);
+					}
+					else {
+						fiber.children.push(this.reRender(child));
+					}
+				})
+			}
 		}
 		//console.log(fiber);
 		return fiber;
