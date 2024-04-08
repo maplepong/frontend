@@ -1,5 +1,5 @@
-/* @jsx createElement */
-import {createElement} from "../core/myReact.js";
+/* @jsx myReact.createElement */
+import myReact from "../core/myReact.js";
 import "../css/Pingpong.css"
 
 const Game = (isEnd) => {

@@ -1,32 +1,36 @@
-/* @jsx createElement */
-import Login from "./component/Login.js";
-import MyInfo from "./component/MyInfo.js";
-import { createElement,Link } from "./core/myReact.js";
-import SignUp from "./component/SignUp.js";
-import Game from "./component/Game.js"
+/* @jsx myReact.createElement */
+// import Login from "./component/Login.js";
+// import MyInfo from "./component/MyInfo.js";
+import myReact, { Link } from "./core/myReact.js";
+import myReactDOM from "./core/myReactDOM.js";
+// import SignUp from "./component/SignUp.js";
 import "./css/index.css";
+import Test from "./component/Test.js"
 
 const setAxios = () => {
-	axios.defaults.baseURL = "http://localhost:8000/";
+	// axios.defaults.baseURL = "http://localhost:8000/";
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
 	// axios.defauls.timeout = 1000;
 }
 
 const App = () => {
 	setAxios();
-
-	const updateScore = (score) => {
-		const scoreElement = document.querySelector('#score p');
-		scoreElement.textContent = score;
-	};
-
-	return (
-	<div class="app">
-		<Link to="/game">
-			<button id="linkGame">to game</button>
-		</Link>
-	</div>
-	)
+	return <div class="app">
+            <Link to="" >
+                <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
+            </Link>
+			<Test />
+			<Link to="home" id="home"><button>Home</button></Link>
+            {/* <h1>
+                Merancendance
+            </h1>
+            <Login />
+            <MyInfo />
+            <SignUp /> */}
+            {/* <button data-route="home">Home</button>
+            <button data-route="login">login</button>
+            <button data-route="signup">SignUp</button> */}
+	    </div>
 }
 
 export default App;

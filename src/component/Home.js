@@ -1,21 +1,13 @@
-/* @jsx createElement */
-import {createElement, Link, render, useState } from "../core/myReact.js";
+/* @jsx myReact.createElement */
+import myReact , { Link } from "../core/myReact.js";
 
 const Home = () => {
-	const [count, setCount] = useState(1);
-
-	const buttonClick = () => {
-		console.log(typeof count);
-		setCount(count + 1);
-	}
-
-	return (
-		<div id="home">
-			<button onClick={buttonClick}>{count}</button>
-			<Link to="/" id=""></Link>
-			<div id="character"></div>
+	return <div id="home">
+			<div>
+				<h1> Home </h1>
+				<h2> this page is not set yet.</h2>
+			</div>
 		</div>
-	)
 }
 
 export default Home;

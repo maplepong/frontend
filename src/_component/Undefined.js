@@ -1,5 +1,5 @@
-/* @jsx myReact.createElement */
-import myReact from "../core/myReact.js";
+/* @jsx createElement */
+import {createElement, render, useState, addEvent} from "../core/myReact.js";
 
 const Undefined = () => {
 	return <div>
