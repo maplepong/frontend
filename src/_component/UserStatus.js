@@ -1,5 +1,6 @@
-/* @jsx myReact.createElement */
-import myReact from "../core/myReact.js";
+/* @jsx createElement */
+import { requestUserStatus } from "../core/Api.js";
+import {createElement} from "../core/myReact.js";
 import '../css/UserStatus.css';
 
 const UserStatus = (props, ...children) => {

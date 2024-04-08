@@ -1,26 +1,19 @@
-function exist(para) {
-	if (typeof para === "undefined" || para === null || para === undefined){
-		return false;
-	}
-	if (typeof para === "string" && para.isEmpty)
-		return false;
-	return true;
-}	
+import fiberNode from "./fiberNode.js";
+import myReactDOM from "./myReactDOM.js";
+import createElement from "./createElement.js";
+import { makeProps, exist, isEmptyObj, isEqualArray } from "./utils.js"
 
-function isEmpty(para){
-	if (typeof para === "object"){
-		if (para.length === 0 || typeof para[0] === "undefined")
-			{return false;}
-	}
-	return true;
-}
-function Link(props){
-	// console.log(props)
+export function Link(props){
+	// //console.log(props)
 	const tag = "a"
 	const href = props["to"];
 	if (exist(href))
 		delete props["to"];
+	else {
+		console.error("Link but no path provided");
+	}
 	props["href"] = href;
+	console.log("Link making href is", href);
 	if (exist(props.children)){
 		var children = props["children"];
 		if (Array.isArray(children) === false)
@@ -31,128 +24,176 @@ function Link(props){
 	return {tag, props};
 }
 
-function myReact() {
-	const state = [];
-	let position = 0;
-	const app = document.getElementById("app");
-	let rootNode;
-	
-	//init state hook
-	function useState(initValue) {
-		let currPosition = position;
-		if (state.length == position) {
-			state.push(undefined);
-		}
-		if (state[currPosition] === undefined) {
-			state[currPosition] = initValue;
-		}
-		position++;
-		const _state = state[currPosition];
-		const _setState = (nextValue) => {
-			state[currPosition] = nextValue;
-			render(rootNode);
-		}
-		return [_state, _setState];
-	}
+function createMyReact() {
+	return {
+	enrenderComponent : [],
+	enrenderQueue : [], //what is changed {changedhow, component, props}
+	callback : [], // will be called after reRender
+	fiberRoot : null,  //root of fiberNode
+	currentFiberNode : null,
 
-	function makeProps(props, children){
-		return {
-			...props,
-			children: children.length === 1 ? children[0] : children
+	render : async function render(newVirtualDOM, eventType){
+		if (eventType === "reRender")
+		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
+			//re-render....
+			//is it reRender or 
+			const newFiberRoot = this.reRender(this.fiberRoot);
+			// this.diffRoot(this.FiberRoot); //enrenderQueue를 통해 바뀐 부분 찾기
+			// await myReactDOM.updateDOM(this.enrenderQueue); //나중에 바뀐 부분만 보낼 수 있게...업데이트 할 수 있으면...좋고...
+			await myReactDOM.updateDOM(newFiberRoot);
+			this.fiberRoot = newFiberRoot;
+			this.enrenderQueue = [];
 		}
-	}
+		else if (eventType === "newPage"){
+			this.erase();
+			myReactDOM.erase();
+		}
+		console.log("myReact", newVirtualDOM, eventType)
+		if (!this.fiberRoot) { //first Render, called by DOM
+			this.fiberRoot = newVirtualDOM;
+			console.log("???????")
+			await myReactDOM.initDOM(this.fiberRoot);
+		}
+		// 1. call callback
+		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
+		// 3. empty the callback arr
+		// f ->  {callback, fiber.willUnmount} 
+		this.callback.forEach((f) => {
+			f.willUnmount.forEach((cleanup) => cleanup());
+			f.willUnmount = [];
+			console.log(f);
+			const cleanup = f.callback();
+			cleanup ? f.willUnmount.push(cleanup) : null });
+		this.callback = [];
+	},
+	newPage(newVirtualDOM) {
+		this.erase();
+		myReactDOM.erase();
+		this.render(newVirtualDOM);
+	},
 
-	function createElement(tag, props, ...children){
-		if (!exist(props)) props = {};
-		if (!exist(children)) children = [];
-		if (typeof tag === 'function'){
-			// console.log("tag:",tag);
-			// console.log(props, children);
-			if (children.length > 0){
-				return tag(makeProps(props, children))
-			}
-			return tag(props);
-		}
-		else{
-			return ({tag, props, children});
-		}
-	}
+	erase : function erase() {
+		this.fiberRoot = null;
+		this.enrenderComponent = []
+		this.enrenderQueue = []
+		this.callback.forEach((f) => {
+			f.willUnmount.forEach((cleanup) => cleanup());
+		})
+		this.callback = []
+	},
+	
+	createElement : createElement,
 
-	function addEvent(target, eventType, selector, callback) {
-		const children = [...document.querySelectorAll(selector)];
-		target.addEventListener(eventType, event => {
-			event.preventDefault();
-			if (!event.target.closest(selector)) return false;
-			callback(event);
-		});
-	}
-	
-	function render(node){
-		position = 0;
-		const prevApp = document.querySelector(".app");
-		if (prevApp){
-			prevApp.parentNode.removeChild(prevApp);
+	reRender : function (oldfiber) {
+		const fiber = new fiberNode();
+		//new fiber state value update && copy values of old fiber
+		//if fiber changed? call instance
+		//console.log("state", fiber.state);
+		fiber.getInfo(oldfiber);
+		if (fiber.changed){
+			//console.log("changedState", fiber.changedState)
+			fiber.changedState.forEach(d => {
+				//console.log(d)
+				fiber.state[d.i] = d.value;
+				//console.log("fiber updated state" , fiber.state);
+			})
+			fiber.changedState = [];
+			fiber.changed = false;
+			window.currentFiberNode = fiber;
+			const instance = fiber.instance(fiber.props);
+			fiber.tag = instance.tag;
+			fiber.props = instance.props;
+			fiber.children = instance.children;
+			window.currentFiberNode = null;
 		}
-		// console.log(node);
-		if (!exist(node) && !exist(rootNode)){
-			// console.log("render err");
-			// console.log("node", node)
-			// console.log("node", rootNode)
-			return ;
-		}
-		rootNode = node;
-		const root = createDom(rootNode);
-		// console.log(root)
-		root.setAttribute("class", "app");
-		document.querySelector("#root").prepend(root);
-	}
-	
-	function createDom(node){
-		//error
-		if (typeof node === 'number') node = node.toString();
-		if (typeof node === 'string') return document.createTextNode(node);
-		// console.log(node);
-		// if (!exist(node.props)) node.props = {};
-		
-		//create each element
-		if (!exist(node.tag)){
-			// console.log(node)
-		}
-		const element = document.createElement(node.tag);
-		// console.log(node);
-		//adding props to element
-		if (exist(node.props)){
-			Object.entries(node.props).forEach(([key, value]) => {
-				if (key.slice(0, 2) === 'on') {
-					element.onclick = value;
+		else {
+			oldfiber.children.forEach((child) => {
+				if (typeof child === "number" || typeof child === "string"){
+					fiber.children.push(child);
 				}
 				else {
-					// console.log("props: ", key, value);
-					element.setAttribute(key, value);
+					fiber.children.push(this.reRender(child));
 				}
-			})
-		}
 
-		//add children element
-		// console.log("children", node.children);
-		// console.log(typeof (node.children));
-		if (exist(node.children) && isEmpty(node.children)){
-			node.children.forEach(child => {
-				if (typeof child === 'function') {
-					element.appendChild(createDom(child()));
-					return 
-				}
-				const childElement = createDom(child); 
-				if (exist(childElement)) 
-					element.appendChild(childElement);
 			})
 		}
-		return element;
+		//console.log(fiber);
+		return fiber;
+	},
+
+	/* 현재의 fiberRoot, newFiberRoot 비교해서
+	만약 바뀐 부분 있으면 enrenderQueue에 추가
+	전부 비교한 후 Root 대체
+
+	*/
+	diffRoot : function (newFiberRoot) {
+		this.fiberRoot = newFiberRoot;
 	}
-
-	return {createElement, render, useState, addEvent, createDom};
+	}
 }
 
-const  {createElement, render, useState, addEvent, createDom} = myReact();
+const myReact = createMyReact();
+export default myReact; 
 
-export {createElement, render, useState, addEvent, createDom, Link}
+
+export function useState(initValue){
+	const fiber = window.currentFiberNode;
+	console.log(fiber);
+	const i = fiber.statePosition;
+	fiber.statePosition++;
+	fiber.state[i] = fiber.state[i] || initValue;
+	const setState = (value) => {
+		if (fiber.state[i] === value)
+			return //console.log("setState err-value same-",value);
+		fiber.changedState.push({i, value});
+		myReact.enrenderComponent.push(fiber);
+		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
+		fiber.changed = true;
+		myReact.render(null, "reRender");
+		//render, how I can get the infomation of current page?
+	}
+	return [fiber.state[i], setState];
+}
+
+/*
+	callback -> return f is cleanup function, use carefully
+	cleanup calls when :
+	1. idk..... will update this later
+*/
+export function useEffect(callback, deps){
+	const fiber = window.currentFiberNode;
+	console.log(fiber);
+	const i = fiber.effectPosition;
+	fiber.effectPosition++;
+	//check if fiber has this callback as use
+	if (!fiber.useEffect[i] || isEmptyObj(fiber.useEffect[i])){ //first call of this useState
+		fiber.useEffect[i] = { callback, deps: deps || [], cleanup: null};
+	}
+	//if cleanup exist -> runs at
+	// 1. before reRender 
+	// 2. before unMount this component
+	else if (fiber.useEffect[i].cleanup) {
+		fiber.useEffect[i].cleanup();
+	}
+
+	/* 	
+	
+	check if callback need to queue
+	1. no deps -> call for one time, erase useEffect
+	2. dep || func change -> enqueue callback,
+	if return(cleanup) exist, add to fiber obj...
+	
+	after calling callback, if cleanUp exist,
+	save cleanUp as a 3rd value.
+	
+	*/
+
+	if (!deps || isEmptyObj(deps)){
+		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+	}
+	else if (!isEqualArray(fiber.useEffect[i].deps, deps))
+	//after first call, check if dep has changed
+		myReact.callback.push({callback, willUnmount: fiber.willUnmount});	
+	
+	fiber.useEffect = {callback, deps, cleanup : null};
+}

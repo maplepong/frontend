@@ -1,5 +1,5 @@
-/* @jsx createElement */
-import {createElement} from "../core/myReact.js";
+/* @jsx myReact.createElement */
+import myReact , { Link } from "../core/myReact.js";
 import Game from "./Game.js"
 import "../css/Pingpong.css"
 
