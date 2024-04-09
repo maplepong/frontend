@@ -32,14 +32,14 @@ function createMyReact() {
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
 
-	renderFiberRoot : function () {
-	// createElement하는 시점, 특히 라우터에서 import되는 타이밍에 렌더하지 않게 방지
-	//
-	const fiber = new fiberNode(); 
-	window.currentFiberNode = fiber; //tracking which Fiber is on rendering 
+	// renderFiberRoot : function () {
+	// // createElement하는 시점, 특히 라우터에서 import되는 타이밍에 렌더하지 않게 방지
+	// //
+	// const fiber = new fiberNode(); 
+	// window.currentFiberNode = fiber; //tracking which Fiber is on rendering 
 	
 
-	},
+	// },
 	render : async function render(newVirtualDOM, eventType){
 		console.log(this.callback);
 		if (eventType === "reRender")
