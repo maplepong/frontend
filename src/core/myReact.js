@@ -81,11 +81,9 @@ function createMyReact() {
 	createElement : createElement,
 
 	reRender : function (oldfiber) {
-		const fiber = new fiberNode();
+		const fiber = new fiberNode(oldfiber);
 		//new fiber state value update && copy values of old fiber
 		//if fiber changed? call instance
-		//console.log("state", fiber.state);
-		fiber.getInfo(oldfiber);
 		if (fiber.changed){
 			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
