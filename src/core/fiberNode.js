@@ -55,28 +55,6 @@ export default class fiberNode {
 			this.isEvent = ref.isEvent; // eventListner added?
 		}
     }
-	getInfo(oldFiber){
-		this.stateNode = oldFiber.stateNode;
-		this.state = oldFiber.state;
-		this.instance = oldFiber.instance;
-		this.tag = oldFiber.tag;
-		this.props = oldFiber.props;
-
-		this.changedState = oldFiber.changedState;
-		oldFiber.changedState = [];
-		this.changed = oldFiber.changed;
-		oldFiber.changed = false;
-		
-
-		this.isEvent = oldFiber.isEvent;
-		this.useEffect = oldFiber.useEffect;
-		if(this.tag ==="div"){
-			console.log("new useEffect", this.useEffect)
-			console.log("old useEffect", oldFiber.useEffect)
-		}
-		this.willUnmount = oldFiber.willUnmount;
-	}
-
     render(parentNode) { // setting fiberNode values, not real rendering
 	// if (!stateNode) { // first Render
 	 //부모 노드에 대한 처리
