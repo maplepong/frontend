@@ -3,7 +3,7 @@ import myReact, { Link } from "../core/myReact.js";
 import { requestLogin, requestFriendList, requestUserInfo } from "../core/Api.js";
 import { useState, useEffect } from "../core/myReact.js"
 import "../css/index.css";
-// import "../css/friend.css";
+import "../css/friend.css";
 
 const FriendList = () => {
     requestLogin(() => { return (["subcho", "1234"])}, ()=>{} );
