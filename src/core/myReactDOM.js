@@ -45,7 +45,6 @@ function addChildren(node, fNode){
 
 
 function createDOM(fNode) {
-	// //console.log(fNode);
 	const node = document.createElement(fNode.tag);
 	fNode.stateNode = node;
 	addProps(node, fNode);
