@@ -7,14 +7,10 @@ const Test = () => {
     const [count, setCount] = useState(0);
     
 	const incre = () => {
-		console.log(count);
 		setCount(count + 1);
-		console.log(count);
 	}
 	const decre = () => {
-		console.log(count -1);
 		setCount(count - 1);
-		console.log(count);
 	}
 
 	const [text, setText] = useState("test");
@@ -27,7 +23,7 @@ const Test = () => {
 	const callbackTest = () => {
 		console.log("callllllllbackkkkkkk");
 	}
-	useEffect(callbackTest, [count]); //count 변수 변경시 실행
+	useEffect(callbackTest, ); //count 변수 변경시 실행
 
 	const callback = () => {
 		console.log("text change")
