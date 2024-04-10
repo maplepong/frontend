@@ -19,17 +19,10 @@ const App = () => {
             <Link to="" >
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
-			<Test />
+			{/* <Test /> */}
 			<Link to="home" id="home"><button>Home</button></Link>
-            {/* <h1>
-                Merancendance
-            </h1>
-            <Login />
-            <MyInfo />
-            <SignUp /> */}
-            {/* <button data-route="home">Home</button>
-            <button data-route="login">login</button>
-            <button data-route="signup">SignUp</button> */}
+			<Link to="test" id="home"><button>Test</button></Link>
+            
 	    </div>
 }
 

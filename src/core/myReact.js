@@ -32,7 +32,16 @@ function createMyReact() {
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
 
+	// renderFiberRoot : function () {
+	// // createElement하는 시점, 특히 라우터에서 import되는 타이밍에 렌더하지 않게 방지
+	// //
+	// const fiber = new fiberNode(); 
+	// window.currentFiberNode = fiber; //tracking which Fiber is on rendering 
+	
+
+	// },
 	render : async function render(newVirtualDOM, eventType){
+		console.log(this.callback);
 		if (eventType === "reRender")
 		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
 			//re-render....
@@ -45,23 +54,26 @@ function createMyReact() {
 			this.enrenderQueue = [];
 		}
 		else if (eventType === "newPage"){
-			this.erase();
+			this.erase(); ///처음 등록한 콜백 지워짐
 			myReactDOM.erase();
 		}
 		if (!this.fiberRoot) { //first Render, called by DOM
 			this.fiberRoot = newVirtualDOM;
+			this.fiberRoot.render();
 			await myReactDOM.initDOM(this.fiberRoot);
 		}
 		// 1. call callback
 		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
 		// 3. empty the callback arr
 		// f ->  {callback, fiber.willUnmount} 
+		console.log(this.callback);
 		this.callback.forEach((f) => {
 			f.willUnmount.forEach((cleanup) => cleanup());
 			f.willUnmount = [];
 			// console.log(f);
 			const cleanup = f.callback();
 			cleanup ? f.willUnmount.push(cleanup) : null });
+		console.log("Render finished, callback arr is ", this.callback)
 		this.callback = [];
 	},
 
@@ -78,12 +90,9 @@ function createMyReact() {
 	createElement : createElement,
 
 	reRender : function (oldfiber) {
-		const fiber = new fiberNode();
+		const fiber = new fiberNode(oldfiber);
 		//new fiber state value update && copy values of old fiber
 		//if fiber changed? call instance
-		//console.log("state", fiber.state);
-		fiber.getInfo(oldfiber);
-		// console.log("reRender", fiber, oldfiber)
 		if (fiber.changed){
 			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
@@ -170,15 +179,14 @@ export function useEffect(callback, deps){
 	const i = fiber.effectPosition;
 	fiber.effectPosition++;
 	//check if fiber has this callback as use
-	if (!fiber.useEffect[i] || isEmptyObj(fiber.useEffect[i])){ //first call of this useState
-		fiber.useEffect[i] = { callback, deps: deps || [], cleanup: null};
-	}
-	//if cleanup exist -> runs at
-	// 1. before reRender 
-	// 2. before unMount this component
-	else if (fiber.useEffect[i].cleanup) {
-		fiber.useEffect[i].cleanup();
-	}
+	fiber.useEffect[i] = fiber.useEffect[i] ||{ callback, deps: undefined, cleanup: null};
+	 //first call of this useState
+	// //if cleanup exist -> runs at
+	// // 1. before reRender 
+	// // 2. before unMount this component
+	// if (fiber.useEffect[i].cleanup) {
+	// 	fiber.useEffect[i].cleanup();
+	// } // cleanup -> calls on myReact.render
 
 	/* 	
 	
@@ -191,11 +199,17 @@ export function useEffect(callback, deps){
 	save cleanUp as a 3rd value.
 	
 	*/
-	if (!deps || isEmptyObj(deps)){
-		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
-	}
-	else if (!isEqualArray(fiber.useEffect[i].deps, deps))
-	//after first call, check if dep has changed
-		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
-		fiber.useEffect[i].deps = deps;
+	// if (fiber.useEffect[i])
+	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
+	// console.log("useEffect deps new", deps)
+	console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
+	if (isEqualArray(fiber.useEffect[i].deps, deps)) return;
+	//if deps not changed || include both are empth array [], just return
+
+	// calling callback :
+	// 1. deps === undefined
+	// 2. deps === [] (but first call)
+	// 3. deps changed
+	myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+	fiber.useEffect[i].deps = deps;
 }

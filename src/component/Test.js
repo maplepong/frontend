@@ -7,14 +7,10 @@ const Test = () => {
     const [count, setCount] = useState(0);
     
 	const incre = () => {
-		console.log(count);
 		setCount(count + 1);
-		console.log(count);
 	}
 	const decre = () => {
-		console.log(count -1);
 		setCount(count - 1);
-		console.log(count);
 	}
 
 	const [text, setText] = useState("test");
@@ -25,12 +21,15 @@ const Test = () => {
 	}
 
 	const callbackTest = () => {
-		console.log("callllllllbackkkkkkk");
+		console.log("callback : callllllllbackkkkkkk");
 	}
 	useEffect(callbackTest, [count]); //count 변수 변경시 실행
 
+	useEffect(function testDep() {
+		console.log("callback : test Dependencies")
+	}, [])
 	const callback = () => {
-		console.log("text change")
+		console.log("callback : text change")
 	}
 	const re = () => {
 		myReact.redirect("welcome");
