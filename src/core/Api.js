@@ -1,4 +1,4 @@
-//import router from "./Router.js";
+import router from "./Router";
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
@@ -42,7 +42,7 @@ function requestLogin(getInfo, resultLogin){
 		}
 	)
 	.then(response=>{
-		console.log(response);
+		console.log('User Info: ', response);
 		if (typeof response !== "undefined"){
 			if (response.status === 200){
 				localStorage.setItem('username', username);
@@ -61,6 +61,37 @@ function requestLogin(getInfo, resultLogin){
 	});
 }
 
+async function requestFriendList() {
+	axios.defaults.withCredentials = false; //develop
+	var result;
+	await axios.request({
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+		method: "GET",
+		url: baseUrl() + "user/friend-request-list",
+	})
+	.then(response => {
+		console.log('My Friend List :', response);
+		result = response;
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
+	if (typeof result === "undefined" || result.status != 200){
+		console.log("FriendInfo request Error")
+		console.log(response);
+		return ;
+	}
+	//response.status == 200
+	else {
+		// console.log("FriendInfo request ok")
+		// resultInfo(response.data);
+		console.log(result);
+		return result.data;
+	} 
+}
+
 const urlCheck = (location) => {
 
 	let getParameter = (key) => {
@@ -68,7 +99,7 @@ const urlCheck = (location) => {
 	};
 
 	const name = getParameter("code");
-	console.log('code:', code);
+	console.log('code: ', code);
 }
 
 async function request42ApiLogin(code) {
@@ -83,7 +114,6 @@ async function request42ApiLogin(code) {
 	const formData = new FormData();
 	console.log(code);
 	formData.append('code', code);
-	console.log("들어오긴 할까요,,,ㅅㅂㅅㅂㅅㅂ");
 	const response = await axios.post(
 		baseUrl() + "user/api-login",
 		formData,
@@ -117,7 +147,7 @@ async function request42ApiLogin(code) {
 		}
 		console.log("status", response.status);
 		status = response.status;
-		//resultLogin(status);
+		// resultLogin(status);
 	}
 }
 
@@ -152,6 +182,7 @@ function requestValidCheck(type, value) {
 
 async function requestUserInfo(nickname, resultInfo){
 	axios.defaults.withCredentials = false; //develope
+	var result;
 	const response = await axios.request({
 
 		headers: {
@@ -161,12 +192,13 @@ async function requestUserInfo(nickname, resultInfo){
 		url: baseUrl() + "user/information?nickname=" + nickname,
 	})
 	.then(response => {
+		result = response;
 		console.log('Response:', response);
 	})
 	.catch(error => {
 		console.error('Error:', error);
 	});
-	if (typeof response === "undefined" || response.status != 200){
+	if (typeof result === "undefined" || result.status != 200){
 		console.log("UserInfo request Error")
 		return ;
 	}
@@ -174,8 +206,8 @@ async function requestUserInfo(nickname, resultInfo){
 	else {
 		console.log("UserInfo request ok")
 		// resultInfo(response.data);
-		console.log(response);
-		return response.data;
+		console.log(result);
+		return result.data;
 	} 
 }
 
@@ -229,5 +261,5 @@ function requestRefresh(username, password){
 }
 
 
-export { requestLogin, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
+export { requestLogin, requestFriendList, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
 
