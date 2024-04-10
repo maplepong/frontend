@@ -33,6 +33,10 @@ export default class fiberNode {
 
 		this.isEvent = oldFiber.isEvent;
 		this.useEffect = oldFiber.useEffect;
+		if(this.tag ==="div" && oldFiber.useEffect.length > 0){
+			console.log("new useEffect", this.useEffect)
+			console.log("old useEffect", oldFiber.useEffect)
+		}
 		this.willUnmount = oldFiber.willUnmount;
 	}
 

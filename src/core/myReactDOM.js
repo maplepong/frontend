@@ -137,7 +137,6 @@ function createMyReactDOM (){
 	fiberRoot: null,
 
 	initDOM : function initDOM(fNode){
-		console.log("initDOM")
 		document.addEventListener("DOMContentLoaded", () => {
 			window.addEventListener("routeChange", router);
 			window.addEventListener("popstate", router);
@@ -147,7 +146,6 @@ function createMyReactDOM (){
 		}	
 		this.fiberRoot = fNode;
 		this.DOM = createDOM(fNode);
-		console.log("this DOM", this.diffDom)
 		this.rootNode.appendChild(this.DOM);
 		addEvent(this.rootNode, "click", "a", ({ target }) => {
 			const route = target.closest("a").getAttribute('href');
@@ -165,7 +163,6 @@ function createMyReactDOM (){
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
 	},
 	erase(){
-		console.log(this.DOM)
 		if(this.DOM)
 			this.rootNode.removeChild(this.DOM);
 		this.DOM = null;
