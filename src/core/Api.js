@@ -80,7 +80,7 @@ async function requestFriendList() {
 	});
 	if (typeof result === "undefined" || result.status != 200){
 		console.log("FriendInfo request Error")
-		console.log(response);
+		console.log(result);
 		return ;
 	}
 	//response.status == 200
