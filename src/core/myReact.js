@@ -70,7 +70,7 @@ function createMyReact() {
 		this.callback.forEach((f) => {
 			f.willUnmount.forEach((cleanup) => cleanup());
 			f.willUnmount = [];
-			console.log(f);
+			// console.log(f);
 			const cleanup = f.callback();
 			cleanup ? f.willUnmount.push(cleanup) : null });
 		console.log("Render finished, callback arr is ", this.callback)
@@ -174,6 +174,7 @@ export function useState(initValue){
 	1. idk..... will update this later
 */
 export function useEffect(callback, deps){
+	console.log("useEffect called: callback", callback)
 	const fiber = window.currentFiberNode;
 	const i = fiber.effectPosition;
 	fiber.effectPosition++;
