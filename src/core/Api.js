@@ -19,7 +19,7 @@ const redirect = (page) => {
 		localStorage.removeItem("in");
 		localStorage.removeItem("");
 	}
-	//router();
+	router();
 }
 
 function requestLogin(getInfo, resultLogin){
@@ -68,7 +68,7 @@ const urlCheck = (location) => {
 	};
 
 	const name = getParameter("code");
-	console.log('code: ', code);
+	console.log('code:', code);
 }
 
 async function request42ApiLogin(code) {
@@ -83,6 +83,7 @@ async function request42ApiLogin(code) {
 	const formData = new FormData();
 	console.log(code);
 	formData.append('code', code);
+	console.log("들어오긴 할까요,,,ㅅㅂㅅㅂㅅㅂ");
 	const response = await axios.post(
 		baseUrl() + "user/api-login",
 		formData,
@@ -90,7 +91,8 @@ async function request42ApiLogin(code) {
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
 				'Content-Type': 'multipart/form-data'
-			}
+			},
+			  timeout: 50000000
 		}
 	)
 		.catch(error => {
@@ -99,11 +101,15 @@ async function request42ApiLogin(code) {
 		});
 	if (typeof response !== "undefined") {
 		if (response.status === 200) {
-			username = response.data.username;
+			console.log(response.data.username);
+			const username = response.data.username;
 			localStorage.setItem('username', username);
 			localStorage.setItem('nickname', response.data.nickname);
 			localStorage.setItem('accessToken', response.data.access_token)
 			axios.defaults.headers.common['Authorization'] = response.data.access_token;
+			console.log("이미 있는 회원입니당");
+			console.log(localStorage.getItem('accessToken'));
+			console.log(localStorage.getItem('nickname'))
 		}
 		else if (response.status === 409) {
 			console.log("회원가입 필요");
@@ -111,7 +117,7 @@ async function request42ApiLogin(code) {
 		}
 		console.log("status", response.status);
 		status = response.status;
-		resultLogin(status);
+		//resultLogin(status);
 	}
 }
 
