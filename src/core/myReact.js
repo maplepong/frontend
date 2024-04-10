@@ -178,15 +178,14 @@ export function useEffect(callback, deps){
 	const i = fiber.effectPosition;
 	fiber.effectPosition++;
 	//check if fiber has this callback as use
-	if (!fiber.useEffect[i] || isEmptyObj(fiber.useEffect[i])){ //first call of this useState
-		fiber.useEffect[i] = { callback, deps: deps || [], cleanup: null};
-	}
-	//if cleanup exist -> runs at
-	// 1. before reRender 
-	// 2. before unMount this component
-	else if (fiber.useEffect[i].cleanup) {
-		fiber.useEffect[i].cleanup();
-	}
+	fiber.useEffect[i] = fiber.useEffect[i] ||{ callback, deps: undefined, cleanup: null};
+	 //first call of this useState
+	// //if cleanup exist -> runs at
+	// // 1. before reRender 
+	// // 2. before unMount this component
+	// if (fiber.useEffect[i].cleanup) {
+	// 	fiber.useEffect[i].cleanup();
+	// } // cleanup -> calls on myReact.render
 
 	/* 	
 	
@@ -199,16 +198,17 @@ export function useEffect(callback, deps){
 	save cleanUp as a 3rd value.
 	
 	*/
-	if (fiber.useEffect[i])
-		console.log("useEffect deps old", fiber.useEffect[i].deps)
-	console.log("useEffect deps new", deps)
-	if (!deps || isEmptyObj(deps)){
-		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
-		console.log(myReact.callback);
-	}
-	else if (!isEqualArray(fiber.useEffect[i].deps, deps)){
-		//after first call, check if dep has changed
-		myReact.callback.push({callback, willUnmount: fiber.willUnmount});
-		fiber.useEffect[i].deps = deps;
-	}
+	// if (fiber.useEffect[i])
+	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
+	// console.log("useEffect deps new", deps)
+	console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
+	if (isEqualArray(fiber.useEffect[i].deps, deps)) return;
+	//if deps not changed || include both are empth array [], just return
+
+	// calling callback :
+	// 1. deps === undefined
+	// 2. deps === [] (but first call)
+	// 3. deps changed
+	myReact.callback.push({callback, willUnmount: fiber.willUnmount});
+	fiber.useEffect[i].deps = deps;
 }

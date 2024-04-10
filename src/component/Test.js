@@ -21,12 +21,15 @@ const Test = () => {
 	}
 
 	const callbackTest = () => {
-		console.log("callllllllbackkkkkkk");
+		console.log("callback : callllllllbackkkkkkk");
 	}
-	useEffect(callbackTest, ); //count 변수 변경시 실행
+	useEffect(callbackTest, [count]); //count 변수 변경시 실행
 
+	useEffect(function testDep() {
+		console.log("callback : test Dependencies")
+	}, [])
 	const callback = () => {
-		console.log("text change")
+		console.log("callback : text change")
 	}
 	const re = () => {
 		myReact.redirect("welcome");

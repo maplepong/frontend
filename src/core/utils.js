@@ -17,10 +17,23 @@ export function isEmptyObj(para){
 	return false;
 }
 
+export function isEmptyArray(para){
+	if (Array.isArray(para)){
+		if (para.length === 0) {
+			
+		}
+	}
+}
+
 //equal test for array 
 export function isEqualArray (a, b) {
-	return a.length && b.length &&
-		a.every((v, i) => v === b[i]); 
+	if (!Array.isArray(a) || ! Array.isArray(b)){
+		return false;
+	}
+	if (a.length === 0 && b.length === 0)
+		return true;
+	return a.length && b.length && 
+		a.every((v, i) => v === b[i])
 }
 
 export function makeProps(props, children){
