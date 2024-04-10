@@ -59,6 +59,7 @@ function createMyReact() {
 		}
 		if (!this.fiberRoot) { //first Render, called by DOM
 			this.fiberRoot = newVirtualDOM;
+			this.fiberRoot.render();
 			await myReactDOM.initDOM(this.fiberRoot);
 		}
 		// 1. call callback

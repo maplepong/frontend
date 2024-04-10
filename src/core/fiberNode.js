@@ -55,23 +55,18 @@ export default class fiberNode {
 			this.isEvent = ref.isEvent; // eventListner added?
 		}
     }
-    render(parentNode) { // setting fiberNode values, not real rendering
-	// if (!stateNode) { // first Render
-	 //부모 노드에 대한 처리
-	// this.return.return.appendChild(this.stateNode);??
-	this.return = parentNode;
-	parentNode.children.array.forEach(element => {
-		this.child.append(element);
-		element.sibling.append(this);
-	});
-
-	//자식 노드에 대한 처리
-	this.instance.children.forEach((child) => {
-		this.children.append(child.render(this));
-		console.log(this.children)
-	})
-	return this;
-		// }
+    render(parentNode) {
+		if (!this.instance || typeof this.instance !== "function") {
+			this.children.forEach((child) => child.render());
+		}
+		else {
+			window.currentFiberNode = this;
+			var instance = this.instance(this.props);
+			this.tag = instance.tag;
+			this.props = instance.props;
+			this.children = instance.children;
+			window.currentFiberNode = null;
+		}
 	}
 	compareFiber(ref) {
 			this.tag === ref.tag ? null : console.log("comparefiber Error: tag", this.tag, ref.tag);
