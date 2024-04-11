@@ -1,4 +1,4 @@
-/* @jsx createElement */
+/* @jsx myReact.createElement */
 import myReact , { Link, useEffect } from "../core/myReact.js";
 import { requestSignup, requestValidCheck } from "../core/Api";
 import router from "../core/Router.js";
