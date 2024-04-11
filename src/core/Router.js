@@ -22,7 +22,7 @@ const pathList = {
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
  	"/signup": <SignUp />,
-	 "/api-signup": <ApiSignUp />,
+	"/api-signup": <ApiSignUp />,
 	"/game" : <GameContainer />,
 	"/welcome" : <Welcome/>,
 	"/test" : <Test />,
