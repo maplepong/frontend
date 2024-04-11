@@ -66,7 +66,6 @@ function createMyReact() {
 		// 2. if cleanup exist -> save it to the useState. it will be used in unmount
 		// 3. empty the callback arr
 		// f ->  {callback, fiber.willUnmount} 
-		console.log(this.callback);
 		this.callback.forEach((f) => {
 			f.willUnmount.forEach((cleanup) => cleanup());
 			f.willUnmount = [];
@@ -204,7 +203,7 @@ export function useEffect(callback, deps){
 	// if (fiber.useEffect[i])
 	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
 	// console.log("useEffect deps new", deps)
-	console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
+	// console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
 	if (isEqualArray(fiber.useEffect[i].deps, deps)) return;
 	//if deps not changed || include both are empth array [], just return
 
