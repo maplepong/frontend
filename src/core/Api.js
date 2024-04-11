@@ -61,6 +61,17 @@ function requestLogin(getInfo, resultLogin){
 	});
 }
 
+function requestLogout(resultLogout)
+{
+	localStorage.removeItem("username");
+	localStorage.removeItem("nickname");
+	localStorage.removeItem("accessToken");
+	axios.defaults.headers.common['Authorization'] = null;
+	axios.defaults.withCredentials = false;
+	resultLogout(200);
+	return ;
+}
+
 async function requestFriendList() {
 	axios.defaults.withCredentials = false; //develop
 	var result;
@@ -142,8 +153,11 @@ async function request42ApiLogin(code) {
 			console.log(localStorage.getItem('nickname'))
 		}
 		else if (response.status === 409) {
-			console.log("회원가입 필요");
-			return;
+			const username = response.data.id;
+			console.log("id : " + id + "님은 회원가입 필요");
+			myReact.redirect("api_signup", {username: username});
+			
+			return ;
 		}
 		console.log("status", response.status);
 		status = response.status;
@@ -169,6 +183,23 @@ function requestSignup(username, password, nickname) {
 	});
 }
 
+function requestApiSignup(username, nickname) {
+	axios.defaults.withCredentials = false;
+	const formData = new FormData();
+	console.log(username, nickname);
+	formData.append('username', username);
+	formData.append('nickname', nickname);
+	axios.post(baseUrl() + "user/api-signup", formData, {headers : {
+		'X-CSRFToken': getCookie('csrftoken'), 
+		'Content-Type': 'multipart/form-data'
+	}})
+	.then(response => {
+		console.log('Response:', response);
+	}).catch(error => {
+		console.error('Error:', error);
+	});
+}
+
 function requestValidCheck(type, value) {
 	axios.get(baseUrl() + "user/valid-check" + 
 	"?type=" + type + "&value=" + value)
@@ -180,11 +211,10 @@ function requestValidCheck(type, value) {
 		});
 }
 
-async function requestUserInfo(nickname, resultInfo){
+async function requestUserInfo(nickname){
 	axios.defaults.withCredentials = false; //develope
 	var result;
 	const response = await axios.request({
-
 		headers: {
 			Authorization: `Bearer ${localStorage.accessToken}`,
 		},
@@ -261,5 +291,5 @@ function requestRefresh(username, password){
 }
 
 
-export { requestLogin, requestFriendList, requestSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
+export { requestLogin, requestLogout, requestFriendList, requestSignup, requestApiSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
 
