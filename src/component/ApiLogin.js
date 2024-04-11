@@ -6,10 +6,10 @@ const ApiLogin = () => {
 	const api_link = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-da15e1c7ef76e1c919d318b024eaf492d23793d93fabe249be7b160a5c7a0fa0&redirect_uri=http%3A%2F%2Flocalhost%3A5050%2Fapi-login&response_type=code";
 	
 	const redirect = () => {
-		console.log("redirect입니당")
+		console.log("redirect입니당");
 		window.location.href = api_link;
+		
 	}
-
 	const getCode = () => {
 		const url = window.location.href;
 		const code = url.split("code=")[1];
@@ -17,6 +17,11 @@ const ApiLogin = () => {
 		console.log("url:", url);
 		return code;
 	}
+	
+	if(!getCode())
+		useEffect(redirect, []);
+
+
 	const code = getCode();
 	if (code) {
 		console.log("code:", code);
@@ -26,15 +31,18 @@ const ApiLogin = () => {
 			})
 			.catch(error => {
 				console.error("로그인 요청 중 오류 발생:", error);
+				return ;
 			});
+		setTimeout(() => {
+			myReact.redirect("home")
+		}
+		, 1000);
 	}
 	else
 		console.log("code is null");
 	return (
 		<div id="api-login-container">
 			<p>42 login</p>
-			<button onClick={redirect}>버튼입니당나라</button>
-			<button onClick={getCode}>code받아오기</button>
 		</div>
 	)
 }
