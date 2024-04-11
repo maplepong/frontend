@@ -41,3 +41,8 @@
 	margin: 0;
 	border-radius: 0 0 11px 11px;
 }
+
+#myinfo-img {
+	width: 150px;
+	height: 150px;
+}
