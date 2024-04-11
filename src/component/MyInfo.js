@@ -4,7 +4,12 @@ import myReact , { Link, useEffect } from "../core/myReact.js";
 import "../css/MyInfo.css"
 
 const MyInfo = () => {
-	requestUserInfo(localStorage.nickname);
+	const resultInfo = (data) => {
+		if (!data)
+			return console.error("noDATA")
+		console.log(data);
+	}
+	useEffect(() => requestUserInfo(localStorage.nickname, resultInfo), []);
 	return (
 		<div id="container-myinfo" class="modal">
 			<div id="myinfo-headline">
