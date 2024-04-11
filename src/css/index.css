@@ -1,3 +1,88 @@
+* {
+	outline: 0;
+	padding: 0;
+	margin: 0;
+	max-width: 100%;
+}
+
+body {
+	font-family: "MapleStory OTF";
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #f5f5f5;
+	color: hsl(0, 0%, 20%);
+	background-image: url("../../public/asset/background/bg0.jpg");
+	background-size: cover;
+	scroll-behavior: auto;
+  }
+  
+  /* 헤더 및 버튼 스타일 */
+  header {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+  }
+  
+  button {
+	font-family: "MapleStory OTF";
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+	background-color: #0056b3;
+  }
+  
+  /* 메인 컨텐츠 영역 스타일 */
+  main {
+	display: flex;
+	flex-direction: column;
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  p {
+	line-height: 1.6;
+  }
+  
+  form#loginForm {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	background: #ffffff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+	display: flex;
+	flex-direction: column;
+  }
+  
+  .form-group label {
+	margin-bottom: 5px;
+  }
+  
+  .form-group input {
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+  }
+  
+
 /* 입장 시의 디자인 */
 #Logo {
   display: flex;
@@ -33,82 +118,6 @@
   -webkit-text-stroke: 2px black;
 }
 
-body {
-  font-family: "MapleStory OTF";
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f5f5f5;
-  color: hsl(0, 0%, 20%);
-  background-image: url("../../public/asset/background/bg0.jpg");
-  background-size: cover;
-  scroll-behavior: auto;
-}
-
-/* 헤더 및 버튼 스타일 */
-header {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-button {
-  font-family: "MapleStory OTF";
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* 메인 컨텐츠 영역 스타일 */
-main {
-  display: flex;
-  flex-direction: column;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-p {
-  line-height: 1.6;
-}
-
-form#loginForm {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 /* 42 Seoul API 로그인 및 회원가입 버튼 스타일 */
 button.api-login,
@@ -243,16 +252,26 @@ button[type="submit"]:hover {
 #root {
 	width: 100%;
 	height: 100%;
-	margin: 0 0;
+	margin: 0 ;
 }
 
 .app {
 	width: 100%;
-	height: 80%;
+	overflow: auto;
 }
 
 nav {
 	width: 100%;
 	height: fit-content;
 	display: flex;
+}
+
+.test {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	div {
+		display: flex;
+		flex-direction: row;
+	}
 }
