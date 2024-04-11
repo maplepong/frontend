@@ -39,16 +39,19 @@ const Test = () => {
 	const onOtherTest = () => { console.log("onchange success")}
 
 	return <div class="test">
-            <p>Test UseState: {count}
-                <button onclick={incre}>증가</button>
-                <button onclick={decre}>감소</button>
-            </p>
 			<div>
-				<input id="textInput"></input>
-				<button onclick={textchange}></button>
-				<p >Text is{text}</p>
+				<p>Test state-count: {count}
+				</p>
+				<button onclick={incre}>증가</button>
+				<button onclick={decre}>감소</button>
 			</div>
 			<div>
+				<p >Test state-text : {text}</p>
+				<input id="textInput"></input>
+				<button onclick={textchange}></button>
+			</div>
+			<div>
+				<p>Test onchange : </p>
 				<select onchange={onOtherTest}>
 					<option value="ok">ok</option>
 					<option value="no">no</option>
