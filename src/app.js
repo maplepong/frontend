@@ -1,6 +1,7 @@
 /* @jsx myReact.createElement */
 // import Login from "./component/Login.js";
 // import MyInfo from "./component/MyInfo.js";
+import axios from "axios";
 import myReact, { Link } from "./core/myReact.js";
 import myReactDOM from "./core/myReactDOM.js";
 import { requestLogin, requestFriendList, requestUserInfo } from "./core/Api.js";
