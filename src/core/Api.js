@@ -1,4 +1,5 @@
 import router from "./Router";
+import myReact from "./myReact";
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
@@ -141,7 +142,14 @@ async function request42ApiLogin(code) {
 			return;
 		});
 	if (typeof response !== "undefined") {
-		if (response.status === 200) {
+		if (response.status === 202)
+		{
+			const username = response.data.id;
+			console.log("id : " + username + "님은 회원가입 필요");
+			localStorage.setItem('username', username);
+			myReact.redirect("api-signup");
+		}
+		else if (response.status === 200) {
 			console.log(response.data.username);
 			const username = response.data.username;
 			localStorage.setItem('username', username);
@@ -152,16 +160,6 @@ async function request42ApiLogin(code) {
 			console.log(localStorage.getItem('accessToken'));
 			console.log(localStorage.getItem('nickname'))
 		}
-		else if (response.status === 409) {
-			const username = response.data.id;
-			console.log("id : " + id + "님은 회원가입 필요");
-			myReact.redirect("api_signup", {username: username});
-			
-			return ;
-		}
-		console.log("status", response.status);
-		status = response.status;
-		// resultLogin(status);
 	}
 }
 
@@ -187,7 +185,7 @@ function requestApiSignup(username, nickname) {
 	axios.defaults.withCredentials = false;
 	const formData = new FormData();
 	console.log(username, nickname);
-	formData.append('username', username);
+	formData.append('id', username);
 	formData.append('nickname', nickname);
 	axios.post(baseUrl() + "user/api-signup", formData, {headers : {
 		'X-CSRFToken': getCookie('csrftoken'), 

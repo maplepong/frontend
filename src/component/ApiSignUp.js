@@ -3,9 +3,12 @@ import myReact , { Link, useEffect } from "../core/myReact.js";
 import { requestApiSignup } from "../core/Api.js";
 
 const ApiSignUp = () => {
-    const getInfo = (username) => {
+    const getInfo = () => {
+        const username = localStorage.getItem('username');
         const nickname = document.querySelector("#new-nickname").value;
+        console.log("nickname: ", nickname, "username: ", username);
         requestApiSignup(username ,nickname);
+        localStorage.removeItem('username');
         history.pushState({}, "", "/home");
 	};
 
