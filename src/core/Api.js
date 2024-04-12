@@ -63,12 +63,12 @@ function requestLogin(getInfo, resultLogin){
 	});
 }
 
-function requestFriend(nickname)
+async function requestFriend(nickname)
 {
 	console.log("닉네임: ", nickname);
 	axios.defaults.withCredentials = false; //develop
 	var result;
-	axios.request({
+	await axios.request({
 		headers: {
 			Authorization: `Bearer ${localStorage.accessToken}`,
 		},
