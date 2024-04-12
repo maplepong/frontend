@@ -33,10 +33,6 @@ const ApiLogin = () => {
 				console.error("로그인 요청 중 오류 발생:", error);
 				return ;
 			});
-		setTimeout(() => {
-			myReact.redirect("home")
-		}
-		, 1000);
 	}
 	else
 		console.log("code is null");
