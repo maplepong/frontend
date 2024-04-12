@@ -2,6 +2,16 @@ import myReact from "./myReact.js";
 import router from "./Router.js";
 import { exist, isEmptyObj } from "./utils.js"
 
+const eventType = [
+    "onclick",
+    "onkeydown",
+    "onkeyup",
+    "oninput",
+    "onfocus",
+    "onblur",
+    "onchange",
+]
+
 function addEvent(target, eventType, selector, callback) {
 	const children = [...document.querySelectorAll(selector)];
 	target.addEventListener(eventType, event => {
@@ -11,77 +21,63 @@ function addEvent(target, eventType, selector, callback) {
 	});
 }
 
-function addProps(node, fNode){
-	//console.log("tag", fNode.tag, exist(fNode.props), !isEmptyObj(fNode.props))
-	if (exist(fNode.props) && !isEmptyObj(fNode.props)){
-		Object.entries(fNode.props).forEach(([key, value]) => {
-			if (key.slice(0, 2) === 'on') {
-				node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-				// addEvent(node,"click",null, value)
-			}
-			else {
-				node.setAttribute(key, value);
-			}
-		})
-	}
-}
-
-function addChildren(node, fNode){
-	if (exist(fNode.children) && !isEmptyObj(fNode.children)) {
-		fNode.children.forEach(child => {
-			//console.log(child);
-			if (typeof child === 'number') 
-				child = child.toString();
-			if (typeof child === 'string'){
-				child = document.createTextNode(child);
-				node.appendChild(child);
-			}
-			else
-				node.appendChild(createDOM(child));
-		})
-	}
-}
-
-
 
 function createDOM(fNode) {
 	const node = document.createElement(fNode.tag);
 	fNode.stateNode = node;
-	addProps(node, fNode);
-	addChildren(node, fNode);
+	updateProps ( node,	fNode.props || {}, null);
+	updateChildren ( node, fNode.children || [], null)
 	return node;
 }
 
 function updateProps(target, newProps, oldProps){
 	for (const [key, value] of Object.entries(newProps)){
-		if (key.slice(0, 2) === 'on') {
-			target.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-			// addEvent(target,"click",null, value);
+		if (eventType.find((e) => ( e === key.toLowerCase()))) {
+			target[key.toLowerCase()] = value;
 		}
-		else if (oldProps[key] === newProps[key]) continue;
+		else if (oldProps && oldProps[key] === newProps[key]) continue;
 		else target.setAttribute(key, value);
 	}
-	for (const [key, value] of Object.entries(oldProps)){
-		// if (key.slice(0, 2) === 'on') {
-		// 	// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-		// 	target.removeEventListener("click", value);
-		// }
-		if (oldProps[key] === newProps[key]) continue;
-		else target.removeAttribute(key);
+	if (oldProps){
+		for (const [key, value] of Object.entries(oldProps)){
+			// if (key.slice(0, 2) === 'on') {
+			// 	// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
+			// 	target.removeEventListener("click", value);
+			// }
+			if (oldProps[key] === newProps[key]) continue;
+			else target.removeAttribute(key);
+		}
 	}
 }
+
 function updateChildren(target, newChildren, oldChildren){
-	const maxLength = Math.max(newChildren.length , oldChildren.length);
-	for (let i = maxLength - 1; i >= 0; i--){
-		let newChild = newChildren[i];
-		if (typeof newChild === "string" || 
-			typeof newChild ==="number"){
-				target.replaceChild(
-					document.createTextNode(newChildren[i]),
-					target.childNodes[i]);
-				return ;
+	if (oldChildren) {
+		const maxLength = Math.max(newChildren.length , oldChildren.length);
+		for (let i = maxLength - 1; i >= 0; i--){
+			let newChild = newChildren[i];
+			if (typeof newChild === "string" || 
+				typeof newChild ==="number"){
+					target.replaceChild(
+						document.createTextNode(newChildren[i]),
+						target.childNodes[i]);
+					return ;
+				}
+			diffDom(target, newChildren[i], oldChildren[i], i);
+		}
+		return ;
+	}
+	else { //add new
+		if (!newChildren || newChildren.length === 0) return;
+		newChildren.forEach(child => {
+			if (typeof child === 'number') 
+				child = child.toString();
+			if (typeof child === 'string'){
+				child = document.createTextNode(child);
+				target.appendChild(child);
 			}
-		diffDom(target, newChildren[i], oldChildren[i], i);
+			else
+				target.appendChild(createDOM(child));
+		})
 	}
 }
 
@@ -115,7 +111,6 @@ function diffDom(parent, newfNode, oldfNode, index){
 	// same tag ::
 	else {
 		if (newfNode.tag === "button" )
-			//console.log(newfNode.props);
 		updateProps(
 			parent.childNodes[index],
 			newfNode.props || {},
