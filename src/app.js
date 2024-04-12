@@ -5,9 +5,11 @@ import myReact, { Link } from "./core/myReact.js";
 import myReactDOM from "./core/myReactDOM.js";
 import { requestLogin, requestFriendList, requestUserInfo } from "./core/Api.js";
 import FriendList from "./component/FriendList.js"
+import RequestFriend from "./component/RequestFriend.js";
 import { useState, useEffect } from "./core/myReact.js"
 // import SignUp from "./component/SignUp.js";
 import "./css/index.css";
+import "./css/friend.css";
 import Test from "./component/Test.js"
 
 const setAxios = () => {
@@ -22,11 +24,12 @@ const App = () => {
             <Link to="" >
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
+			<Test />
             <FriendList />
+			<RequestFriend />
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
-            
-	    </div>
+		</div>
 }
 
 export default App;
