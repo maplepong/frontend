@@ -1,5 +1,6 @@
 import router from "./Router";
 import myReact from "./myReact";
+import axios from "axios";
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
@@ -60,6 +61,33 @@ function requestLogin(getInfo, resultLogin){
 		console.error('Error:', error);
 		return ;
 	});
+}
+
+function requestFriend(nickname)
+{
+	console.log("닉네임: ", nickname);
+	axios.defaults.withCredentials = false; //develop
+	var result;
+	const response = axios.post(
+		baseUrl() + "user/friend/" + nickname
+	)
+	.then(response => {
+		console.log(nickname + "에게 친구 요청");
+		result = response;
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
+	if (typeof result === "undefined" || result.status != 200){
+		console.log("Friend request Error")
+		console.log(result);
+		return ;
+	}
+	//response.status == 200
+	else {
+		console.log(result);
+		return result.data;
+	}
 }
 
 function requestLogout(resultLogout)
@@ -134,7 +162,7 @@ async function request42ApiLogin(code) {
 				'X-CSRFToken': getCookie('csrftoken'),
 				'Content-Type': 'multipart/form-data'
 			},
-			  timeout: 50000000
+			timeout: 50000000
 		}
 	)
 		.catch(error => {
@@ -289,5 +317,5 @@ function requestRefresh(username, password){
 }
 
 
-export { requestLogin, requestLogout, requestFriendList, requestSignup, requestApiSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
+export { requestLogin, requestLogout, requestFriend, requestFriendList, requestSignup, requestApiSignup, requestValidCheck, requestUserInfo,request42ApiLogin, requestChangePassword}
 
