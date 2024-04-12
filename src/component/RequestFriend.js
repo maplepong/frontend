@@ -6,12 +6,10 @@ import "../css/index.css";
 import "../css/friend.css";
 
 const RequestFriend = () => {
-    // requestLogin(() => { return (["gyopark", "1234"])}, ()=>{} );
-
     const [nickname, setNickname] = useState('');
-    // const nickname = "gyopark";
+
     const handleClick = (event) => {
-        event.preventDefault();  // 폼의 기본 동작 방지
+        event.preventDefault();
         const response = requestFriend(nickname);
         console.log('친구 요청 결과:', response);
     }
@@ -19,8 +17,7 @@ const RequestFriend = () => {
     return (
         <div id="requestFriend">
             <form id="requestBox">
-            <input type="text" id="nickname" placeholder="닉네임 입력" value={nickname} onchange={e => {
-                // console.log("Event:", e);
+            <input type="text" placeholder="닉네임 입력" onchange={e => {
                 console.log("Input value:", e.target.value);
                 setNickname(e.target.value);
             }} />
