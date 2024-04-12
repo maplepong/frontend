@@ -5,7 +5,7 @@ import { useState, useEffect } from "../core/myReact.js"
 import "../css/friend.css";
 
 const FriendList = () => {
-    requestLogin(() => { return (["subcho", "1234"])}, ()=>{} );
+    requestLogin(() => { return (["gyopark", "1234"])}, ()=>{} );
     // requestFriendList();
 
     const [friendRequests, setFriendRequests] = useState({

@@ -68,9 +68,13 @@ function requestFriend(nickname)
 	console.log("닉네임: ", nickname);
 	axios.defaults.withCredentials = false; //develop
 	var result;
-	const response = axios.post(
-		baseUrl() + "user/friend/" + nickname
-	)
+	axios.request({
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+		method: "POST",
+		url: baseUrl() + "user/friend/" + nickname,
+	})
 	.then(response => {
 		console.log(nickname + "에게 친구 요청");
 		result = response;
