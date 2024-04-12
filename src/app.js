@@ -8,7 +8,6 @@ import FriendList from "./component/FriendList.js"
 import { useState, useEffect } from "./core/myReact.js"
 // import SignUp from "./component/SignUp.js";
 import "./css/index.css";
-import "./css/friend.css";
 import Test from "./component/Test.js"
 
 const setAxios = () => {
