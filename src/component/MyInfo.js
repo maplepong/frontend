@@ -18,9 +18,9 @@ const MyInfo = () => {
 	const resultInfo = (responsedata) => {
 		if (!responsedata)
 			return console.error("noDATA")
-		console.log(responsedata);
+		// console.log("image...",responsedata.image)
+		// console.log(responsedata);
 		setData({...responsedata});		
-		console.log(responsedata.image)
 	}
 	useEffect(() => requestUserInfo(localStorage.nickname, resultInfo), []);
 	// useEffect(() => console.log(data), [data]);
@@ -41,6 +41,7 @@ const MyInfo = () => {
 					<li>username {data.username}</li>
 					<li>wins {data.wins}</li>
 					<li>win_rate {data.win_rate}</li>
+					{/* <li>image {data.image}</li> */}
 				</ul>
 			</div>
 		</div>

@@ -49,6 +49,7 @@ function createMyReact() {
 			const newFiberRoot = this.reRender(this.fiberRoot);
 			// this.diffRoot(this.FiberRoot); //enrenderQueue를 통해 바뀐 부분 찾기
 			// await myReactDOM.updateDOM(this.enrenderQueue); //나중에 바뀐 부분만 보낼 수 있게...업데이트 할 수 있으면...좋고...
+			console.log(newFiberRoot);
 			await myReactDOM.updateDOM(newFiberRoot);
 			this.fiberRoot = newFiberRoot;
 			this.enrenderQueue = [];
