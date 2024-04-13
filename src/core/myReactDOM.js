@@ -31,13 +31,6 @@ function createDOM(fNode) {
 }
 
 function updateProps(target, newProps, oldProps){
-	for (const [key, value] of Object.entries(newProps)){
-		if (eventType.find((e) => ( e === key.toLowerCase()))) {
-			target[key.toLowerCase()] = value;
-		}
-		else if (oldProps && oldProps[key] === newProps[key]) continue;
-		else target.setAttribute(key, value);
-	}
 	if (oldProps){
 		for (const [key, value] of Object.entries(oldProps)){
 			// if (key.slice(0, 2) === 'on') {
@@ -47,6 +40,13 @@ function updateProps(target, newProps, oldProps){
 			if (oldProps[key] === newProps[key]) continue;
 			else target.removeAttribute(key);
 		}
+	}
+	for (const [key, value] of Object.entries(newProps)){
+		if (eventType.find((e) => ( e === key.toLowerCase()))) {
+			target[key.toLowerCase()] = value;
+		}
+		else if (oldProps && oldProps[key] === newProps[key]) continue;
+		else target.setAttribute(key, value);
 	}
 }
 
@@ -110,7 +110,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 	}
 	// same tag ::
 	else {
-		if (newfNode.tag === "button" )
+		// if (newfNode.tag === "button") ///???? what????why????
 		updateProps(
 			parent.childNodes[index],
 			newfNode.props || {},
