@@ -158,12 +158,12 @@ export function useState(initValue){
 	fiber.state[i] = fiber.state[i] || initValue;
 	const setState = (value) => {
 		if (fiber.state[i] === value)
-			return //console.log("setState err-value same-",value);
-		fiber.changedState.push({i, value});
-		myReact.enrenderComponent.push(fiber);
-		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
-		fiber.changed = true;
-		myReact.render(null, "reRender");
+		return //console.log("setState err-value same-",value);
+	fiber.changedState.push({i, value});
+	myReact.enrenderComponent.push(fiber);
+	// myReact.enrenderQueue.append(["stateChange", fiber, i]);
+	fiber.changed = true;
+	myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}
 	return [fiber.state[i], setState];
