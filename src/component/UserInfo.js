@@ -3,7 +3,6 @@ import { requestUserInfo } from "../core/Api.js";
 import myReact , { useEffect, useState} from "../core/myReact.js";
 
 const UserInfo = (props) => {
-	console.log(props.nickname)
 	const [data, setData] = useState({
 		id: "",
 		username: "",
@@ -19,7 +18,6 @@ const UserInfo = (props) => {
 		if (!responsedata)
 			return console.error("noDATA")
 		// console.log("image...",responsedata.image)
-		console.log(responsedata);
 		setData({...responsedata});		
 	}
 	useEffect(() => requestUserInfo(props.nickname, resultInfo), []);
