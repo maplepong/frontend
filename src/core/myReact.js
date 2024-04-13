@@ -164,6 +164,7 @@ export function useState(initValue){
 		myReact.enrenderComponent.push(fiber);
 		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
 		fiber.changed = true;
+		console.log(value);
 		myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}
