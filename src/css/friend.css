@@ -59,3 +59,18 @@
 #list {
     margin: 15px;
 }
+
+/* friend request */
+
+#requestFriend {
+    margin:5px;
+}
+
+#requestBox {
+    display: flex;
+    flex-direction: row;
+}
+
+#requestName {
+    background-color: yellow;
+}
