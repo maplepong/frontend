@@ -11,7 +11,6 @@ import ApiLogin from "../component/ApiLogin.js"
 import SignUp from "../component/SignUp.js"
 import ApiSignUp from "../component/ApiSignUp.js";
 import GameContainer from "../component/GameContainer.js"
-import Component from '../_core/Component';
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 
