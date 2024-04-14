@@ -12,7 +12,7 @@ import { useState, useEffect } from "./core/myReact.js"
 import "./css/index.css";
 import "./css/friend.css";
 import Test from "./component/Test.js"
-import ApiTest from "./component/ApiTest.js";
+
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
@@ -23,15 +23,15 @@ const setAxios = () => {
 const App = () => {
 	setAxios();
 	return <div class="app">
-            {/* <Link to="" >
+            <Link to="" >
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
 			<Test />
             <FriendList />
 			<RequestFriend />
 			<Link to="home" id="home"><button>Home</button></Link>
-			<Link to="test" id="home"><button>Test</button></Link> */}
-			<ApiTest></ApiTest>
+			<Link to="test" id="home"><button>Test</button></Link>
+			<Link to="api-test" id="home"><button>APITest</button></Link>
 		</div>
 }
 
