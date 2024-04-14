@@ -1,4 +1,3 @@
-import router from "./Router";
 import myReact from "./myReact";
 import axios from "axios";
 
@@ -10,19 +9,50 @@ const apiInstance = axios.create({
 	timeout: 1000,
 	withCredentials: false, //develope
 })
+
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
 	const parts = value.split(`; ${name}=`);
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-apiInstance.interceptors.response.use(response => response, error => {
+apiInstance.interceptors.response.use(response => response, async error => {
+	const originalRequest = error.config;
+	if (error.response.status === 401){ //token err
+		if (!originalRequest._retry){
+			originalRequest._retry = true;
+			try {
+				const refreshToken = localStorage.getItem('refreshToken');
+				const response = await apiInstance.post(('refresh'), {
+					token : refreshToken,
+				});
+				const {accessToken} = response.data;
+				localStorage.setItem('accessToken', accessToken);
+				apiInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+				originalRequest.headers['Authorization'] = `Bearer ${response.data.access_token}`;
+			}
+			catch (refreshError) {
+				//remove local data
+				console.error("refresh token fail::", refreshError);
+				//redirect to home;
+			}
+		}	
+	}
 	if (!error.response) { // It's a network error
-        console.log('Network error - retrying...');
-        return axiosInstance.request(error.config);
-    }
+		if (!originalRequest._retry){
+			originalRequest._retry = true;
+			console.log('Network error - retrying...');
+			return apiInstance.request(error.config);
+		}
+	}
     return Promise.reject(error);
 });
+
+function setToken() {
+	if (localStorage.accessToken){
+		apiInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.accessToken}`;
+	}
+}
 
 
 const api = {
@@ -53,6 +83,7 @@ const api = {
 		})
 	},
 	sendFriendRequest(nickname) {
+		setToken();
 		return apiInstance.request({
 			method: "POST",
 			url: "user/friend/" + nickname,
@@ -62,8 +93,138 @@ const api = {
 			return response;
 		})
 		.catch(error => { return error });
+	},
+	handleFriendRequest(nickname, type){//type ==="POST", "DELETE"
+		setToken();
+		return apiInstance.request({
+			method: type,
+			url: "user/friend-request/" + nickname,
+		})
+		.then(response => {
+			console.log(nickname + "의 친구 요청을 " + type + "하였습니다.")
+			return response.status;
+		})
+		.catch(error => { return error });
+	},
+	deleteFriend(nickname) {
+		setToken();
+		return apiInstance.request({
+			method: "DELETE",
+			url: "user/friend/" + nickname,
+		})
+		.then(response => {
+			console.log(nickname + "과 더이상 친구가 아닙니다.")
+			return response.status;
+		})
+		.catch(error => { return error });
+	},
+	logout() { //not on api list
+		localStorage.removeItem("username");
+		localStorage.removeItem("nickname");
+		localStorage.removeItem("accessToken");
+		apiInstance.defaults.headers.common['Authorization'] = null;
+		apiInstance.defaults.withCredentials = false;
+		alert("로그아웃되었습니다");
+		//need::redirect to home
+	},
+	getFriendList(){
+		setToken();
+		return apiInstance.request({
+			method: "GET",
+			url: "user/friend-request-list",
+		})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => { return error });
+	},
+	signup(nickname, ){
+		setToken();
+	},
+	validCheck(type, value){
+		setToken();
+		return apiInstance.request({
+			method: "GET",
+			url: "user/valid-check?type=" + type + "&value="+ value,
+		})
+		.then(response => {
+			console.log(value," 값은 ",type, " 값으로 적합하다")
+			return response;
+		})
+		.catch(error => { 
+			if (error.response.status === 409){
+				console.log(value," 값은 ",type, " 할수없다.. 중복되었다")
+			}
+			else {
+				console.log(value," 값은 ",type, " 할수없다.. 요청에 문제가 있다")
+			}
+			return error });
+	},
+	getUserInfomation(nickname){
+		setToken();
+		return apiInstance.request({
+			method: "GET",
+			url: "user/information?nickname=" + nickname,
+		})
+		.then(response => {
+			console.log(nickname + "의 정보를 불러왔습니다.")
+			return response.data;
+		})
+		.catch(error => { return error });
+	},
+	patchUserInfomation(changedValue){ //409 conflict
+		setToken();
+		const nickname = localStorage.nickname;
+		return apiInstance.request({
+			method: "PATCH",
+			url: "user/information",
+			data: changedValue,
+			headers: {
+				'Content-Type' : 'application/json',
+			},
+		})
+		.then(response => {
+			console.log(nickname + "의 정보를 변경했습니다.")
+			return response.data;
+		})
+		.catch(error => { 
+			console.log(nickname + "의 정보를 변경하지 못했습니다.")
+			return error });
+	},
+	userImage(type, src){
+		setToken();
+		if (type === "POST"){
+			if (!src){
+				console.error("api image post:: no image provided");
+				return false;
+			}
+			return apiInstance.request({
+				method: type,
+				url: "user/image",
+				data: src,
+				headers: {
+					'Content-Type' : 'multipart/form-data=image'
+				},
+			}).then(response => {
+				console.log("사진을 올렸다")
+				return response.status;
+			})
+			.catch(error => { 
+				console.log("사진을 올리지 못했다...")
+				return error });
+		}
+		return apiInstance.request({
+			method: type,
+			url: "user/image",
+		})
+		.then(response => {
+			console.log("사진을 " + type + " 했다")
+			return response.data;
+		})
+		.catch(error => { 
+			console.log("사진을 " + type + " 하지 못했다...")
+			return error });
 	}
-
 }
 
 export default api;
