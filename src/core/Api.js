@@ -241,7 +241,7 @@ function requestValidCheck(type, value) {
 		});
 }
 
-async function requestUserInfo(nickname){
+async function requestUserInfo(nickname, resultInfo){
 	axios.defaults.withCredentials = false; //develope
 	var result;
 	const response = await axios.request({
@@ -254,6 +254,7 @@ async function requestUserInfo(nickname){
 	.then(response => {
 		result = response;
 		console.log('Response:', response);
+		resultInfo(response.data);
 	})
 	.catch(error => {
 		console.error('Error:', error);
@@ -265,7 +266,6 @@ async function requestUserInfo(nickname){
 	//response.status == 200
 	else {
 		console.log("UserInfo request ok")
-		// resultInfo(response.data);
 		console.log(result);
 		return result.data;
 	} 
