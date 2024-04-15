@@ -13,6 +13,7 @@ import "./css/index.css";
 import "./css/friend.css";
 import Test from "./component/Test.js"
 
+
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
@@ -30,6 +31,7 @@ const App = () => {
 			<RequestFriend />
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
+			<Link to="api-test" id="home"><button>APITest</button></Link>
 		</div>
 }
 
