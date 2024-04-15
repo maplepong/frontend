@@ -1,7 +1,6 @@
 /* @jsx myReact.createElement */
-
+//// TEST PAGE for useState, useEffect
 import myReact, { useState, useEffect, Link } from "../core/myReact.js";
-import router from "../core/Router.js"
 
 const Test = () => {
 
