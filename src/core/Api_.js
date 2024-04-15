@@ -198,12 +198,14 @@ const api = {
 				console.error("api image post:: no image provided");
 				return false;
 			}
+			const formData = new FormData();
+			formData.append('file', src);
 			return apiInstance.request({
 				method: type,
 				url: "user/image",
-				data: src,
-				headers: {
-					'Content-Type' : 'multipart/form-data=image'
+				data: formData,
+				headers: { //develope
+					'Content-Type' : 'multipart/form-data'
 				},
 			}).then(response => {
 				console.log("사진을 올렸다")

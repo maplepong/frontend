@@ -38,9 +38,20 @@ const ApiTest = () => {
 		}
 		imgContainer.src = image.image;
 	}
-	async function patchImage(){
+	
+	const onFileChange = (e) => {
+		const {
+		  target: {files},
+		} = e;
+		const filefile = files[0]; //우선 1개만 보여줄꺼니까 크기 1로 지정
+		
+		patchImage(filefile);
+	}
+
+
+	async function patchImage(FILE){
 		console.log(await api.userImage("DELETE"));
-		console.log(await api.userImage("POST", "https://img.freepik.com/premium-photo/anime-boy-cool-fighting-scene_962635-271.jpg"));
+		console.log(await api.userImage("POST", FILE));
 	}
 
 	async function validCheck() {
@@ -65,6 +76,7 @@ const ApiTest = () => {
 		<button onclick={getImage}>사진불러오기</button>
 		<img style="{width: 150px, height: 150px}" src="null" id="testImg"></img>
 		<button onclick={patchImage}>이미지 패치해보기.. delete가 안됨..</button>
+		<input type="file" accept="image/*"  id="testUpload" onchange={onFileChange}></input>
 	</div>)
 	
 }
