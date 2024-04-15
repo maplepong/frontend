@@ -11,9 +11,9 @@ import ApiLogin from "../component/ApiLogin.js"
 import SignUp from "../component/SignUp.js"
 import ApiSignUp from "../component/ApiSignUp.js";
 import GameContainer from "../component/GameContainer.js"
-import Component from '../_core/Component';
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
+import ApiTest from "../component/ApiTest"
 
 const pathList = {
 	"/": <App />,
@@ -21,6 +21,7 @@ const pathList = {
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
+	"/api-test": <ApiTest />,
  	"/signup": <SignUp />,
 	"/api-signup": <ApiSignUp />,
 	"/game" : <GameContainer />,
