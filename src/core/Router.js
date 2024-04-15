@@ -24,7 +24,7 @@ const pathList = {
 	"/api-test": <ApiTest />,
  	"/signup": <SignUp />,
 	"/api-signup": <ApiSignUp />,
-	"/game" : <GameContainer />,
+	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
 	"/test" : <Test />,
 }
