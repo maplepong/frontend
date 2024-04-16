@@ -14,6 +14,7 @@ import GameContainer from "../component/GameContainer.js"
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
+import Lobby from "../component/Lobby.js"
 
 const pathList = {
 	"/": <App />,
@@ -26,6 +27,7 @@ const pathList = {
 	"/api-signup": <ApiSignUp />,
 	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
+	"/lobby": <Lobby />,
 	"/test" : <Test />,
 }
 

@@ -6,7 +6,7 @@ const apiInstance = axios.create({
 	headers: {
 		'Content-Type' : 'application/json',
 	},
-	timeout: 1000,
+	timeout: 3000,
 	withCredentials: false, //develope
 })
 
@@ -19,18 +19,20 @@ function getCookie(name) {
 apiInstance.interceptors.response.use(response => response, async error => {
 	const originalRequest = error.config;
 	if (!error.response || !error.response.status)
-		Promise.reject(error);
+		return Promise.reject(error);
 	if (error.response.status === 401){ //token err
 		console.log("401::trying refresh")
 		if (!originalRequest._retry){
 			originalRequest._retry = true;
 			try {
+				console.log("cookie : ", document.cookie)
 				const refreshToken = localStorage.getItem('refreshToken');
 				const response = await apiInstance.request({
 					method : "POST",
 					url: "user/api/token/refresh",
 					headers: {
 						'X-CSRFToken': getCookie('csrftoken'),
+						'cookie': document.cookie,
 					},
 				});
 				const {accessToken} = response.data;
