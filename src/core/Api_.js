@@ -199,7 +199,7 @@ const api = {
 				return false;
 			}
 			const formData = new FormData();
-			formData.append('file', src);
+			formData.append('image', src);
 			return apiInstance.request({
 				method: type,
 				url: "user/image",
