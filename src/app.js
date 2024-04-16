@@ -26,9 +26,9 @@ const App = () => {
             <Link to="" >
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
-			<Test />
-            <FriendList />
-			<RequestFriend />
+			{/* <Test /> */}
+            {/* <FriendList /> */}
+			{/* <RequestFriend /> */}
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
 			<Link to="api-test" id="home"><button>APITest</button></Link>

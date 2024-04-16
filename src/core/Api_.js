@@ -18,13 +18,20 @@ function getCookie(name) {
 
 apiInstance.interceptors.response.use(response => response, async error => {
 	const originalRequest = error.config;
+	if (!error.response || !error.response.status)
+		Promise.reject(error);
 	if (error.response.status === 401){ //token err
+		console.log("401::trying refresh")
 		if (!originalRequest._retry){
 			originalRequest._retry = true;
 			try {
 				const refreshToken = localStorage.getItem('refreshToken');
-				const response = await apiInstance.post(('refresh'), {
-					token : refreshToken,
+				const response = await apiInstance.request({
+					method : "POST",
+					url: "user/api/token/refresh",
+					headers: {
+						'X-CSRFToken': getCookie('csrftoken'),
+					},
 				});
 				const {accessToken} = response.data;
 				localStorage.setItem('accessToken', accessToken);
