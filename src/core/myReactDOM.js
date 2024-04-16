@@ -14,11 +14,11 @@ const eventType = [
 
 function addEvent(target, eventType, selector, callback) {
 	const children = [...document.querySelectorAll(selector)];
-	target.addEventListener(eventType, event => {
+	children.forEach((child) => {child.addEventListener(eventType, event => {
 		event.preventDefault();
 		if (selector && !event.target.closest(selector)) return false;
 		callback(event);
-	});
+	});})
 }
 
 
