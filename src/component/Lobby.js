@@ -6,8 +6,12 @@ const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
 
 	const resultLobby = (responsedata) => {
-        setLobbyData(responsedata);		
-        console.log("resultLobby", responsedata);
+        setLobbyData(responsedata);
+        console.log("responsedata", responsedata);
+        console.log("lobbyData", lobbyData);
+        lobbyData.map(room => {
+            console.log(room);
+        });
 	}
 
     const resultCreateGame = (responsedata) => {
@@ -32,6 +36,8 @@ const Lobby = (props) => {
         resultLobby(res);
     }, []);
 
+    console.log("lobbyData", lobbyData);
+
 	return (
         <div id="container-lobby" className="modal">
             <div id="lobby-headline">
@@ -42,7 +48,7 @@ const Lobby = (props) => {
             </div>
             <div id="modal" className="hidden">
                 <div id="modal-content">
-                    <form id="room-form">
+                    <form id="room-form" onSubmit={create_game}>
                         <div id="modal-title">방 제목</div>
                         <input type="text" id="room-name" name="room-name" placeholder="방 제목 입력"></input>
                         <div id="checkbox-container">
@@ -58,24 +64,25 @@ const Lobby = (props) => {
                 </div>
             </div>
             <div id="lobby-body">
-                <ul>
-                    {lobbyData ? lobbyData.map(room => (
-                        <li key={room.id}>
-                            <ul>
-                                <li>Room Number: {room.id}</li>
-                                <li>Room Title: {room.name}</li>
-                                <li>Players:</li>
-                                <ul>
-                                    {room.players.map(player => (
-                                        <li key={player.id}>{player.nickname}</li>
-                                    ))}
-                                </ul>
-                                <li>Room Status: {room.status}</li>
-                                <li>Locked: {room.password}</li>
-                            </ul>
-                        </li>
-                    )) : <li>방이 없습니다.</li>}
-                </ul>
+                <p>sibal</p>
+            <ul>
+               { /* {lobbyData.map(room => (
+                <li key={room.id}>
+                    <ul>
+                    <li>Room Number: {room.id}</li>
+                    <li>Room Title: {room.name}</li>
+                    <li>Players:</li>
+                    <ul>
+                        {room.players.map(player => (
+                        <li key={player.id}>{player.nickname}</li>
+                        ))}
+                    </ul>
+                    <li>Room Status: {room.status}</li>
+                    <li>Locked: {room.password}</li>
+                    </ul>
+                </li>
+                ))} */}
+            </ul>
             </div>
         </div>
     );
