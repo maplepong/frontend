@@ -1,52 +1,25 @@
-/* Signup.css */
+#Signup-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
 
-  #id-container {
-    display: flex;
-  }
-  inputlabel {
-	width: 140px;
-  }
-  #signup-form {
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-color: #f9f9f9;
-  }
-  
-  #signup-username, #signup-nickname, #signup-password {
-    display: flex;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box; /* Makes sure padding does not affect total width */
-  }
+#userinputBox, #nickinputBox {
+  margin: 10px;
+}
 
-  #input-username, #input-id {
-    display: flex;
-    width: 70%;
-    margin: 10px;
-    height: 20px;
-    justify-content: center;
-  }
+#passinputBox {
+  margin: 10px;
+}
 
-  #input-password {
-    display: flex;
-    width: 100%;
-    margin: 10px;
-    height: 20px;
-    justify-content: center;
-  }
+#p-id-error, #p-nick-error {
+  color: white;
+}
 
-  .dup-check {
-    width: 150px;
-  }
+.errMessage {
+  font-size: 15px;
+}
 
-  #btn-container {
-    display: flex;
-    justify-content: center;
-  }
+#new-username, #new-password, #new-nickname {
+  width: 300px;
+}

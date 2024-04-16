@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -18,6 +18,8 @@ function getCookie(name) {
 
 apiInstance.interceptors.response.use(response => response, async error => {
 	const originalRequest = error.config;
+	if (!error.response || !error.response.status)
+		return Promise.reject(error);
 	if (error.response.status === 401){ //token err
 		if (!originalRequest._retry){
 			originalRequest._retry = true;
@@ -138,8 +140,27 @@ const api = {
 		})
 		.catch(error => { return error });
 	},
-	signup(nickname, ){
-		setToken();
+	signup(username, password, nickname){
+		// setToken(); // 없어도 된다.
+		const formData = new FormData();
+		console.log(username, password, nickname);
+		formData.append('username', username);
+		formData.append('nickname', nickname);
+		formData.append('password', password);
+		return apiInstance.request({
+			method: "POST",
+			url: "user/sign-up",
+			data: formData,
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data',
+			}
+		}).then(response => {
+			console.log(response);
+			console.log(username, '의 회원가입 완료!');
+		}).catch(error => {
+			console.error('Error: ', error);
+		});
 	},
 	validCheck(type, value){
 		setToken();
@@ -152,13 +173,16 @@ const api = {
 			return response;
 		})
 		.catch(error => { 
+			if (!error.response || !error.response.status)
+				return error;
 			if (error.response.status === 409){
 				console.log(value," 값은 ",type, " 할수없다.. 중복되었다")
 			}
 			else {
 				console.log(value," 값은 ",type, " 할수없다.. 요청에 문제가 있다")
 			}
-			return error });
+			return error 
+		});
 	},
 	getUserInfomation(nickname){
 		setToken();
