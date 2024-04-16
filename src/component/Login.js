@@ -1,6 +1,7 @@
 /* @jsx myReact.createElement */
 import myReact , { Link } from "../core/myReact.js";
 import { requestLogin, requestLogout } from "../core/Api.js";
+import api from "../core/Api_.js"
 
 const Login = () => {
 	const getInfo = () => {
@@ -19,6 +20,11 @@ const Login = () => {
 			alert("login fail");
 		}
 	}
+	
+	async function login(){
+		const res = await api.login(getInfo)
+		console.log(res);
+	}
 
 	const resultLogout = (status) => {
 		if (status === 200) {
@@ -35,7 +41,7 @@ const Login = () => {
 		<div id="login-container">
 			<input id="input-username" placeholder="ID"></input>
 			<input id="input-password" placeholder="password"></input>
-			<button id="btn-request-login" onClick={() => { requestLogin(getInfo, resultLogin) }}>Login</button>
+			<button id="btn-request-login" onClick={login}>Login</button>
 			<button id="btn-request-logout" onClick={() => { requestLogout(resultLogout)}}>Logout</button>
 			<p id="p-login-error"></p>
 		</div>
