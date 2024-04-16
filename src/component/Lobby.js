@@ -1,13 +1,26 @@
 /* @jsx myReact.createElement */
 import myReact , { useEffect, useState} from "../core/myReact.js";
 import { requestLobbyList, requestCreateGame } from "../core/ApiGame.js";
+import api from "../core/Api_.js"
 
 const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
+	const [room, setRoom] = useState({id: "", name: "", status: "", password: ""});
+
+	async function requestLogin() {
+		const res = await api.login(() => {return ["test", "4545"]})
+		console.log(res);
+	}
 
 	const resultLobby = (responsedata) => {
-        setLobbyData(responsedata);		
+		setRoom(responsedata[0]);
+		console.log(room);
+        // setLobbyData(responsedata);		
         console.log("resultLobby", responsedata);
+		// const listElem = document.querySelector("#room-list");
+		// if (resposedata.length > 0){
+			
+		// }
 	}
 
     const resultCreateGame = (responsedata) => {
@@ -34,6 +47,7 @@ const Lobby = (props) => {
 
 	return (
         <div id="container-lobby" className="modal">
+			<button onclick={requestLogin}>login: test</button>
             <div id="lobby-headline">
                 <p>Pingpong🏓</p>
                 <button>X</button>
@@ -58,23 +72,36 @@ const Lobby = (props) => {
                 </div>
             </div>
             <div id="lobby-body">
-                <ul>
-                    {lobbyData ? lobbyData.map(room => (
-                        <li key={room.id}>
-                            <ul>
-                                <li>Room Number: {room.id}</li>
-                                <li>Room Title: {room.name}</li>
-                                <li>Players:</li>
-                                <ul>
-                                    {room.players.map(player => (
-                                        <li key={player.id}>{player.nickname}</li>
-                                    ))}
-                                </ul>
-                                <li>Room Status: {room.status}</li>
-                                <li>Locked: {room.password}</li>
-                            </ul>
-                        </li>
-                    )) : <li>방이 없습니다.</li>}
+                <ul id="room-list">
+					{/* {lobbyData.length > 0 ? (
+						lobbyData.map(room => (
+							<li key={room.id}>
+							<ul>
+								<li>Room Number: {room.id}</li>
+								<li>Room Title: {room.name}</li>
+								<li>Players:
+								 <ul>
+									{room.players.map(player => (
+									<li key={player.id}>{player.nickname}</li>
+									))}
+								</ul> 
+								</li>
+								<li>Room Status: {room.status}</li>
+								<li>Locked: {room.password ? "Yes" : "No"}</li>
+							</ul>
+							</li>
+						))
+						) : (
+						<li>방이 없습니다.</li>
+						)} */}
+						<li key={room.id}>
+							<ul>
+								<li>Room Number: {room.id}</li>
+								<li>Room Title: {room.name}</li>
+								<li>Room Status: {room.status}</li>
+								<li>Locked: {room.password ? "Yes" : "No"}</li>
+							</ul>
+							</li>
                 </ul>
             </div>
         </div>
