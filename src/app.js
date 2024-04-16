@@ -9,7 +9,6 @@ import FriendList from "./component/FriendList.js"
 import RequestFriend from "./component/RequestFriend.js";
 import { useState, useEffect } from "./core/myReact.js"
 import SignUp from "./component/SignUp.js";
-// import NewSignUp from "./component/NewSignup.js";
 import "./css/index.css";
 import "./css/friend.css";
 import Test from "./component/Test.js"
