@@ -22,7 +22,7 @@ const pathList = {
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
 	"/api-test": <ApiTest />,
- 	"/signup": <SignUp />,
+	"/signup": <SignUp />,
 	"/api-signup": <ApiSignUp />,
 	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
@@ -30,13 +30,19 @@ const pathList = {
 }
 
 export default function router(param) {
-	var path = window.location.pathname;
+	var path;
+	//  = window.location.pathname;
+	if (!param)
+		path = window.location.pathname;
+	else
+		path = param;
 	console.log("router called: path: ", path);
 	const component = pathList[path];
+	console.log("component", component);
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
 	}
 	else {
-		myReact.render(<div>{component}<Navbar/></div>, "newPage");
+		myReact.render(<div>{component}</div>, "newPage");
 	}
 }
