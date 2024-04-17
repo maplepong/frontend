@@ -2,11 +2,11 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
-	timeout: 1000,
+	timeout: 3000,
 	withCredentials: false, //develope
 })
 
@@ -129,13 +129,14 @@ const api = {
 		alert("로그아웃되었습니다");
 		//need::redirect to home
 	},
-	getFriendList(){
+	getRequestFriendList(){
 		setToken();
 		return apiInstance.request({
 			method: "GET",
 			url: "user/friend-request-list",
 		})
 		.then(response => {
+			// console.log(response);
 			return response.data;
 		})
 		.catch(error => { return error });
