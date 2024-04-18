@@ -44,11 +44,12 @@ const App = () => {
 			{/* <Test /> */}
             {/* <FriendList /> */}
 			{/* <RequestFriend /> */}
-			{/* <SignUp /> */}
-			
+
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
 			<Link to="api-test" id="home"><button>APITest</button></Link>
+			
+			<SignUp />
 		</div>
 }
 
