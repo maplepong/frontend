@@ -6,36 +6,42 @@ import api from "../core/Api_.js";
 
 const FriendList = () => {
 
-    const [friendreq, setfriendreq] = useState({
+    // const result = async () => {
+    //     const data = await api.getRequestFriendList();
+    //     console.log(data);
+    // }
+    // result();
+
+    const [ list, setList ] = useState({
         sends: [],
         receives: []
     });
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await api.getRequestFriendList();
-            if (response && response.status === 200 && response.data) {
-                setfriendreq(response.data);
-            }
+            const data = await api.getRequestFriendList();
+            setList(data);
         };
         fetchData();
-    }, []);
+    }, [])
 
-    const createRequestList = (requests, type) => {
-        let requestList = [];
-        for (let i = 0; i < requests.length; i++) {
-            requestList.push(
-                <div key={i}>
-                    <span>👤 {requests[i].from_user || requests[i].to_user} 요청</span>
-                    <button onClick={() => console.log(`${type === 'receive' ? '수락' : '취소'}`)}>{type === 'receive' ? '수락' : '취소'}</button>
-                </div>
-            );
+    function renderReceives() {
+        if (list.receives.length > 0) {
+            const elements = list.receives.map((item, index) => {
+                // fiberNode에서 children을 직접 참조하여 추출
+                console.log("item", item);
+                const content = item.from_user ? item.from_user : null;
+                console.log("content", content);
+                return <div key={index}>{content}</div>;
+            });
+            console.log("elements", elements.fiberNode);
+            return <div>{elements}</div>;
+        } else {
+            return <div>받은 요청이 없습니다.</div>;
         }
-        return requestList;
-    };
-
-    const receivedRequestsElements = createRequestList(friendreq.receives, 'receive');
-    const sentRequestsElements = createRequestList(friendreq.sends, 'send');
+    }
+    
+    
 
     return (
         <div id="box">
@@ -46,12 +52,11 @@ const FriendList = () => {
             <hr className="line" />
             <div>
                 <span id="request">받은 친구 요청</span>
-                {receivedRequestsElements}
+                {renderReceives()}
             </div>
             <hr className="line" />
             <div>
                 <span id="request">보낸 친구 요청</span>
-                {sentRequestsElements}
             </div>
         </div>
     );
