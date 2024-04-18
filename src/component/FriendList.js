@@ -28,20 +28,23 @@ const FriendList = () => {
     function renderReceives() {
         if (list.receives.length > 0) {
             const elements = list.receives.map((item, index) => {
-                // fiberNode에서 children을 직접 참조하여 추출
-                console.log("item", item);
-                const content = item.from_user ? item.from_user : null;
-                console.log("content", content);
-                return <div key={index}>{content}</div>;
+                // 각 아이템의 fiberNode에서 첫 번째 child를 가져옴
+                const content = item;
+                console.log("Item:", item, "Content:", content);
+                // 각 아이템에 대한 JSX 요소를 직접 반환
+                console.log("초기", <div key={index}>{content}</div>);
+                const value = <div key={index}>{content}</div>.children;
+                console.log("value: ", value[0].from_user);
+                return value[0].from_user;
             });
-            console.log("elements", elements.fiberNode);
-            return <div>{elements}</div>;
+            console.log("Elements:", elements);
+            return <div>{elements}</div>;  // 생성된 JSX 요소 배열을 반환
         } else {
             return <div>받은 요청이 없습니다.</div>;
         }
     }
     
-    
+    console.log("renderReceives", renderReceives());
 
     return (
         <div id="box">
