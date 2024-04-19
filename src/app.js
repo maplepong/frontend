@@ -41,9 +41,9 @@ const App = () => {
 			<Link to="login"><button id="btn-nav-login">로그인</button></Link>
 			<button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button>
 
-			{/* <Test /> */}
+			<Test />
             {/* <FriendList /> */}
-			{/* <RequestFriend /> */}
+			<RequestFriend />
 
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
