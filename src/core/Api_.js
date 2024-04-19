@@ -147,8 +147,27 @@ const api = {
 		})
 		.catch(error => { return error });
 	},
-	signup(nickname, ){
-		setToken();
+	signup(username, password, nickname){
+		// setToken(); // 없어도 된다.
+		const formData = new FormData();
+		console.log(username, password, nickname);
+		formData.append('username', username);
+		formData.append('nickname', nickname);
+		formData.append('password', password);
+		return apiInstance.request({
+			method: "POST",
+			url: "user/sign-up",
+			data: formData,
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data',
+			}
+		}).then(response => {
+			console.log(response);
+			console.log(username, '의 회원가입 완료!');
+		}).catch(error => {
+			console.error('Error: ', error);
+		});
 	},
 	validCheck(type, value){
 		setToken();
@@ -161,13 +180,16 @@ const api = {
 			return response;
 		})
 		.catch(error => { 
+			if (!error.response || !error.response.status)
+				return error;
 			if (error.response.status === 409){
 				console.log(value," 값은 ",type, " 할수없다.. 중복되었다")
 			}
 			else {
 				console.log(value," 값은 ",type, " 할수없다.. 요청에 문제가 있다")
 			}
-			return error });
+			return error 
+		});
 	},
 	getUserInfomation(nickname){
 		setToken();
@@ -207,12 +229,14 @@ const api = {
 				console.error("api image post:: no image provided");
 				return false;
 			}
+			const formData = new FormData();
+			formData.append('image', src);
 			return apiInstance.request({
 				method: type,
 				url: "user/image",
-				data: src,
-				headers: {
-					'Content-Type' : 'multipart/form-data=image'
+				data: formData,
+				headers: { //develope
+					'Content-Type' : 'multipart/form-data'
 				},
 			}).then(response => {
 				console.log("사진을 올렸다")

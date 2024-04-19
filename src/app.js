@@ -8,7 +8,7 @@ import { requestLogin, requestFriendList, requestUserInfo } from "./core/Api.js"
 import FriendList from "./component/FriendList.js"
 import RequestFriend from "./component/RequestFriend.js";
 import { useState, useEffect } from "./core/myReact.js"
-// import SignUp from "./component/SignUp.js";
+import SignUp from "./component/SignUp.js";
 import "./css/index.css";
 import "./css/friend.css";
 import Test from "./component/Test.js"
@@ -17,7 +17,7 @@ import Test from "./component/Test.js"
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
 	// axios.defaults.baseURL = "http://10.19.247.54:8001/";
-	axios.defaults.timeout = 1000;
+	axios.defaults.timeout = 3000;
 }
 
 const App = () => {
@@ -26,9 +26,10 @@ const App = () => {
             <Link to="" >
                 <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
             </Link>
-			{/* <Test /> */}
-            {/* <FriendList /> */}
-			{/* <RequestFriend /> */}
+			<Test />
+            <FriendList />
+			<RequestFriend />
+			<SignUp />
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
 			<Link to="api-test" id="home"><button>APITest</button></Link>
