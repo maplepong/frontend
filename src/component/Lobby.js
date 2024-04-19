@@ -5,7 +5,6 @@ import api from "../core/Api_.js"
 
 const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
-
 	async function requestLogin() {
 		const res = await api.login(() => {return ["test", "4545"]})
 		console.log(res);
@@ -77,11 +76,11 @@ const Lobby = (props) => {
                     <li>Room Number: {room.id}</li>
                     <li>Room Title: {room.name}</li>
                     <li>Players:</li>
-                    {/* <ul>
-                        {room.players.map(player => (
-                        <li key={player.id}>{player.nickname}</li>
+                    <ul>
+                        {room.players.map((player, i) => ( // player id, nickname으로 들어오지 않고 nickname만 배열로 들어옵니다
+                        <li key={i}>{player}</li>
                         ))}
-                    </ul> */}
+                    </ul>
                     <li>Room Status: {room.status}</li>
                     <li>Locked: {room.password}</li>
                     </ul>
