@@ -14,9 +14,11 @@ import GameContainer from "../component/GameContainer.js"
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
+import FriendList from '../component/FriendList';
 
 const pathList = {
 	"/": <App />,
+	// "/": <div><ApiTest /><FriendList /></div>, //test develope
 	"/login": <Login />,
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
@@ -38,6 +40,7 @@ export default function router() {
 		myReact.render(<Undefined />, "newPage");
 	}
 	else {
-		myReact.render(<div>{component}</div>, "newPage");
+		// myReact.render(component, "newPage"); //test develope
+		myReact.render(<div>{component}<Navbar/></div>, "newPage");
 	}
 }

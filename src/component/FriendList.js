@@ -3,6 +3,7 @@ import myReact, { Link } from "../core/myReact.js";
 import { useState, useEffect } from "../core/myReact.js";
 import "../css/friend.css";
 import api from "../core/Api_.js";
+import { requestFriendList } from "../core/Api.js";
 
 const FriendList = () => {
 
@@ -10,17 +11,18 @@ const FriendList = () => {
         sends: [],
         receives: []
     });
+
+
 	
 	console.log(list);
-	console.log(list.receives.length);
 
-	console.log(list.receives.length > 0 ?
-		<li>{list.receives[0]}</li> : <li>받은 요청이 없습니다.</li>)
-    useEffect(async () => {
-            const data = await api.getRequestFriendList();
-            setList(data);
-        }, [])
 
+	const fetchFriendRequestList = async () => {
+		const res = await requestFriendList();
+		console.log(res);
+		setList(res);
+	}
+	useEffect(fetchFriendRequestList, []);
     // function renderReceives() {
     //     if (list.receives.length > 0) {
     //         const elements = list.receives.map((item, index) => {
@@ -52,13 +54,19 @@ const FriendList = () => {
             <div>
                 <span id="request">받은 친구 요청</span>
                 <ul>
-					{list.receives.length > 0 ?
-					<li>{list.receives[0].from_user}</li> : <li>받은 요청이 없습니다.</li>}
+					{list && list.receives.length > 0 ? 
+					list.receives.map((req) => <li>{req.from_user}</li>)
+					: <li>받은 요청이 없습니다.</li>}
 				</ul>
             </div>
             <hr className="line" />
             <div>
                 <span id="request">보낸 친구 요청</span>
+				<ul>
+					{list && list.sends.length > 0 ? 
+					list.sends.map((req) => <li>{req.to_user}</li>)
+					: <li>받은 요청이 없습니다.</li>}
+				</ul>
             </div>
         </div>
     );

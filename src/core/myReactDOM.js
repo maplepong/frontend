@@ -23,6 +23,10 @@ function addEvent(target, eventType, selector, callback) {
 
 
 function createDOM(fNode) {
+	if (typeof fNode === "string" || typeof fNode === "number"){
+		const node = document.createTextNode(fNode);
+		return node;
+	}
 	const node = document.createElement(fNode.tag);
 	fNode.stateNode = node;
 	updateProps ( node,	fNode.props || {}, null);
@@ -50,34 +54,79 @@ function updateProps(target, newProps, oldProps){
 	}
 }
 
+function disassembleChildren(children, result){
+	result = result || [];
+	if (!Array.isArray(children)){
+		result.push(children);
+		return result;
+	}
+	children.forEach((child) => {
+		if (Array.isArray(child)){
+			result = disassembleChildren(child);
+		}
+		else if (!child){
+			result.push("no value"); //수정 및 확인 필요
+		}
+		else {
+			result.push(child);
+		}
+	})
+	return result;
+}
+
+function addChild(target, child){
+	if (typeof child === 'number') 
+				child = child.toString();
+	if (typeof child === 'string'){
+		child = document.createTextNode(child);
+		target.appendChild(child);
+	}
+	else
+		target.appendChild(createDOM(child));
+}
+
 function updateChildren(target, newChildren, oldChildren){
+	newChildren = disassembleChildren(newChildren);
 	if (oldChildren) {
+		oldChildren = disassembleChildren(oldChildren);
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
-		for (let i = maxLength - 1; i >= 0; i--){
-			let newChild = newChildren[i];
-			if (typeof newChild === "string" || 
-				typeof newChild ==="number"){
-					target.replaceChild(
-						document.createTextNode(newChildren[i]),
-						target.childNodes[i]);
-					return ;
-				}
+		// for (let i = maxLength - 1; i >= 0; i--){
+		for (let i = 0; i < maxLength; i++){
+		// 	let newChild = newChildren[i];
+		// 	if (typeof newChild === "string" || 
+		// 		typeof newChild === "number" ){
+		// 			target.replaceChild(
+		// 				document.createTextNode(newChildren[i]),
+		// 				target.childNodes[i]);
+		// 			return ;
+		// 		}
+			if (!oldChildren[i]){
+				return addChild(target, newChildren[i]);
+			}
 			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 		return ;
 	}
 	else { //add new
 		if (!newChildren || newChildren.length === 0) return;
-		newChildren.forEach(child => {
-			if (typeof child === 'number') 
-				child = child.toString();
-			if (typeof child === 'string'){
-				child = document.createTextNode(child);
-				target.appendChild(child);
-			}
-			else
-				target.appendChild(createDOM(child));
-		})
+		newChildren.forEach(child => addChild(target, child));
+	}
+}
+
+function textNodeUpdate(parent, newfNode, oldfNode, index){
+	if (typeof oldfNode === "string" || typeof oldfNode === "number"){  
+		if (typeof newfNode === "string" || typeof newfNode === "number"){
+			//old : text | new : text
+			if (oldfNode === newfNode) return ; //same
+			return parent.replaceChild(document.createTextNode(newChildren[i]),
+							target.childNodes[i]);
+		} 
+		if (newfNode) //old : text | new 
+			return parent.prepend(createDOM(newfNode));
+	}
+	else if (typeof newfNode === "string" || typeof newfNode === "number"){ 
+		parent.replaceChild(document.createTextNode(newChildren[i]),
+							target.childNodes[i]);
 	}
 }
 
@@ -86,6 +135,22 @@ function diffDom(parent, newfNode, oldfNode, index){
 	var element;
 	// error :: 
 	if (!oldfNode && !newfNode ) return 0;
+
+	// TextNode update
+	if (typeof oldfNode === "string" || typeof oldfNode === "number"){  
+		if (typeof newfNode === "string" || typeof newfNode === "number"){
+			//old : text | new : text
+			if (oldfNode === newfNode) return ; //same
+			return parent.replaceChild(document.createTextNode(newfNode),
+							parent.childNodes[index]);
+		} 
+		if (newfNode) //old : text | new 
+			return parent.prepend(createDOM(newfNode));
+	}
+	else if (oldfNode && typeof newfNode === "string" || typeof newfNode === "number"){ 
+		return parent.replaceChild(document.createTextNode(newfNode),
+							parent.childNodes[index]);
+	}
 	
 	// removed :: unmount
 	if (oldfNode && !newfNode){
