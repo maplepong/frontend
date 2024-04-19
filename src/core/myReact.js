@@ -31,6 +31,7 @@ function createMyReact() {
 	callback : [], // will be called after reRender
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
+	isUpdateScheduled : false,
 
 	// renderFiberRoot : function () {
 	// // createElement하는 시점, 특히 라우터에서 import되는 타이밍에 렌더하지 않게 방지
@@ -150,6 +151,13 @@ function createMyReact() {
 const myReact = createMyReact();
 export default myReact; 
 
+function scheduleUpdate(fiber) {
+	myReact.enrenderQueue.push(fiber);
+	if (!myReact.isUpdateScheduled){
+		myReact.isUpdateScheduled = true;
+		setTimeout(() => {myReact.render(null, "reRender")}, 20);
+	}
+}
 
 export function useState(initValue){
 	const fiber = window.currentFiberNode;
@@ -160,11 +168,11 @@ export function useState(initValue){
 		if (fiber.state[i] === value)
 		return //console.log("setState err-value same-",value);
 	fiber.changedState.push({i, value});
-	myReact.enrenderComponent.push(fiber);
+	scheduleUpdate(fiber);
 	// myReact.enrenderQueue.append(["stateChange", fiber, i]);
 	fiber.changed = true;
-	console.log("렌더를 합니다")
-	myReact.render(null, "reRender");
+	// console.log("렌더를 합니다")
+	// myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}
 	return [fiber.state[i], setState];
