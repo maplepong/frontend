@@ -70,36 +70,42 @@ function disassembleChildren(children, result){
 	return result;
 }
 
+function addChild(target, child){
+	if (typeof child === 'number') 
+				child = child.toString();
+	if (typeof child === 'string'){
+		child = document.createTextNode(child);
+		target.appendChild(child);
+	}
+	else
+		target.appendChild(createDOM(child));
+}
+
 function updateChildren(target, newChildren, oldChildren){
 	newChildren = disassembleChildren(newChildren);
 	if (oldChildren) {
 		oldChildren = disassembleChildren(oldChildren);
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
-		for (let i = maxLength - 1; i >= 0; i--){
-			let newChild = newChildren[i];
-			if (typeof newChild === "string" || 
-				typeof newChild ==="number"){
-					target.replaceChild(
-						document.createTextNode(newChildren[i]),
-						target.childNodes[i]);
-					return ;
-				}
+		// for (let i = maxLength - 1; i >= 0; i--){
+		for (let i = 0; i < maxLength; i++){
+		// 	let newChild = newChildren[i];
+		// 	if (typeof newChild === "string" || 
+		// 		typeof newChild === "number" ){
+		// 			target.replaceChild(
+		// 				document.createTextNode(newChildren[i]),
+		// 				target.childNodes[i]);
+		// 			return ;
+		// 		}
+			if (!oldChildren[i]){
+				return addChild(target, newChildren[i]);
+			}
 			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 		return ;
 	}
 	else { //add new
 		if (!newChildren || newChildren.length === 0) return;
-		newChildren.forEach(child => {
-			if (typeof child === 'number') 
-				child = child.toString();
-			if (typeof child === 'string'){
-				child = document.createTextNode(child);
-				target.appendChild(child);
-			}
-			else
-				target.appendChild(createDOM(child));
-		})
+		newChildren.forEach(child => addChild(target, child));
 	}
 }
 
