@@ -13,7 +13,10 @@ const Login = () => {
 		}
 		console.log("끼얏 호우!!!!");
 		const response = await api.login(getInfo)
-		if (response.status != 200) return error;
+		if (response.status != 200) {
+			console.log(response)
+			return response;
+		}
 		else {
 			console.log(response);
 			router("/home")

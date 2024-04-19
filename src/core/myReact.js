@@ -41,7 +41,7 @@ function createMyReact() {
 
 	// },
 	render : async function render(newVirtualDOM, eventType){
-		console.log(this.callback);
+		console.log("??", this.callback);
 		if (eventType === "reRender")
 		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
 			//re-render....
@@ -163,6 +163,7 @@ export function useState(initValue){
 	myReact.enrenderComponent.push(fiber);
 	// myReact.enrenderQueue.append(["stateChange", fiber, i]);
 	fiber.changed = true;
+	console.log("렌더를 합니다")
 	myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}

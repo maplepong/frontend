@@ -11,7 +11,7 @@ const Home = () => {
 				<h1> Home </h1>
 				<h2> this page is not set yet.</h2>
 			</div>
-			<Navbar />
+			{/* <Navbar /> */}
 		</div>
 }
 
