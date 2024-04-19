@@ -5,7 +5,6 @@ import api from "../core/Api_.js"
 
 const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
-	const [room, setRoom] = useState({id: "", name: "", status: "", password: ""});
 
 	async function requestLogin() {
 		const res = await api.login(() => {return ["test", "4545"]})
@@ -13,14 +12,7 @@ const Lobby = (props) => {
 	}
 
 	const resultLobby = (responsedata) => {
-		setRoom(responsedata[0]);
-		console.log(room);
-        // setLobbyData(responsedata);		
-        console.log("resultLobby", responsedata);
-		// const listElem = document.querySelector("#room-list");
-		// if (resposedata.length > 0){
-			
-		// }
+        setLobbyData(responsedata);
 	}
 
     const resultCreateGame = (responsedata) => {
@@ -39,11 +31,15 @@ const Lobby = (props) => {
         resultLobby(res);
     }
 
-	useEffect(async () => {
+	const updateList  = async () => {
         const res = await requestLobbyList();
         if (res === null) return console.log("requestLobbyList error");
-        resultLobby(res);
-    }, []);
+        setLobbyData(res);
+    }
+
+	useEffect(updateList, []);
+
+    console.log("lobbyData", lobbyData);
 
 	return (
         <div id="container-lobby" className="modal">
@@ -56,7 +52,7 @@ const Lobby = (props) => {
             </div>
             <div id="modal" className="hidden">
                 <div id="modal-content">
-                    <form id="room-form">
+                    <form id="room-form" onSubmit={create_game}>
                         <div id="modal-title">방 제목</div>
                         <input type="text" id="room-name" name="room-name" placeholder="방 제목 입력"></input>
                         <div id="checkbox-container">
@@ -71,38 +67,27 @@ const Lobby = (props) => {
                     </form>
                 </div>
             </div>
+			<button onclick={updateList}>방이 있을까?</button>
             <div id="lobby-body">
-                <ul id="room-list">
-					{/* {lobbyData.length > 0 ? (
-						lobbyData.map(room => (
-							<li key={room.id}>
-							<ul>
-								<li>Room Number: {room.id}</li>
-								<li>Room Title: {room.name}</li>
-								<li>Players:
-								 <ul>
-									{room.players.map(player => (
-									<li key={player.id}>{player.nickname}</li>
-									))}
-								</ul> 
-								</li>
-								<li>Room Status: {room.status}</li>
-								<li>Locked: {room.password ? "Yes" : "No"}</li>
-							</ul>
-							</li>
-						))
-						) : (
-						<li>방이 없습니다.</li>
-						)} */}
-						<li key={room.id}>
-							<ul>
-								<li>Room Number: {room.id}</li>
-								<li>Room Title: {room.name}</li>
-								<li>Room Status: {room.status}</li>
-								<li>Locked: {room.password ? "Yes" : "No"}</li>
-							</ul>
-							</li>
-                </ul>
+                <p>sibal</p>
+            <ul>
+           {lobbyData.length > 0 ? lobbyData.map(room => (
+                <li key={room.id}>
+                    <ul>
+                    <li>Room Number: {room.id}</li>
+                    <li>Room Title: {room.name}</li>
+                    <li>Players:</li>
+                    {/* <ul>
+                        {room.players.map(player => (
+                        <li key={player.id}>{player.nickname}</li>
+                        ))}
+                    </ul> */}
+                    <li>Room Status: {room.status}</li>
+                    <li>Locked: {room.password}</li>
+                    </ul>
+                </li>
+                )) : <li>방이 없다고 만들라고</li>}
+            </ul>
             </div>
         </div>
     );

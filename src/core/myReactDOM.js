@@ -14,11 +14,11 @@ const eventType = [
 
 function addEvent(target, eventType, selector, callback) {
 	const children = [...document.querySelectorAll(selector)];
-	target.addEventListener(eventType, event => {
+	children.forEach((child) => {child.addEventListener(eventType, event => {
 		event.preventDefault();
 		if (selector && !event.target.closest(selector)) return false;
 		callback(event);
-	});
+	});})
 }
 
 
@@ -50,8 +50,30 @@ function updateProps(target, newProps, oldProps){
 	}
 }
 
+function disassembleChildren(children, result){
+	result = result || [];
+	if (!Array.isArray(children)){
+		result.push(children);
+		return result;
+	}
+	children.forEach((child) => {
+		if (Array.isArray(child)){
+			result = disassembleChildren(child);
+		}
+		else if (!child){
+			result.push("no value"); //수정 및 확인 필요
+		}
+		else {
+			result.push(child);
+		}
+	})
+	return result;
+}
+
 function updateChildren(target, newChildren, oldChildren){
+	newChildren = disassembleChildren(newChildren);
 	if (oldChildren) {
+		oldChildren = disassembleChildren(oldChildren);
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
 		for (let i = maxLength - 1; i >= 0; i--){
 			let newChild = newChildren[i];
