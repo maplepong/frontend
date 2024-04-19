@@ -74,3 +74,7 @@
 #requestName {
     background-color: yellow;
 }
+
+#receives {
+    display: flex;
+}

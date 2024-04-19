@@ -129,6 +129,17 @@ const api = {
 		alert("로그아웃되었습니다");
 		//need::redirect to home
 	},
+	getFriendList(){
+		setToken();
+		return apiInstance.request({
+			method: "GET",
+			url: "user/friend-list",
+		}).then(response => {
+			console.log(response);
+			return response.data;
+		})
+		.catch(error => { return error })
+	},
 	getRequestFriendList(){
 		setToken();
 		return apiInstance.request({
