@@ -41,7 +41,6 @@ const App = () => {
 			<Link to="login"><button id="btn-nav-login">로그인</button></Link>
 			<button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button>
 
-			<Test />
             {/* <FriendList /> */}
 			<RequestFriend />
 
