@@ -29,13 +29,8 @@ const pathList = {
 	"/test" : <Test />,
 }
 
-export default function router(param) {
-	var path;
-	//  = window.location.pathname;
-	if (!param)
-		path = window.location.pathname;
-	else
-		path = param;
+export default function router() {
+	const path = window.location.pathname;
 	console.log("router called: path: ", path);
 	const component = pathList[path];
 	console.log("component", component);
