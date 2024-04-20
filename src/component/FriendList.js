@@ -18,14 +18,20 @@ const FriendList = () => {
         const fetchData = async () => {
             const friendRequests = await api.getRequestFriendList();
             console.log("GET REQUEST LIST", friendRequests);
-            setList(friendRequests);
-    
+            
             const friends = await api.getFriendList();
             console.log("GET FRIEND LIST", friends);
+            
             setFriendList(friends);
+            setList(friendRequests);
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        console.log("Updated LIST", list);
+        console.log("Updated FRIENDLIST", friendlist);
+    }, [list, friendlist]); // 상태 업데이트 후 확인
     
     return (
         <div id="box">
@@ -39,7 +45,7 @@ const FriendList = () => {
                 <ul>
 					{list && list.receives.length > 0 ? 
 					list.receives.map((req) => <div>
-                        <li id="receives">
+                        <li class="exchange">
                         {req.from_user}
                         <button onClick={() => api.handleFriendRequest(req.from_user, "POST")}>수락</button>
 
@@ -53,8 +59,11 @@ const FriendList = () => {
                 <span id="request">보낸 친구 요청</span>
 				<ul>
 					{list && list.sends.length > 0 ? 
-					list.sends.map((req) => <li>{req.to_user}</li>)
-					: <li>받은 요청이 없습니다.</li>}
+					list.sends.map((req) => <div>
+                        <li class="exchange">{req.to_user}
+                        <button onClick={() =>  api.handleFriendRequest(req.to_user, "DELETE")}>취소</button>
+                        </li></div>)
+					: <li>보낸 요청이 없습니다.</li>}
 				</ul>
             </div>
             <hr className="line" />
@@ -62,7 +71,11 @@ const FriendList = () => {
                 <span id="request">내 친구들</span>
                 <ul>
 					{friendlist && friendlist.length > 0 ? 
-					friendlist.map((item) => <li key={item.id}>{item.nickname}</li>)
+					friendlist.map((item) => <div>
+                        <li class="exchange" key={item.id}>{item.nickname}
+                        <button onClick={() =>  api.deleteFriend(item.nickname)}>삭제</button>
+                        </li>
+                        </div>)
 					: <li>친구가 없습니다.</li>}
 				</ul>
             </div>
