@@ -1,5 +1,5 @@
 /* @jsx myReact.createElement */
-import myReact , { Link } from "../core/myReact.js";
+import myReact , { Link, useEffect, useState } from "../core/myReact.js";
 import Game from "./Game.js"
 import "../css/Pingpong.css"
 
@@ -9,17 +9,26 @@ const GameContainer = () => {
 	// 	scoreElement.textContent = score;
 	// };
 
+	const [score, setScore] = useState("0:0");
+
+	const updateScore = (newscore) => {
+		console.log({newscore})
+		console.log("score: " , {score})
+		setScore(newscore);
+	}
+	
 	return (
 	<div class="game-container">
 		<canvas id="myCanvas" >
 		</canvas>
 		<div id="score">
-			<p>0:0</p>
+			<p>{ score }</p>
 		</div>
 		<button id="runButton">Start game</button>
-		<button id="" onclick={Game}>Render</button>
+		<button id="" onclick={() => Game({ updateScore })}>Render</button>
 	</div>
 	)
 }
+  
+  export default GameContainer;
 
-export default GameContainer

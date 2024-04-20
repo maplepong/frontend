@@ -1,8 +1,9 @@
 /* @jsx myReact.createElement */
-import myReact from "../core/myReact.js";
+import myReact, { useEffect } from "../core/myReact.js";
 import "../css/Pingpong.css"
+import GameContainer from "./GameContainer.js";
 
-const Game = (isEnd) => {
+const Game = ({ updateScore}) => {
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	var ballRadius = 10;
@@ -125,12 +126,16 @@ const Game = (isEnd) => {
 			console.log(leftscore += 1);
 			clearInterval(interval);
 			flag = 1;
+			const score = `${leftscore}:${rightscore}`;
+			updateScore(score);
 			return;
 		}
 		else if (y + dy < ballRadius){
 			console.log(rightscore += 1);
 			clearInterval(interval);
 			flag = 1;
+			const score = `${leftscore}:${rightscore}`;
+			updateScore(score);
 			return;
 		}
 		}
@@ -154,7 +159,7 @@ const Game = (isEnd) => {
 	document.addEventListener("keyup", keyUpHandler, false);
 	document.addEventListener("keydown", topkeyDownHandler, false);
 	document.addEventListener("keyup", topkeyUpHandler, false);
+
 }
 
-
-export default Game
+  export default Game;
