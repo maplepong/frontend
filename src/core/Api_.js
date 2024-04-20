@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -115,7 +115,7 @@ const api = {
 			url: "user/friend/" + nickname,
 		})
 		.then(response => {
-			console.log(nickname + "과 더이상 친구가 아닙니다.")
+			console.log(nickname + "(와)과 더 이상 친구가 아닙니다.")
 			return response.status;
 		})
 		.catch(error => { return error });

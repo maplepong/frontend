@@ -75,6 +75,6 @@
     background-color: yellow;
 }
 
-#receives {
+.exchange {
     display: flex;
 }
