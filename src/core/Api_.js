@@ -206,7 +206,10 @@ const api = {
 			console.log(nickname + "의 정보를 불러왔습니다.")
 			return response.data;
 		})
-		.catch(error => { return error });
+		.catch(error => { 
+			console.log("에러!!")
+			return error 
+		});
 	},
 	patchUserInfomation(changedValue){ //409 conflict
 		setToken();
