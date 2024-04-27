@@ -8,10 +8,10 @@ const ApiTest = () => {
 		console.log(res);
 	}
 	async function befriend() {
-		console.log(await api.sendFriendRequest("subini"));
+		console.log(await api.sendFriendRequest("니얼굴"));
 	}
-	async function getFriendList() {
-		console.log(await api.getFriendList());
+	async function getRequestFriendList() {
+		console.log(await api.getRequestFriendList());
 	}
 	async function okFriendList(){
 		console.log(await api.handleFriendRequest("니얼굴", "POST"));
@@ -41,7 +41,7 @@ const ApiTest = () => {
 	
 	const onFileChange = (e) => {
 		const {
-		  target: {files},
+			target: {files},
 		} = e;
 		const filefile = files[0]; //우선 1개만 보여줄꺼니까 크기 1로 지정
 		
@@ -66,7 +66,7 @@ const ApiTest = () => {
 		<button onclick={requestLogin}>login: test</button>
 		<button onclick={() => {api.logout()}}>로그아웃</button>
 		<button onclick={befriend}>친구요청: gyopark</button>
-		<button onclick={getFriendList}>getFriendList</button>
+		<button onclick={getRequestFriendList}>getRequestFriendList</button>
 		<button onclick={okFriendList}>ok to FriendRequest</button>
 		<button onclick={deleteFriend}>니얼굴과 친구 끊기</button>
 		<input id="validinput" placeholder="유효성체크할값"></input>

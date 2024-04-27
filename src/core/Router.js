@@ -14,15 +14,17 @@ import GameContainer from "../component/GameContainer.js"
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
+import FriendList from '../component/FriendList';
 
 const pathList = {
 	"/": <App />,
+	// "/": <div><ApiTest /><FriendList /></div>, //test develope
 	"/login": <Login />,
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
 	"/api-login": <ApiLogin />,
 	"/api-test": <ApiTest />,
- 	"/signup": <SignUp />,
+	"/signup": <SignUp />,
 	"/api-signup": <ApiSignUp />,
 	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
@@ -30,13 +32,17 @@ const pathList = {
 }
 
 export default function router(param) {
-	var path = window.location.pathname;
+	var path;
+	if (!param) path = window.location.pathname;
+	else path = param;
 	console.log("router called: path: ", path);
 	const component = pathList[path];
+	console.log("component", component);
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
 	}
 	else {
+		// myReact.render(component, "newPage"); //test develope
 		myReact.render(<div>{component}<Navbar/></div>, "newPage");
 	}
 }
