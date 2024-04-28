@@ -1,5 +1,5 @@
 /* @jsx myReact.createElement */
-import myReact from "../core/myReact.js";
+import myReact, { useEffect } from "../core/myReact.js";
 import "../css/Pingpong.css"
 
 const Game = (isEnd) => {
@@ -22,8 +22,19 @@ const Game = (isEnd) => {
 	var leftscore = 0;
 	var rightscore = 0;
 	var flag = 0;
-	var interval = setInterval(draw, 20);
-	var intervalGame = setInterval(runGame, 3000);
+	var interval; // = setInterval(draw, 20);
+	var intervalGame; // = setInterval(runGame, 3000);
+
+	useEffect(() => {
+		interval = setInterval(draw, 20);
+		intervalGame = setInterval(runGame, 3000);
+
+		return () => {
+			clearInterval(interval);
+			clearInterval(intervalGame);
+		};
+	}, [leftscore, rightscore]);
+
 	function runGame() {
 		if (flag){
 			if (leftscore > 2  || rightscore > 2) {
@@ -125,12 +136,17 @@ const Game = (isEnd) => {
 			console.log(leftscore += 1);
 			clearInterval(interval);
 			flag = 1;
+			const score = '${leftscore}:${rightscore}';
+			console.log(score);
+			updateScore(score);
 			return;
 		}
 		else if (y + dy < ballRadius){
 			console.log(rightscore += 1);
 			clearInterval(interval);
 			flag = 1;
+			const score = '{$leftscore}:${rightscore}';
+			updateScore(score);
 			return;
 		}
 		}

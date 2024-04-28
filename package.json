@@ -25,5 +25,13 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maplepong/frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maplepong/frontend/issues"
+  },
+  "homepage": "https://github.com/maplepong/frontend#readme"
 }
