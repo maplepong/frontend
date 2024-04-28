@@ -281,3 +281,7 @@ nav {
 		flex-direction: row;
 	}
 }
+
+.hidden {
+	display: hidden;
+}

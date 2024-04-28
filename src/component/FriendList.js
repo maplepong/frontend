@@ -5,7 +5,7 @@ import "../css/friend.css";
 import api from "../core/Api_.js";
 // import { requestFriendList } from "../core/Api.js";
 
-const FriendList = ( { onShowModal } ) => {
+const FriendList = ( props ) => {
 
     const [ list, setList ] = useState({
         sends: [],
@@ -33,9 +33,10 @@ const FriendList = ( { onShowModal } ) => {
         console.log("Updated FRIENDLIST", friendlist);
     }, [list, friendlist]); // 상태 업데이트 후 확인
     
-    const seeInfo = async (nickname) => {
-        const res = await api.getUserInfomation(nickname);
-        onShowModal(res); // Home 컴포넌트로 정보 전달
+    const seeInfo = (nickname) => {
+        // const res = await api.getUserInfomation(nickname);
+		console.log("PROPS", props);
+        props.callback(nickname); // Home 컴포넌트로 정보 전달
     }
 
     return (
