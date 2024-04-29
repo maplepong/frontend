@@ -7,6 +7,7 @@ import Home from "../component/Home.js"
 import Welcome from "../component/Welcome.js"
 import Login from "../component/Login.js"
 import MyInfo from "../component/MyInfo.js"
+import UserInfoPage from "../component/UserInfoPage.js"
 import ApiLogin from "../component/ApiLogin.js"
 import SignUp from "../component/SignUp.js"
 import ApiSignUp from "../component/ApiSignUp.js";
@@ -15,6 +16,7 @@ import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
 import FriendList from '../component/FriendList';
+import UserInfo from '../component/UserInfo';
 
 const pathList = {
 	"/": <App />,
@@ -22,6 +24,7 @@ const pathList = {
 	"/login": <Login />,
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
+	"/userinfo": <UserInfoPage />,
 	"/api-login": <ApiLogin />,
 	"/api-test": <ApiTest />,
 	"/signup": <SignUp />,
@@ -29,6 +32,7 @@ const pathList = {
 	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
 	"/test" : <Test />,
+
 }
 
 export default function router(param) {

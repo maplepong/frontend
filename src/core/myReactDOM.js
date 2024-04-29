@@ -10,6 +10,8 @@ const eventType = [
     "onfocus",
     "onblur",
     "onchange",
+    "onmouseover",
+    "onmouseout",
 ]
 
 function addEvent(target, eventType, selector, callback) {
