@@ -1,60 +1,87 @@
 /* @jsx myReact.createElement */
-import myReact, { useEffect } from "../core/myReact.js";
+import myReact , { Link, useState, useEffect} from "../core/myReact.js";
 import "../css/Pingpong.css"
 
-const Game = (isEnd) => {
-	var canvas = document.getElementById("myCanvas");
-	var ctx = canvas.getContext("2d");
-	var ballRadius = 10;
-	var x = canvas.width/2;
-	var y = canvas.height-30;
-	var dx = 2;
-	var dy = -2;
+const PingPong = () => {
+	const [score, setScore] = useState({left:0, right:0});
 
-	var paddleHeight = 10;
-	var paddleWidth = 75;
-	var paddleX = (canvas.width - paddleWidth) / 2;
-	var paddleY = (canvas.width - paddleWidth) / 2;
-	var rightPressed = false;
-	var leftPressed = false;
-	var toprightPressed = false;
-	var topleftPressed = false;
-	var leftscore = 0;
-	var rightscore = 0;
-	var flag = 0;
-	var interval; // = setInterval(draw, 20);
-	var intervalGame; // = setInterval(runGame, 3000);
+	console.log(score);
+	
+	function updateScore (leftAdd, rightAdd) {
+		flag: 1; //updating
+		console.log(score);
+		setScore({left : score.left += leftAdd,
+				right : score.right += rightAdd});
+	}
+		
+	var canvas, ctx, ballRadius, x, y, dx, dy;
+	var paddleHeight, paddleWidth, paddleX, paddleY, rightPressed,leftPressed, topleftPressed, toprightPressed;
+	// var leftscore, rightscore;
+	var imagepath, flag;
+	var interval;
+	var ball;
 
-	useEffect(() => {
+
+
+	function initGame () {
+		canvas = document.getElementById("myCanvas");
+		ctx = canvas.getContext("2d");
+		ballRadius = 10;
+		x = canvas.width/2;
+		y = canvas.height-30;
+		dx = 2;
+		dy = -2;
+
+		paddleHeight = 10;
+		paddleWidth = 75;
+		paddleX = (canvas.width - paddleWidth) / 2;
+		paddleY = (canvas.width - paddleWidth) / 2;
+		rightPressed = false;
+		leftPressed = false;
+		toprightPressed = false;
+		topleftPressed = false;
+		// leftscore = 0;
+		// rightscore = 0;
+
+		imagepath = "asset/game/mushroom.gif";
+		ball = new Image();
+		ball.src = imagepath;
+
+		flag = 0;
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+		document.addEventListener("keydown", topkeyDownHandler, false);
+		document.addEventListener("keyup", topkeyUpHandler, false);
+	}
+	// var interval; // = setInterval(draw, 20);
+	// var intervalGame; // = setInterval(runGame, 3000);
+
+	const gameDraw = () => {
 		interval = setInterval(draw, 20);
-		intervalGame = setInterval(runGame, 3000);
 
 		return () => {
+			console.log("score", score);
 			clearInterval(interval);
-			clearInterval(intervalGame);
 		};
-	}, [leftscore, rightscore]);
-
-	function runGame() {
-		if (flag){
-			if (leftscore > 2  || rightscore > 2) {
-				console.log("gameover");
-				clearInterval(intervalGame);
-				return;
-			}
-			else {
-				setTimeout(3000);
-				x = canvas.width/2;
-				y = canvas.height/2;
-				flag = 0;
-				interval = setInterval(draw, 20);
-			}
-		}
 	}
+	
 
-	var imagepath = "asset/game/mushroom.gif";
-	var ball = new Image();
-	ball.src = imagepath;
+	// function runGame() {
+	// 	if (flag){
+	// 		if (leftscore > 2  || rightscore > 2) {
+	// 			console.log("gameover");
+	// 			clearInterval(intervalGame);
+	// 			return;
+	// 		}
+	// 		else {
+	// 			setTimeout(3000);
+	// 			x = canvas.width/2;
+	// 			y = canvas.height/2;
+	// 			flag = 0;
+	// 			interval = setInterval(draw, 20);
+	// 		}Z
+	// 	}
+	// }
 
 
 
@@ -68,35 +95,37 @@ const Game = (isEnd) => {
 	}
 
 	function drawPaddle() {
-	ctx.beginPath();
-	ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-	ctx.fillStyle = "#0095DD";
-	ctx.fill();
-	ctx.closePath();
+		ctx.beginPath();
+		ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+		ctx.fillStyle = "#0095DD";
+		ctx.fill();
+		ctx.closePath();
 	}
 
 	function drawEnemyPaddle() {
 		ctx.beginPath();
-	ctx.rect(paddleY, paddleHeight -10, paddleWidth, paddleHeight);
-	ctx.fillStyle = "#0095DD";
-	ctx.fill();
-	ctx.closePath();
+		ctx.rect(paddleY, paddleHeight -10, paddleWidth, paddleHeight);
+		ctx.fillStyle = "#0095DD";
+		ctx.fill();
+		ctx.closePath();
 	}
 
 	function keyDownHandler(e) {
 		if (e.key === "Right" || e.key === "ArrowRight") {
 			rightPressed = true;
-		} else if (e.key === "Left" || e.key === "ArrowLeft") {
-	leftPressed = "true";
-	}
+		} 
+		else if (e.key === "Left" || e.key === "ArrowLeft") {
+			leftPressed = true;
+		}
 	}
 
 	function keyUpHandler(e) {
 		if (e.key === "Right" || e.key === "ArrowRight") {
-		rightPressed = false;
-	}	else if (e.key === "Left" || e.key === "ArrowLeft") {
-		leftPressed = false;
-	}
+			rightPressed = false;
+		}	
+		else if (e.key === "Left" || e.key === "ArrowLeft") {
+			leftPressed = false;
+		}
 	}
 
 	function topkeyDownHandler(e) {
@@ -110,7 +139,8 @@ const Game = (isEnd) => {
 	function topkeyUpHandler(e) {
 		if (e.key === "d") {
 		toprightPressed = false;
-	}	else if (e.key === "a") {
+	}	
+		else if (e.key === "a") {
 		topleftPressed = false;
 	}
 	}
@@ -129,25 +159,19 @@ const Game = (isEnd) => {
 			dx = -dx;
 		}//양옆의 벽면에 닿은 경우
 		if (y + dy > canvas.height - ballRadius || y + dy < 10) {
-			if (x > paddleX && x < paddleX + paddleWidth || x > paddleY && x < paddleY + paddleWidth) 		{
+			if (x > paddleX && x < paddleX + paddleWidth || x > paddleY && 
+				x < paddleY + paddleWidth) {
 				dy = -dy;
 			}
 		else if (y + dy > canvas.height){ //위아래 벽면에 닿은 경우
-			console.log(leftscore += 1);
+			console.log("score", score);
 			clearInterval(interval);
-			flag = 1;
-			const score = '${leftscore}:${rightscore}';
-			console.log(score);
-			updateScore(score);
-			return;
+			return updateScore(1, 0);
 		}
 		else if (y + dy < ballRadius){
-			console.log(rightscore += 1);
+			console.log("score", score);
 			clearInterval(interval);
-			flag = 1;
-			const score = '{$leftscore}:${rightscore}';
-			updateScore(score);
-			return;
+			return updateScore(0, 1);
 		}
 		}
 		if (rightPressed) {
@@ -165,12 +189,31 @@ const Game = (isEnd) => {
 		x += dx;
 		y += dy;
 	}
+	
+	var resultValue = score.left + " : " + score.right;
+	if (!flag) {
+		useEffect(initGame);
+		console.log("스코어:",score.left, score.right)
+		
+		if (score.left < 3 && score.right < 3){
+			useEffect(gameDraw, score);
+		}
+		else {
+			resultValue = "Game finished\n" + (score.left > score.right ?
+							 "left win by " : "right win by ") + resultValue ;
+		}
+	}
 
-	document.addEventListener("keydown", keyDownHandler, false);
-	document.addEventListener("keyup", keyUpHandler, false);
-	document.addEventListener("keydown", topkeyDownHandler, false);
-	document.addEventListener("keyup", topkeyUpHandler, false);
+
+	return (
+	<div class="game-container">
+		<canvas id="myCanvas" width="600" height="360">
+		</canvas>
+		<div id="score">
+			<p>{resultValue}</p>
+		</div>
+	</div>
+	)
 }
 
-
-export default Game
+export default PingPong
