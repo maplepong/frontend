@@ -3,9 +3,16 @@ import myReact, { Link } from "../core/myReact.js";
 import { useState, useEffect } from "../core/myReact.js";
 import "../css/friend.css";
 import api from "../core/Api_.js";
+import NicknameHover from "./NicknameHover.js";
 // import { requestFriendList } from "../core/Api.js";
 
 const FriendList = ( props ) => {
+	//testing
+	async function requestLogin() {
+		const res = await api.login(() => {return ["test", "4545"]})
+		console.log(res);
+	}
+	requestLogin();
 
     const [ list, setList ] = useState({
         sends: [],
@@ -77,9 +84,10 @@ const FriendList = ( props ) => {
                 <ul>
 					{friendlist && friendlist.length > 0 ? 
 					friendlist.map((item) => <div>
-                        <li class="exchange" key={item.id}>{item.nickname}
-                        <button class="inter" onClick={() => {seeInfo(item.nickname)}}>정보</button>
-                        <button class="inter" onClick={() => api.deleteFriend(item.nickname)}>삭제</button>
+                        <li class="exchange" key={item.id}>
+							<NicknameHover nickname={item.nickname} />
+                        {/* <button class="inter" onClick={() => {seeInfo(item.nickname)}}>정보</button>
+                        <button class="inter" onClick={() => api.deleteFriend(item.nickname)}>삭제</button> */}
                         </li></div>)
 					: <span>친구가 없습니다.</span>}
 				</ul>
