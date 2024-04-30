@@ -21,10 +21,10 @@ import UserInfo from '../component/UserInfo';
 const pathList = {
 	"/": <App />,
 	// "/": <div><ApiTest /><FriendList /></div>, //test develope
+	"/userinfo": <UserInfoPage />,
 	"/login": <Login />,
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
-	"/userinfo": <UserInfoPage />,
 	"/api-login": <ApiLogin />,
 	"/api-test": <ApiTest />,
 	"/signup": <SignUp />,
@@ -32,13 +32,14 @@ const pathList = {
 	"/gameroom" : <GameContainer />,
 	"/welcome" : <Welcome/>,
 	"/test" : <Test />,
-
 }
 
 export default function router(param) {
 	var path;
-	if (!param) path = window.location.pathname;
-	else path = param;
+	if (!param)
+		path = window.location.pathname;
+	else
+		path = param;
 	console.log("router called: path: ", path);
 	const component = pathList[path];
 	console.log("component", component);

@@ -45,7 +45,6 @@ const FriendList = ( props ) => {
 		console.log("PROPS", props);
         props.callback(nickname); // Home 컴포넌트로 정보 전달
     }
-
     return (
         <div id="box">
             <span id="manage">친구 관리</span>
