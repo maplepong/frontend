@@ -53,6 +53,7 @@ function createMyReact() {
 			await myReactDOM.updateDOM(newFiberRoot);
 			this.fiberRoot = newFiberRoot;
 			this.enrenderQueue = [];
+			this.isUpdateScheduled = false;
 		}
 		else if (eventType === "newPage"){
 			this.erase(); ///처음 등록한 콜백 지워짐
