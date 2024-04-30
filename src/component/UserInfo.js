@@ -1,6 +1,6 @@
 /* @jsx myReact.createElement */
 import { requestUserInfo } from "../core/Api.js";
-import myReact , { useEffect, useState} from "../core/myReact.js";
+import myReact , { useEffect, useState } from "../core/myReact.js";
 
 const UserInfo = (props) => {
 	const [data, setData] = useState({
