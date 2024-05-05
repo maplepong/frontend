@@ -16,7 +16,6 @@ const PingPong = () => {
 		
 	var canvas, ctx, ballRadius, x, y, dx, dy;
 	var paddleHeight, paddleWidth, paddleX, paddleY, rightPressed,leftPressed, topleftPressed, toprightPressed;
-	// var leftscore, rightscore;
 	var imagepath, flag;
 	var interval;
 	var ball;
@@ -53,8 +52,6 @@ const PingPong = () => {
 		document.addEventListener("keydown", topkeyDownHandler, false);
 		document.addEventListener("keyup", topkeyUpHandler, false);
 	}
-	// var interval; // = setInterval(draw, 20);
-	// var intervalGame; // = setInterval(runGame, 3000);
 
 	const gameDraw = () => {
 		interval = setInterval(draw, 20);
@@ -64,26 +61,6 @@ const PingPong = () => {
 			clearInterval(interval);
 		};
 	}
-	
-
-	// function runGame() {
-	// 	if (flag){
-	// 		if (leftscore > 2  || rightscore > 2) {
-	// 			console.log("gameover");
-	// 			clearInterval(intervalGame);
-	// 			return;
-	// 		}
-	// 		else {
-	// 			setTimeout(3000);
-	// 			x = canvas.width/2;
-	// 			y = canvas.height/2;
-	// 			flag = 0;
-	// 			interval = setInterval(draw, 20);
-	// 		}Z
-	// 	}
-	// }
-
-
 
 	function drawBall() {
 		// ctx.beginPath();
@@ -148,10 +125,6 @@ const PingPong = () => {
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		drawBall();
-		// ball.onload  = function() {
-		// 	drawBall();
-		// }
-
 		drawPaddle();
 		drawEnemyPaddle();
 
@@ -199,7 +172,7 @@ const PingPong = () => {
 			useEffect(gameDraw, score);
 		}
 		else {
-			resultValue = "Game finished\n" + (score.left > score.right ?
+			resultValue = (score.left > score.right ?
 							 "left win by " : "right win by ") + resultValue ;
 		}
 	}
@@ -207,7 +180,7 @@ const PingPong = () => {
 
 	return (
 	<div class="game-container">
-		<canvas id="myCanvas" width="600" height="360">
+		<canvas id="myCanvas" width="240" height="160">
 		</canvas>
 		<div id="score">
 			<p>{resultValue}</p>
