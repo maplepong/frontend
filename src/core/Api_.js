@@ -21,12 +21,19 @@ apiInstance.interceptors.response.use(response => response, async error => {
 	if (!error.response || !error.response.status)
 		return Promise.reject(error);
 	if (error.response.status === 401){ //token err
+		console.log("401::trying refresh")
 		if (!originalRequest._retry){
 			originalRequest._retry = true;
 			try {
+				console.log("cookie : ", document.cookie)
 				const refreshToken = localStorage.getItem('refreshToken');
-				const response = await apiInstance.post(('refresh'), {
-					token : refreshToken,
+				const response = await apiInstance.request({
+					method : "POST",
+					url: "user/api/token/refresh",
+					headers: {
+						'X-CSRFToken': getCookie('csrftoken'),
+						'cookie': document.cookie,
+					},
 				});
 				const {accessToken} = response.data;
 				localStorage.setItem('accessToken', accessToken);
