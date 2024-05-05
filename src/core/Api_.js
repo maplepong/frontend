@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -122,7 +122,7 @@ const api = {
 			url: "user/friend/" + nickname,
 		})
 		.then(response => {
-			console.log(nickname + "과 더이상 친구가 아닙니다.")
+			console.log(nickname + "(와)과 더 이상 친구가 아닙니다.")
 			return response.status;
 		})
 		.catch(error => { return error });
@@ -140,9 +140,21 @@ const api = {
 		setToken();
 		return apiInstance.request({
 			method: "GET",
+			url: "user/friend-list",
+		}).then(response => {
+			console.log(response);
+			return response.data;
+		})
+		.catch(error => { return error })
+	},
+	getRequestFriendList(){
+		setToken();
+		return apiInstance.request({
+			method: "GET",
 			url: "user/friend-request-list",
 		})
 		.then(response => {
+			// console.log(response);
 			return response.data;
 		})
 		.catch(error => { return error });
@@ -201,7 +213,10 @@ const api = {
 			console.log(nickname + "의 정보를 불러왔습니다.")
 			return response.data;
 		})
-		.catch(error => { return error });
+		.catch(error => { 
+			console.log("에러!!")
+			return error 
+		});
 	},
 	patchUserInfomation(changedValue){ //409 conflict
 		setToken();

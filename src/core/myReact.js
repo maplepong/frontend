@@ -31,6 +31,7 @@ function createMyReact() {
 	callback : [], // will be called after reRender
 	fiberRoot : null,  //root of fiberNode
 	currentFiberNode : null,
+	isUpdateScheduled : false,
 
 	// renderFiberRoot : function () {
 	// // createElement하는 시점, 특히 라우터에서 import되는 타이밍에 렌더하지 않게 방지
@@ -41,8 +42,8 @@ function createMyReact() {
 
 	// },
 	render : async function render(newVirtualDOM, eventType){
-		console.log(this.callback);
-		if (eventType === "reRender")
+		console.log("??", this.callback);
+		if (eventType === "reRender" || eventType === "batchRender")
 		{//변화하는 경우 : 이게 enrenderQueue에 들어가있을때밖에 없나???
 			//re-render....
 			//is it reRender or 
@@ -150,23 +151,43 @@ function createMyReact() {
 const myReact = createMyReact();
 export default myReact; 
 
+function batchUpdates(fiber) {
+	myReact.enrenderQueue.push(fiber);
+	if (!myReact.isUpdateScheduled) {
+		myReact.isUpdateScheduled = true;
+		requestAnimationFrame(() => {
+			myReact.render(null, "batchRender");
+		})
+	}
+}
 
 export function useState(initValue){
 	const fiber = window.currentFiberNode;
-	const i = fiber.statePosition;
-	fiber.statePosition++;
+	const i = fiber.statePosition++;
 	fiber.state[i] = fiber.state[i] || initValue;
+	
 	const setState = (value) => {
-		if (fiber.state[i] === value)
-		return //console.log("setState err-value same-",value);
-	fiber.changedState.push({i, value});
-	myReact.enrenderComponent.push(fiber);
-	// myReact.enrenderQueue.append(["stateChange", fiber, i]);
-	fiber.changed = true;
-	myReact.render(null, "reRender");
+		if (fiber.state[i] === value) return 
+		//console.log("setState err-value same-",value);
+		fiber.changedState.push({i, value});
+		// myReact.enrenderQueue.append(["stateChange", fiber, i]);
+		fiber.changed = true;
+		batchUpdates(fiber);
+		// scheduleUpdate(fiber);
+		// console.log("렌더를 합니다")
+		// myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}
 	return [fiber.state[i], setState];
+}
+
+function scheduleUpdate(fiber) {
+	// myReact.enrenderQueue.push(fiber);
+	// if (!myReact.isUpdateScheduled){
+	// 	myReact.isUpdateScheduled = true;
+	// 	setTimeout(() => {myReact.render(null, "reRender")}, 20);
+	// }
+	batchUpdates(fiber);
 }
 
 /*

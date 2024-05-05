@@ -10,7 +10,7 @@ function getCookie(name) {
 
 const baseUrl = () => {
 	// return "http://10.19.247.54:/";
-	return "http://localhost:8000/";
+	return "http://localhost:12649/";
 }
 
 const redirect = (page) => {
@@ -67,31 +67,31 @@ async function requestFriend(nickname)
 {
 	console.log("닉네임: ", nickname);
 	axios.defaults.withCredentials = false; //develop
-	var result;
-	await axios.request({
+	return await axios.request({
 		headers: {
 			Authorization: `Bearer ${localStorage.accessToken}`,
 		},
 		method: "POST",
-		url: baseUrl() + "user/friend/" + nickname,
+		url: "user/friend/" + nickname,
 	})
 	.then(response => {
 		console.log(nickname + "에게 친구 요청");
 		result = response;
+		if (result.status == 201){
+			return response.data;
+		}
+		if (result.status == 409){ //conflict
+			console.log("Friend request Error conflict")
+			console.log(result);
+		}
+		else {
+			console.log("Friend request Error :", result);
+		}
 	})
 	.catch(error => {
-		console.error('Error:', error);
+		console.error('Freind Request Error:', error);
+		return null;
 	});
-	if (typeof result === "undefined" || result.status != 200){
-		console.log("Friend request Error")
-		console.log(result);
-		return ;
-	}
-	//response.status == 200
-	else {
-		console.log(result);
-		return result.data;
-	}
 }
 
 function requestLogout(resultLogout)

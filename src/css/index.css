@@ -260,6 +260,8 @@ button[type="submit"]:hover {
 }
 
 .app {
+  display: flex;
+  flex-direction: column;
 	width: 100%;
 	overflow: auto;
 }
