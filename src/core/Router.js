@@ -11,7 +11,7 @@ import UserInfoPage from "../component/UserInfoPage.js"
 import ApiLogin from "../component/ApiLogin.js"
 import SignUp from "../component/SignUp.js"
 import ApiSignUp from "../component/ApiSignUp.js";
-import GameContainer from "../component/GameContainer.js"
+import Game from "../component/Game.js"
 import Navbar from "../component/Navbar.js";
 import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
@@ -30,7 +30,7 @@ const pathList = {
 	"/api-test": <ApiTest />,
 	"/signup": <SignUp />,
 	"/api-signup": <ApiSignUp />,
-	"/gameroom" : <GameContainer />,
+	"/gameroom" : <Game />,
 	"/welcome" : <Welcome/>,
 	"/lobby": <Lobby />,
 	"/test" : <Test />,
