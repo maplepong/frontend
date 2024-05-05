@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -205,12 +205,14 @@ const api = {
 	},
 	getUserInfomation(nickname){
 		setToken();
+		console.log("정보를 요청한 닉네임: ", nickname);
 		return apiInstance.request({
 			method: "GET",
 			url: "user/information?nickname=" + nickname,
 		})
 		.then(response => {
 			console.log(nickname + "의 정보를 불러왔습니다.")
+			console.log(typeof response.data, response.data);
 			return response.data;
 		})
 		.catch(error => { 

@@ -7,6 +7,7 @@ import Home from "../component/Home.js"
 import Welcome from "../component/Welcome.js"
 import Login from "../component/Login.js"
 import MyInfo from "../component/MyInfo.js"
+import UserInfoPage from "../component/UserInfoPage.js"
 import ApiLogin from "../component/ApiLogin.js"
 import SignUp from "../component/SignUp.js"
 import ApiSignUp from "../component/ApiSignUp.js";
@@ -16,10 +17,12 @@ import Test from "../component/Test"
 import ApiTest from "../component/ApiTest"
 import Lobby from "../component/Lobby.js"
 import FriendList from '../component/FriendList';
+import UserInfo from '../component/UserInfo';
 
 const pathList = {
 	"/": <App />,
 	// "/": <div><ApiTest /><FriendList /></div>, //test develope
+	"/userinfo": <UserInfoPage />,
 	"/login": <Login />,
 	"/home": <Home />,
 	"/myinfo": <MyInfo />,
@@ -35,8 +38,10 @@ const pathList = {
 
 export default function router(param) {
 	var path;
-	if (!param) path = window.location.pathname;
-	else path = param;
+	if (!param)
+		path = window.location.pathname;
+	else
+		path = param;
 	console.log("router called: path: ", path);
 	const component = pathList[path];
 	console.log("component", component);
