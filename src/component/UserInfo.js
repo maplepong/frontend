@@ -1,28 +1,44 @@
 /* @jsx myReact.createElement */
-import { requestUserInfo } from "../core/Api.js";
-import myReact , { useEffect, useState} from "../core/myReact.js";
+import api from "../core/Api_.js";
+import myReact , { useEffect, useState } from "../core/myReact.js";
 
 const UserInfo = (props) => {
+	console.log("PROPS", props);
+	
 	const [data, setData] = useState({
 		id: "",
-		username: "",
-		nickname: "",
-		introduction: "",
-		losses: "",
-		total_games: "",
-		wins: "",
-		win_rate: "",
-		image: "",
-	});
-	const resultInfo = (responsedata) => {
-		if (!responsedata)
-			return console.error("noDATA")
-		// console.log("image...",responsedata.image)
-		setData({...responsedata});		
-	}
-	useEffect(() => requestUserInfo(props.nickname, resultInfo), []);
+        username: "",
+        nickname: "",
+        introduction: "",
+        losses: "",
+        total_games: "",
+        wins: "",
+        win_rate: "",
+        image: "",
+    });
+	console.log("data", data);
+
+    useEffect(() => {
+        const fetchData = async () => {
+        
+                const response = await api.getUserInfomation("니얼굴");
+				console.log("대답", response);
+                if (response) {
+					console.log("정보 받아옴")
+					setData(response);
+                } else {
+                    console.error("No data returned from API");
+                }
+        };
+        fetchData();
+    }, []);
 
 	// useEffect(() => console.log(data), [data]);
+
+	useEffect(() => {
+		console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
+	}, [data]);  // data가 변경될 때마다 실행
+	
 	return (
 		<div id="container-myinfo" class="modal">
 			<div id="myinfo-headline">

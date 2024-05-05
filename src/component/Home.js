@@ -27,7 +27,7 @@ const Home = () => {
 			{/* 아래 라인 주석 치면 에러안남 */}
 			{/*<Modal content={modalContent} onClose={hideModal} /> && modalVisible */}
 			<FriendList callback={showModal}/>
-			<UserInfo class={status.class} nickname={status.nickname}></UserInfo>
+			{/* <UserInfo class={status.class} nickname={status.nickname}></UserInfo> */}
 			<div id="info">
 			</div>
 			{/* <Navbar /> */}

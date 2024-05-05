@@ -1,0 +1,18 @@
+.nicknameContainer {
+	display: flex;
+	gap: 20px;
+	height: 20px;
+	width: 100%;
+	padding: 5px;
+	margin-top: 40px;
+}
+
+/* .nicknameContainer > p {
+	
+} */
+
+.hovermenu{
+	background-color: aqua;
+	position: relative;
+	left: 0px;
+}
