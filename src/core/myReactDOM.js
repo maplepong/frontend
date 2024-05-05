@@ -64,7 +64,7 @@ function disassembleChildren(children, result){
 		if (Array.isArray(child)){
 			result = disassembleChildren(child);
 		}
-		else if (!child){
+		else if (child == undefined || child == null){
 			result.push("no value"); //수정 및 확인 필요
 		}
 		else {

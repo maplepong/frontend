@@ -5,26 +5,29 @@ import Navbar from "./Navbar.js";
 import FriendList from "./FriendList.js";
 import Modal from "./Modal.js";
 import "../css/home.css"
+import UserInfo from "./UserInfo.js";
 
 const Home = () => {
 
-	const [modalVisible, setModalVisible] = useState(false);
-    const [modalContent, setModalContent] = useState(null);
+	// const [modalVisible, setModalVisible] = useState(false);
+    // const [modalContent, setModalContent] = useState(null);
 
-    const showModal = (content) => {
-        setModalContent(content); // 정보를 설정
-        setModalVisible(true); // 모달 표시
+	var friendNickname = "";
+	const	[status, setStatus] = useState({nickname : "", class: "hidden"});
+    const showModal = (nickname) => {
+		setStatus({nickname, class: ""});
     };
 
-    const hideModal = () => {
-        setModalVisible(false);
-        setModalContent(null); // 모달 정보 초기화
-    };
+    // const hideModal = () => {
+    //     setModalVisible(false);
+    //     setModalContent(null); // 모달 정보 초기화
+    // };
 
 	return <div id="home">
 			{/* 아래 라인 주석 치면 에러안남 */}
-			{<Modal content={modalContent} onClose={hideModal} /> && modalVisible}
-			<FriendList onShowModal={showModal}/>
+			{/*<Modal content={modalContent} onClose={hideModal} /> && modalVisible */}
+			<FriendList callback={showModal}/>
+			<UserInfo class={status.class} nickname={status.nickname}></UserInfo>
 			<div id="info">
 			</div>
 			{/* <Navbar /> */}
