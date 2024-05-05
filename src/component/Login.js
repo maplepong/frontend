@@ -1,39 +1,25 @@
 /* @jsx myReact.createElement */
 import myReact , { Link } from "../core/myReact.js";
 import { requestLogin, requestLogout } from "../core/Api.js";
-import api from "../core/Api_.js"
+import api from "../core/Api_.js";
+import router from "../core/Router.js";
 
 const Login = () => {
-	const getInfo = () => {
+	async function login () {
 		const username = document.querySelector("#input-username").value;
 		const password = document.querySelector("#input-password").value;
-		return ([username, password]);
-	};
-
-	const resultLogin = (status) => {
-		if (status === 200) {
-			//useNavigate로 뺄 예정
-			history.pushState({}, "", "/home");
-			myReact.render("home");
+		const getInfo = () => {
+			return ([username, password]);
+		}
+		console.log("끼얏 호우!!!!");
+		const response = await api.login(getInfo)
+		if (response.status != 200) {
+			console.log(response)
+			return response;
 		}
 		else {
-			alert("login fail");
-		}
-	}
-	
-	async function login(){
-		const res = await api.login(getInfo)
-		console.log(res);
-	}
-
-	const resultLogout = (status) => {
-		if (status === 200) {
-			alert("logout success");
-			history.pushState({}, "", "/");
-			myReact.render("/");
-		}
-		else {
-			alert("logout fail");
+			console.log(response);
+			router("/home")
 		}
 	}
 
@@ -41,8 +27,8 @@ const Login = () => {
 		<div id="login-container">
 			<input id="input-username" placeholder="ID"></input>
 			<input id="input-password" placeholder="password"></input>
-			<button id="btn-request-login" onClick={login}>Login</button>
-			<button id="btn-request-logout" onClick={() => { requestLogout(resultLogout)}}>Logout</button>
+			<button onclick={login}>로그인</button>
+			<button onclick={() => {api.logout()}}>로그아웃</button>
 			<p id="p-login-error"></p>
 		</div>
 	)

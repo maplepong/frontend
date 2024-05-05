@@ -2,6 +2,8 @@
 import myReact, { Link } from "../core/myReact.js";
 import { requestLogin, requestFriendList, requestUserInfo, requestFriend } from "../core/Api.js";
 import { useState, useEffect } from "../core/myReact.js"
+
+import api from "../core/Api_.js";
 import "../css/index.css";
 import "../css/friend.css";
 
@@ -11,7 +13,7 @@ const RequestFriend = () => {
     const handleClick = (event) => {
         event.preventDefault();
         const nicknameValue = document.getElementById('nicknameInput').value;
-        const response = requestFriend(nicknameValue);
+        const response = api.sendFriendRequest(nicknameValue);
         console.log('친구 요청 결과:', response);
     }
 

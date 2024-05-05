@@ -23,6 +23,10 @@ function addEvent(target, eventType, selector, callback) {
 
 
 function createDOM(fNode) {
+	if (typeof fNode === "string" || typeof fNode === "number"){
+		const node = document.createTextNode(fNode);
+		return node;
+	}
 	const node = document.createElement(fNode.tag);
 	fNode.stateNode = node;
 	updateProps ( node,	fNode.props || {}, null);
@@ -109,11 +113,44 @@ function updateChildren(target, newChildren, oldChildren){
 	}
 }
 
+function textNodeUpdate(parent, newfNode, oldfNode, index){
+	if (typeof oldfNode === "string" || typeof oldfNode === "number"){  
+		if (typeof newfNode === "string" || typeof newfNode === "number"){
+			//old : text | new : text
+			if (oldfNode === newfNode) return ; //same
+			return parent.replaceChild(document.createTextNode(newChildren[i]),
+							target.childNodes[i]);
+		} 
+		if (newfNode) //old : text | new 
+			return parent.prepend(createDOM(newfNode));
+	}
+	else if (typeof newfNode === "string" || typeof newfNode === "number"){ 
+		parent.replaceChild(document.createTextNode(newChildren[i]),
+							target.childNodes[i]);
+	}
+}
+
 //parent: DOM node
 function diffDom(parent, newfNode, oldfNode, index){
 	var element;
 	// error :: 
 	if (!oldfNode && !newfNode ) return 0;
+
+	// TextNode update
+	if (typeof oldfNode === "string" || typeof oldfNode === "number"){  
+		if (typeof newfNode === "string" || typeof newfNode === "number"){
+			//old : text | new : text
+			if (oldfNode === newfNode) return ; //same
+			return parent.replaceChild(document.createTextNode(newfNode),
+							parent.childNodes[index]);
+		} 
+		if (newfNode) //old : text | new 
+			return parent.prepend(createDOM(newfNode));
+	}
+	else if (oldfNode && typeof newfNode === "string" || typeof newfNode === "number"){ 
+		return parent.replaceChild(document.createTextNode(newfNode),
+							parent.childNodes[index]);
+	}
 	
 	// removed :: unmount
 	if (oldfNode && !newfNode){

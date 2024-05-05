@@ -12,7 +12,7 @@ import SignUp from "./component/SignUp.js";
 import "./css/index.css";
 import "./css/friend.css";
 import Test from "./component/Test.js"
-
+import api from "./core/Api_.js";
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://localhost:8000/";
@@ -21,18 +21,34 @@ const setAxios = () => {
 }
 
 const App = () => {
-	setAxios();
+	// setAxios(); // 필요 없다고 함
+
+	function checkLogin() {
+		if (localStorage.accessToken) {
+			const login = document.querySelector("#btn-nav-login");
+			// const logout = document.querySelector("#btn-nav-logout");
+			if (login)
+				login.style.display = 'none';
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", () => checkLogin());
+
 	return <div class="app">
             <Link to="" >
-                <img style={"width:200px"}src="./asset/design/maplepong.png"></img>
+                <img style={"width:500px"} src="./asset/design/maplepong.png"></img>
             </Link>
-			<Test />
-            <FriendList />
+			<Link to="login"><button id="btn-nav-login">로그인</button></Link>
+			<button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button>
+
+            {/* <FriendList /> */}
 			<RequestFriend />
-			<SignUp />
+
 			<Link to="home" id="home"><button>Home</button></Link>
 			<Link to="test" id="home"><button>Test</button></Link>
 			<Link to="api-test" id="home"><button>APITest</button></Link>
+			
+			<SignUp />
 		</div>
 }
 
