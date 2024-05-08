@@ -1,6 +1,7 @@
 /* @jsx myReact.createElement */
 import api from "../core/Api_.js";
 import myReact , { useEffect, useState } from "../core/myReact.js";
+import "../css/MyInfo.css"
 
 const UserInfo = (props) => {
 	console.log("PROPS", props);
@@ -20,7 +21,6 @@ const UserInfo = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-        
                 const response = await api.getUserInfomation("니얼굴");
 				console.log("대답", response);
                 if (response) {
