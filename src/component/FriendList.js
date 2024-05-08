@@ -8,11 +8,11 @@ import NicknameHover from "./NicknameHover.js";
 
 const FriendList = ( props ) => {
 	//testing
-	async function requestLogin() {
-		const res = await api.login(() => {return ["test", "4545"]})
-		console.log(res);
-	}
-	requestLogin();
+	// async function requestLogin() {
+	// 	const res = await api.login(() => {return ["test", "4545"]})
+	// 	console.log(res);
+	// }
+	// requestLogin();
 
     const [ list, setList ] = useState({
         sends: [],
