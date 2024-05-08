@@ -3,7 +3,7 @@
 }
 
 #container-chat {
-	min-width: 75%;
+	width: 75%;
 	height: auto;
 	margin: 10px;
 }

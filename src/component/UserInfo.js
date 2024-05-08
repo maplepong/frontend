@@ -22,12 +22,14 @@ const UserInfo = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-			const response = await api.getUserInfomation(props.nickname);
-			if (response) {
-				setData(response);
-			} else {
-				console.error("No data returned from API");
-			}
+                const response = await api.getUserInfomation("props.nickname");
+				console.log("대답", response);
+                if (response) {
+					console.log("정보 받아옴")
+					setData(response);
+                } else {
+                    console.error("No data returned from API");
+                }
         };
         fetchData();
     }, []);

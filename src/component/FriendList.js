@@ -8,6 +8,44 @@ import RequestFriend from "./RequestFriend.js";
 // import { requestFriendList } from "../core/Api.js";
 
 const FriendList = ( props ) => {
+	//testing
+	// async function requestLogin() {
+	// 	const res = await api.login(() => {return ["test", "4545"]})
+	// 	console.log(res);
+	// }
+	// requestLogin();
+
+    const [ list, setList ] = useState({
+        sends: [],
+        receives: []
+    });
+	
+    const [ friendlist, setFriendList ] = useState([]); 
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const friendRequests = await api.getRequestFriendList();
+            console.log("GET REQUEST LIST", friendRequests);
+            
+            const friends = await api.getFriendList();
+            console.log("GET FRIEND LIST", friends);
+            
+            setList(friendRequests);
+            setFriendList(friends);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        console.log("Updated LIST", list);
+        console.log("Updated FRIENDLIST", friendlist);
+    }, [list, friendlist]); // 상태 업데이트 후 확인
+    
+    const seeInfo = (nickname) => {
+        // const res = await api.getUserInfomation(nickname);
+		console.log("PROPS", props);
+        props.callback(nickname); // Home 컴포넌트로 정보 전달
+    }
     return (
         <div id="box">
             <span id="manage">친구 관리</span>
