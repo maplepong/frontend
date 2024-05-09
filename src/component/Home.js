@@ -1,7 +1,6 @@
 /* @jsx myReact.createElement */
 import myReact , { Link } from "../core/myReact.js";
 import { useState } from "../core/myReact.js";
-import Navbar from "./Navbar.js";
 import FriendList from "./FriendList.js";
 import ChooseGame from "./ChooseGame.js";
 import Modal from "./Modal.js";
@@ -34,9 +33,6 @@ const Home = () => {
 					<FriendList callback={showModal}/>
 				</div>
 				{/* <UserInfo class={status.class} nickname={status.nickname}></UserInfo> */}
-				<div id="info">
-				</div>
-				{/* <Navbar /> */}
 		</div>
 }
 
