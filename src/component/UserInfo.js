@@ -16,6 +16,7 @@ const UserInfo = (props) => {
         wins: "",
         win_rate: "",
         image: "",
+		email: "",
     });
 	console.log("data", data);
 
@@ -56,6 +57,7 @@ const UserInfo = (props) => {
 					<li>username {data.username}</li>
 					<li>wins {data.wins}</li>
 					<li>win_rate {data.win_rate}</li>
+					<li>email {data.email}</li>
 					{/* <li>image {data.image}</li> */}
 				</ul>
 			</div>

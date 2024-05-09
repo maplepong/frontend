@@ -14,6 +14,7 @@ const UserStatus = () => {
         wins: "",
         win_rate: "",
         image: "",
+		email: "",
     });
 	console.log("data", data);
 
