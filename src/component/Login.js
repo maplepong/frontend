@@ -3,6 +3,7 @@ import myReact , { Link } from "../core/myReact.js";
 import { requestLogin, requestLogout } from "../core/Api.js";
 import api from "../core/Api_.js";
 import router from "../core/Router.js";
+import "../css/login.css";
 
 const Login = () => {
 	async function login () {
@@ -25,11 +26,12 @@ const Login = () => {
 
 	return (
 		<div id="login-container">
-			<input id="input-username" placeholder="ID"></input>
-			<input id="input-password" placeholder="password"></input>
-			<button onclick={login}>로그인</button>
-			<button onclick={() => {api.logout()}}>로그아웃</button>
-			<p id="p-login-error"></p>
+			<div id="login-box">
+				<input id="input-username" placeholder="ID"></input>
+				<input id="input-password" placeholder="password"></input>
+				<button onclick={login} id="login-btn">로그인</button>
+				<p id="p-login-error"></p>
+			</div>
 		</div>
 	)
 }
