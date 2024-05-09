@@ -8,11 +8,11 @@
   margin: 10px;
 }
 
-#passinputBox {
+#passinputBox, #mailinputBox {
   margin: 10px;
 }
 
-#p-id-error, #p-nick-error {
+#p-id-error, #p-nick-error, #p-mail-error {
   color: white;
 }
 
@@ -20,6 +20,6 @@
   font-size: 15px;
 }
 
-#new-username, #new-password, #new-nickname {
+#new-username, #new-password, #new-nickname, #new-mail {
   width: 300px;
 }

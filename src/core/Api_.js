@@ -159,13 +159,14 @@ const api = {
 		})
 		.catch(error => { return error });
 	},
-	signup(username, password, nickname){
+	signup(username, password, nickname, mail){
 		// setToken(); // 없어도 된다.
 		const formData = new FormData();
-		console.log(username, password, nickname);
+		console.log("INFO", username, password, nickname, mail);
 		formData.append('username', username);
 		formData.append('nickname', nickname);
 		formData.append('password', password);
+		formData.append('email', mail);
 		return apiInstance.request({
 			method: "POST",
 			url: "user/sign-up",

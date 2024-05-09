@@ -8,7 +8,8 @@ const SignUp = () => {
 		const username = document.querySelector("#new-username").value;
 		const password = document.querySelector("#new-password").value;
         const nickname = document.querySelector("#new-nickname").value;
-        api.signup(username, password, nickname);
+        const email = document.querySelector("#new-mail").value;
+        api.signup(username, password, nickname, email);
 	};
 
     async function validcheckUsername() {
@@ -54,6 +55,17 @@ const SignUp = () => {
             errorDisplay.innerHTML = "OK";
     }
 
+    async function validcheckEmail() {
+        const mail = document.querySelector("#new-mail").value;
+        const errorDisplay = document.querySelector("#p-mail-error");
+        if (!mail) {
+            errorDisplay.innerHTML = "";
+            return ;
+        }
+        else
+            errorDisplay.innerHTML = "아직 검증 로직이 없어요"
+    }
+
     return (
         <div id="Signup-container">
             <div id="userinputBox">
@@ -66,6 +78,10 @@ const SignUp = () => {
             <div id="nickinputBox">
                 <input id="new-nickname" placeholder="nickname" onblur={validcheckNickname}></input>
                 <p id="p-nick-error" class="errMessage"></p>
+            </div>
+            <div id="mailinputBox">
+                <input id="new-mail" placeholder="email" onblur={validcheckEmail}></input>
+                <p id="p-mail-error" class="errMessage"></p>
             </div>
 			<button id="btn-request-Signup" onClick={ getInfo }>SignUp</button>
         </div>
