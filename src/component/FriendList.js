@@ -4,6 +4,7 @@ import { useState, useEffect } from "../core/myReact.js";
 import "../css/friend.css";
 import api from "../core/Api_.js";
 import NicknameHover from "./NicknameHover.js";
+import RequestFriend from "./RequestFriend.js";
 // import { requestFriendList } from "../core/Api.js";
 
 const FriendList = ( props ) => {
@@ -48,9 +49,7 @@ const FriendList = ( props ) => {
     return (
         <div id="box">
             <span id="manage">친구 관리</span>
-            <form id="find" class="content">
-                <input />
-            </form>
+            <RequestFriend />
             <hr className="line" />
             <div class="content">
                 <span id="request">받은 친구 요청</span>
