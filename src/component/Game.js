@@ -148,24 +148,24 @@ const PingPong = () => {
 		drawPaddle();
 		drawEnemyPaddle();
 
-		if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+		if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {//양옆의 벽에 닿은 경우
 			dx = -dx;
-		}//양옆의 벽면에 닿은 경우
-		if (y + dy > canvas.height - ballRadius) {//위아래 벽면에 닿은 경우
+		}
+		if (y + dy > canvas.height - ballRadius) {//아래벽
 			if (x > paddleX && x < paddleX + paddleWidth)  {//패들에 닿은 경우
 				dy = -dy;
 			}
-			else {
+			else {//그외 : 사망
 				console.log("score", score);
 				clearInterval(interval);
 				return updateScore(1, 0);
 			}
 		}
-		if (y + dy < ballRadius) {
-			if (x > paddleY && x < paddleY + paddleWidth) {
+		if (y + dy < ballRadius) {//윗벽
+			if (x > paddleY && x < paddleY + paddleWidth) {//패들에 닿은 경우
 				dy = -dy;
 			}
-			else {
+			else {//그외: 사망
 				console.log("score", score);
 				clearInterval(interval);
 				return updateScore(0, 1);
