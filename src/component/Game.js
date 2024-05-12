@@ -4,14 +4,33 @@ import "../css/Pingpong.css"
 
 const PingPong = () => {
 	const [score, setScore] = useState({left:0, right:0});
+	const [socket, setSocket] = useState(null);
+	const newSocket = new WebSocket("ws://192.168.45.188:8000/ws/game/");
 
-	console.log(score);
+	useEffect(() =>  {
+		WebSocket.onopen = function() {
+			console.log("서버 연결 완료");
+		}
+		setSocket(newSocket);
+
+		newSocket.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			console.log("data : ", data);
+			setScore(data);
+		};
+
+		return () => newSocket.close();
+	}, []);
 	
 	function updateScore (leftAdd, rightAdd) {
 		flag: 1; //updating
-		console.log(score);
-		setScore({left : score.left += leftAdd,
-				right : score.right += rightAdd});
+		const data = {
+			left: score.left +leftAdd,
+			right: score.right + rightAdd,
+		};
+		setScore(data);
+
+		socket.send(JSON.stringify({"data": data, "type": "game_update"}));
 	}
 		
 	var canvas, ctx, ballRadius, x, y, dx, dy;
@@ -23,6 +42,7 @@ const PingPong = () => {
 
 
 	function initGame () {
+		//canvas init이랑 각 game 시작 시 초기화해주는 부분 분리
 		canvas = document.getElementById("myCanvas");
 		ctx = canvas.getContext("2d");
 		ballRadius = 10;
@@ -131,22 +151,28 @@ const PingPong = () => {
 		if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
 			dx = -dx;
 		}//양옆의 벽면에 닿은 경우
-		if (y + dy > canvas.height - ballRadius || y + dy < 10) {
-			if (x > paddleX && x < paddleX + paddleWidth || x > paddleY && 
-				x < paddleY + paddleWidth) {
+		if (y + dy > canvas.height - ballRadius) {//위아래 벽면에 닿은 경우
+			if (x > paddleX && x < paddleX + paddleWidth)  {//패들에 닿은 경우
 				dy = -dy;
 			}
-		else if (y + dy > canvas.height){ //위아래 벽면에 닿은 경우
-			console.log("score", score);
-			clearInterval(interval);
-			return updateScore(1, 0);
+			else {
+				console.log("score", score);
+				clearInterval(interval);
+				return updateScore(1, 0);
+			}
 		}
-		else if (y + dy < ballRadius){
-			console.log("score", score);
-			clearInterval(interval);
-			return updateScore(0, 1);
+		if (y + dy < ballRadius) {
+			if (x > paddleY && x < paddleY + paddleWidth) {
+				dy = -dy;
+			}
+			else {
+				console.log("score", score);
+				clearInterval(interval);
+				return updateScore(0, 1);
+			}
 		}
-		}
+		//
+
 		if (rightPressed) {
 			paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
 		} else if (leftPressed) {
