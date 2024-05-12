@@ -51,5 +51,3 @@ export default function router(param) {
 		myReact.render(<div>{component}<Navbar/></div>, "newPage");
 	}
 }
-
-// myReact.render(<div>{component}<Navbar/></div>, "newPage");
