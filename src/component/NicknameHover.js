@@ -4,6 +4,9 @@ import "../css/NicknameHover.css"
 import router from "../core/Router.js";
 
 const NicknameHover = ({nickname}) => {
+	const data = {
+		nickname: nickname,
+	}
 	var show = 0; //0 hidden 1 show;
 	function showmenu (e) {
 		const menu = e.target.closest(".nicknameContainer").getElementsByClassName("hovermenu");
