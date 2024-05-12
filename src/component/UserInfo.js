@@ -32,11 +32,11 @@ const UserInfo = (props) => {
         fetchData();
     }, []);
 
-	// useEffect(() => console.log(data), [data]);
+	useEffect(() => console.log(data), [data]);
 
-	// useEffect(() => {
-	// 	console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
-	// }, [data]);  // data가 변경될 때마다 실행
+	useEffect(() => {
+		console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
+	}, [data]);  // data가 변경될 때마다 실행
 	
 	return (
 		<div id="container-myinfo" class="modal">
