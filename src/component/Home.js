@@ -24,12 +24,12 @@ const Home = () => {
     //     setModalContent(null); // 모달 정보 초기화
     // };
 
-	return <div id="home">
+	return <div id="home">s
 				{/* 아래 라인 주석 치면 에러안남 */}
 				{/*<Modal content={modalContent} onClose={hideModal} /> && modalVisible */}
 				<ChooseGame />
 				<div id="myStatus">
-					<UserStatus username={localStorage.username}></UserStatus>
+					<UserStatus nickname={localStorage.nickname}></UserStatus>
 					<FriendList callback={showModal}/>
 				</div>
 				{/* <UserInfo class={status.class} nickname={status.nickname}></UserInfo> */}

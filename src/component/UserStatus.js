@@ -1,9 +1,9 @@
 /* @jsx myReact.createElement */
-import myReact, { useEffect, useState } from "../core/myReact.js";
 import api from "../core/Api_.js";
+import myReact, { useEffect, useState } from "../core/myReact.js";
 import '../css/UserStatus.css';
 
-const UserStatus = () => {
+const UserStatus = (props) => {
 	const [data, setData] = useState({
 		id: "",
         username: "",
@@ -20,29 +20,29 @@ const UserStatus = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-                const response = await api.getUserInfomation("니얼굴");
-				console.log("대답", response);
-                if (response) {
-					console.log("정보 받아옴")
-					setData(response);
-                } else {
-                    console.error("No data returned from API");
-                }
+			const response = await api.getUserInfomation(props.nickname);
+			console.log("대답", response);
+			if (response) {
+				console.log("정보 받아옴")
+				setData(response);
+			} else {
+				console.error("No data returned from API");
+			}
         };
         fetchData();
     }, []);
 
 	// useEffect(() => console.log(data), [data]);
 
-	useEffect(() => {
-		console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
-	}, [data]);  // data가 변경될 때마다 실행
+	// useEffect(() => {
+	// 	console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
+	// }, [data]);  // data가 변경될 때마다 실행
 	
 	return <div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>
 				<div class="level">42</div>
-				<div class="usernickname">INSTANT VALUE</div>
+				<div class="usernickname">{data.nickname}</div>
 			</div>
 			<div class="status-line" style="background-color: #f1f1f1">
 				<div id="stat-name">핑퐁 승률</div>
