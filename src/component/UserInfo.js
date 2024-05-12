@@ -4,6 +4,8 @@ import myReact , { useEffect, useState } from "../core/myReact.js";
 import "../css/MyInfo.css"
 
 const UserInfo = (props) => {
+	console.log("USERINFO PROPS", props);
+
 	const [data, setData] = useState({
 		id: "",
         username: "",
