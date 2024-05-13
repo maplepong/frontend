@@ -30,7 +30,7 @@ const pathList = {
 	"api-test": <ApiTest />,
 	"signup": <SignUp />,
 	"api-signup": <ApiSignUp />,
-	"gameroom" : <Game/>,
+	"gameroom" : <Game />,
 	"welcome" : <Welcome/>,
 	"lobby": <Lobby />,
 	"test" : <Test />,
