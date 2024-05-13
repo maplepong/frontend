@@ -5,13 +5,13 @@ import "../css/Pingpong.css"
 const PingPong = () => {
 	const [score, setScore] = useState({left:0, right:0});
 	const [socket, setSocket] = useState(null);
-	const newSocket = new WebSocket("ws://192.168.45.188:8000/ws/game/");
+	const newSocket = new WebSocket("ws://localhost:8000/ws/game/");
 
 	useEffect(() =>  {
 		WebSocket.onopen = function() {
 			console.log("서버 연결 완료");
 		}
-		setSocket(newSocket);
+		// setSocket(newSocket);
 
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
@@ -23,13 +23,12 @@ const PingPong = () => {
 	}, []);
 	
 	function updateScore (leftAdd, rightAdd) {
-		flag: 1; //updating
+		// flag: 1; //updating
 		const data = {
-			left: score.left +leftAdd,
+			left: score.left + leftAdd,
 			right: score.right + rightAdd,
 		};
 		setScore(data);
-
 		socket.send(JSON.stringify({"data": data, "type": "game_update"}));
 	}
 		
@@ -38,8 +37,6 @@ const PingPong = () => {
 	var imagepath, flag;
 	var interval;
 	var ball;
-
-
 
 	function initGame () {
 		//canvas init이랑 각 game 시작 시 초기화해주는 부분 분리
@@ -66,7 +63,6 @@ const PingPong = () => {
 		ball = new Image();
 		ball.src = imagepath;
 
-		flag = 0;
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
 		document.addEventListener("keydown", topkeyDownHandler, false);
@@ -74,7 +70,9 @@ const PingPong = () => {
 	}
 
 	const gameDraw = () => {
-		interval = setInterval(draw, 20);
+		if (score.left < 3 && score.right < 3){
+			interval = setInterval(draw, 20);
+		}
 
 		return () => {
 			console.log("score", score);
@@ -143,6 +141,8 @@ const PingPong = () => {
 	}
 
 	function draw() {
+		if (!ctx)
+			return;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		drawBall();
 		drawPaddle();
@@ -189,18 +189,12 @@ const PingPong = () => {
 		y += dy;
 	}
 	
+	useEffect(initGame, score);
+	useEffect(gameDraw, score);
 	var resultValue = score.left + " : " + score.right;
-	if (!flag) {
-		useEffect(initGame);
-		console.log("스코어:",score.left, score.right)
-		
-		if (score.left < 3 && score.right < 3){
-			useEffect(gameDraw, score);
-		}
-		else {
-			resultValue = (score.left > score.right ?
-							 "left win by " : "right win by ") + resultValue ;
-		}
+	if (score.left > 2 	|| score.right > 2){
+		resultValue = (score.left > score.right ?
+						"left win by " : "right win by ") + resultValue ;
 	}
 
 
