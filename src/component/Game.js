@@ -5,13 +5,13 @@ import "../css/Pingpong.css"
 const PingPong = () => {
 	const [score, setScore] = useState({left:0, right:0});
 	const [socket, setSocket] = useState(null);
-	const newSocket = new WebSocket("ws://localhost:8000/ws/game/");
+	const newSocket = new WebSocket("ws://192.168.45.188:8000/ws/game/");
 
 	useEffect(() =>  {
 		WebSocket.onopen = function() {
 			console.log("서버 연결 완료");
 		}
-		// setSocket(newSocket);
+		setSocket(newSocket);
 
 		newSocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
@@ -23,7 +23,6 @@ const PingPong = () => {
 	}, []);
 	
 	function updateScore (leftAdd, rightAdd) {
-		// flag: 1; //updating
 		const data = {
 			left: score.left + leftAdd,
 			right: score.right + rightAdd,
@@ -56,8 +55,6 @@ const PingPong = () => {
 		leftPressed = false;
 		toprightPressed = false;
 		topleftPressed = false;
-		// leftscore = 0;
-		// rightscore = 0;
 
 		imagepath = "asset/game/mushroom.gif";
 		ball = new Image();
