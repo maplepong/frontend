@@ -21,26 +21,24 @@ import UserInfo from '../component/UserInfo';
 const pathList = {
 	"/": <App />,
 	// "/": <div><ApiTest /><FriendList /></div>, //test develope
-	"/userinfo": <UserInfoPage />,
-	"/login": <Login />,
-	"/home": <Home />,
-	"/myinfo": <MyInfo />,
-	"/api-login": <ApiLogin />,
-	"/api-test": <ApiTest />,
-	"/signup": <SignUp />,
-	"/api-signup": <ApiSignUp />,
-	"/gameroom" : <GameContainer />,
-	"/welcome" : <Welcome/>,
-	"/test" : <Test />,
+	"userinfo": <UserInfoPage />,
+	"login": <Login />,
+	"home": <Home />,
+	"myinfo": <MyInfo />,
+	"api-login": <ApiLogin />,
+	"api-test": <ApiTest />,
+	"signup": <SignUp />,
+	"api-signup": <ApiSignUp />,
+	"gameroom" : <GameContainer />,
+	"welcome" : <Welcome/>,
+	"test" : <Test />,
 }
 
-export default function router(param) {
+export default function router() {
 	var path;
-	if (!param)
-		path = window.location.pathname;
-	else
-		path = param;
+    path = window.location.pathname.split('/')[1] || window.location.pathname;
 	console.log("router called: path: ", path);
+    console.log(window.location.pathname.split('/')[1])
 	const component = pathList[path];
 	console.log("component", component);
 	if (component === undefined) {

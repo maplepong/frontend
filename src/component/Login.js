@@ -20,7 +20,7 @@ const Login = () => {
 		}
 		else {
 			console.log(response);
-			router("/home")
+			myReact.redirect("home")
 		}
 	}
 
