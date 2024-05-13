@@ -4,8 +4,9 @@ import myReact , { useEffect, useState } from "../core/myReact.js";
 import "../css/MyInfo.css"
 
 const UserInfo = (props) => {
-	console.log("USERINFO PROPS", props);
-
+    if (window.location.pathname != "/myinfo"){
+        props.nickname = window.location.pathname.split('/')[2];
+    }
 	const [data, setData] = useState({
 		id: "",
         username: "",
@@ -18,14 +19,11 @@ const UserInfo = (props) => {
         image: "",
 		email: "",
     });
-	console.log("data", data);
 
     useEffect(() => {
         const fetchData = async () => {
 			const response = await api.getUserInfomation(props.nickname);
-			console.log("대답", response);
 			if (response) {
-				console.log("정보 받아옴")
 				setData(response);
 			} else {
 				console.error("No data returned from API");
