@@ -178,8 +178,10 @@ const api = {
 		}).then(response => {
 			console.log(response);
 			console.log(username, '의 회원가입 완료!');
+			return response;
 		}).catch(error => {
-			console.error('Error: ', error);
+			console.error('Error: ', error.response);
+			return error.response;
 		});
 	},
 	validCheck(type, value){

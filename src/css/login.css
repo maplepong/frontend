@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 400px;
+  min-width: 400px;
   height: 400px;
   margin: 5px;
 }
@@ -18,23 +18,11 @@
   margin:10px;
 }
 
-#login-btn {
-  height: 80px;
-}
-
 #other-btns {
-  margin: 5px;
   display: flex;
+  justify-content: center;
 }
 
-#login {
-  margin:5px;
-}
-
-#home {
-  margin:5px;
-}
-
-#test {
-  margin:5px;
+.btns {
+  margin: 3px;
 }
