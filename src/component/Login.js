@@ -25,12 +25,31 @@ const Login = () => {
 	}
 
 	return (
-		<div id="login-container">
-			<div id="login-box">
-				<input id="input-username" placeholder="ID"></input>
-				<input id="input-password" placeholder="password"></input>
-				<button onclick={login} id="login-btn">로그인</button>
-				<p id="p-login-error"></p>
+		<div id="login-box">
+			<div id="infos">
+				<div>					
+					<div class="info">
+						<input id="input-username" placeholder="ID"></input>
+					</div>
+					<div class="info">
+						<input id="input-password" placeholder="password"></input>
+					</div>
+				</div>
+				<div id="login">
+					<button onclick={login} id="login-btn">로그인</button>
+				</div>
+			</div>
+			<div id="other-btns">
+					<div id="home">
+						<Link to="home" id="home">
+							<button>Home</button>
+						</Link>
+					</div>
+					<div id="test">
+						<Link to="api-test" id="home">
+							<button>APITest</button>
+						</Link>
+					</div>
 			</div>
 		</div>
 	)

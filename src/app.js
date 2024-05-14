@@ -8,6 +8,7 @@ import { requestLogin, requestFriendList, requestUserInfo } from "./core/Api.js"
 import FriendList from "./component/FriendList.js"
 import RequestFriend from "./component/RequestFriend.js";
 import { useState, useEffect } from "./core/myReact.js"
+import Login from "./component/Login.js";
 import SignUp from "./component/SignUp.js";
 import "./css/index.css";
 import "./css/friend.css";
@@ -34,22 +35,24 @@ const App = () => {
 
 	document.addEventListener("DOMContentLoaded", () => checkLogin());
 
-	return <div class="app">
+	return (
+		<div class="app">
             <Link to="" >
                 <img style={"width:500px"} src="./asset/design/maplepong.png"></img>
             </Link>
-			<Link to="login"><button id="btn-nav-login">로그인</button></Link>
-			<button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button>
-
-            {/* <FriendList /> */}
-			<RequestFriend />
-
-			<Link to="home" id="home"><button>Home</button></Link>
-			<Link to="test" id="home"><button>Test</button></Link>
-			<Link to="api-test" id="home"><button>APITest</button></Link>
 			
-			<SignUp />
+			<Login />
+
+			{/* <button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button> */}
+            {/* <FriendList /> */}
+			{/* <RequestFriend /> */}
+
+			{/* <Link to="home" id="home"><button>Home</button></Link> */}
+			{/* <Link to="test" id="home"><button>Test</button></Link> */}
+			{/* <Link to="api-test" id="home"><button>APITest</button></Link> */}
+			{/* <SignUp /> */}
 		</div>
+	)
 }
 
 export default App;
