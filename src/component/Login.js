@@ -2,6 +2,7 @@
 import myReact , { Link } from "../core/myReact.js";
 import { requestLogin, requestLogout } from "../core/Api.js";
 import api from "../core/Api_.js";
+import SignUp from "./SignUp.js";
 import router from "../core/Router.js";
 import "../css/login.css";
 
@@ -36,20 +37,25 @@ const Login = () => {
 					</div>
 				</div>
 				<div id="login">
-					<button onclick={login} id="login-btn">로그인</button>
+					<button onclick={login}>로그인</button>
 				</div>
 			</div>
 			<div id="other-btns">
-					<div id="home">
-						<Link to="home" id="home">
-							<button>Home</button>
-						</Link>
-					</div>
-					<div id="test">
-						<Link to="api-test" id="home">
-							<button>APITest</button>
-						</Link>
-					</div>
+				<div>
+					<Link to="home">
+						<button class="btns">Home</button>
+					</Link>
+				</div>
+				<div>
+					<Link to="api-test">
+						<button class="btns">APITest</button>
+					</Link>
+				</div>
+				<div>
+					<Link to="signup">
+						<button class="btns">회원가입</button>
+					</Link>
+				</div>
 			</div>
 		</div>
 	)
