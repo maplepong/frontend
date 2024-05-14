@@ -1,25 +1,62 @@
-#Signup-container {
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
+#signup-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#userinputBox, #nickinputBox {
-  margin: 10px;
+#welcome {
+  font-size: 30px;
+  text-align: center;
+  margin:10px;
 }
 
-#passinputBox, #mailinputBox {
-  margin: 10px;
+.inputBox {
+  margin-bottom: 15px;
 }
 
-#p-id-error, #p-nick-error, #p-mail-error {
+#new-username, #new-password, #confirm-password, #new-nickname, #new-mail {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#signup {
+  width: 50%;
+  padding: 10px;
+  background-color: #007BFF;
   color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#signup:hover {
+  background-color: #0056b3;
 }
 
 .errMessage {
-  font-size: 15px;
+  color: red;
+  font-size: 14px;
+  margin: 5px 0 0 0;
 }
 
-#new-username, #new-password, #new-nickname, #new-mail {
-  width: 300px;
+#interact {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.btns {
+  margin: 5px;
 }
