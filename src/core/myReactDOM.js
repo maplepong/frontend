@@ -12,6 +12,7 @@ const eventType = [
     "onchange",
     "onmouseover",
     "onmouseout",
+	"onsubmit",
 ]
 
 function addEvent(target, eventType, selector, callback) {

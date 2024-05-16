@@ -29,15 +29,16 @@ const pathList = {
 	"api-test": <ApiTest />,
 	"signup": <SignUp />,
 	"api-signup": <ApiSignUp />,
-	"gameroom" : <GameContainer />,
+	"gameroom" : <Game />,
 	"welcome" : <Welcome/>,
+	"lobby": <Lobby />,
 	"test" : <Test />,
+	"lobby" : <Lobby />,
 }
 
 export default function router() {
 	var path;
     path = window.location.pathname.split('/')[1] || window.location.pathname;
-	console.log("router called path: ", path);
     console.log(window.location.pathname.split('/')[1])
 	const component = pathList[path];
 	console.log("component", component);
