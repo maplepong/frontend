@@ -1,37 +1,60 @@
 /* @jsx myReact.createElement */
-import myReact , { Link } from "../core/myReact.js";
-import { useState } from "../core/myReact.js";
-import Navbar from "./Navbar.js";
+import myReact , { useState, useEffect } from "../core/myReact.js";
+// import { useState } from "../core/myReact.js";
+import api from "../core/Api_.js";
 import FriendList from "./FriendList.js";
-import Modal from "./Modal.js";
+import ChooseGame from "./ChooseGame.js";
+import UserStatus from "./UserStatus.js";
 import "../css/home.css"
-import UserInfo from "./UserInfo.js";
 
 const Home = () => {
+	const [data, setData] = useState({
+		id: "",
+        username: "",
+        nickname: "",
+        introduction: "",
+        losses: "",
+        total_games: "",
+        wins: "",
+        win_rate: "",
+        image: "",
+		email: "",
+    });
 
-	// const [modalVisible, setModalVisible] = useState(false);
-    // const [modalContent, setModalContent] = useState(null);
+	const [ list, setList ] = useState({
+		sends: [],
+		receives: []
+	});
+	
+	const [ friendlist, setFriendList ] = useState([]); 
 
-	var friendNickname = "";
-	const	[status, setStatus] = useState({nickname : "", class: "hidden"});
-    const showModal = (nickname) => {
-		setStatus({nickname, class: ""});
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+			const response = await api.getUserInfomation(localStorage.nickname);
+			const friendRequests = await api.getRequestFriendList();
+			const friends = await api.getFriendList();
+			
+			setList(friendRequests);
+			setFriendList(friends);
+			if (response) {
+				console.log("정보 받아옴")
+				setData(response);
+			} else {
+				console.error("No data returned from API");
+			}
+        };
+        fetchData();
+    }, []);
 
-    // const hideModal = () => {
-    //     setModalVisible(false);
-    //     setModalContent(null); // 모달 정보 초기화
-    // };
-
-	return <div id="home">
-			{/* 아래 라인 주석 치면 에러안남 */}
-			{/*<Modal content={modalContent} onClose={hideModal} /> && modalVisible */}
-			<FriendList callback={showModal}/>
-			{/* <UserInfo class={status.class} nickname={status.nickname}></UserInfo> */}
-			<div id="info">
+	return (
+			<div id="home">
+				<ChooseGame />
+				<div id="myStatus">
+					<UserStatus data={data}/>
+					<FriendList list={list} friendlist={friendlist}/>
+				</div>
 			</div>
-			{/* <Navbar /> */}
-		</div>
+		)
 }
 
 export default Home;
