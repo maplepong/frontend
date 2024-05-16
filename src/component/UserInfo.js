@@ -1,10 +1,12 @@
 /* @jsx myReact.createElement */
 import api from "../core/Api_.js";
 import myReact , { useEffect, useState } from "../core/myReact.js";
+import "../css/MyInfo.css"
 
 const UserInfo = (props) => {
-	console.log("PROPS", props);
-	
+    if (window.location.pathname != "/myinfo"){
+        props.nickname = window.location.pathname.split('/')[2];
+    }
 	const [data, setData] = useState({
 		id: "",
         username: "",
@@ -15,25 +17,22 @@ const UserInfo = (props) => {
         wins: "",
         win_rate: "",
         image: "",
+		email: "",
     });
-	console.log("data", data);
 
     useEffect(() => {
         const fetchData = async () => {
-        
-                const response = await api.getUserInfomation("니얼굴");
-				console.log("대답", response);
-                if (response) {
-					console.log("정보 받아옴")
-					setData(response);
-                } else {
-                    console.error("No data returned from API");
-                }
+			const response = await api.getUserInfomation(props.nickname);
+			if (response) {
+				setData(response);
+			} else {
+				console.error("No data returned from API");
+			}
         };
         fetchData();
     }, []);
 
-	// useEffect(() => console.log(data), [data]);
+	useEffect(() => console.log(data), [data]);
 
 	useEffect(() => {
 		console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
@@ -43,7 +42,7 @@ const UserInfo = (props) => {
 		<div id="container-myinfo" class="modal">
 			<div id="myinfo-headline">
 				<p>내정보</p>
-				<button>X</button>
+				<button>X</button>	
 			</div>
 			<div id="myinfo-body" onclick={() => console.log(data)}>
 				<img id="myinfo-img" src={data.image}></img>
@@ -56,6 +55,7 @@ const UserInfo = (props) => {
 					<li>username {data.username}</li>
 					<li>wins {data.wins}</li>
 					<li>win_rate {data.win_rate}</li>
+					<li>email {data.email}</li>
 					{/* <li>image {data.image}</li> */}
 				</ul>
 			</div>
