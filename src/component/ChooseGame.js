@@ -12,9 +12,11 @@ const ChooseGame = () => {
                 <div id="tour">
                     <span class="word">토너먼트 참여</span>
                 </div>
-                <div id="pong">
-                    <span class="word">게임하기</span>
-                </div>
+                <Link to="lobby"> 
+                    <div id="pong">
+                        <span class="word">게임하기</span>
+                    </div>
+                </Link>
         </div>
     )
 }

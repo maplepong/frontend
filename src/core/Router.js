@@ -30,10 +30,11 @@ const pathList = {
 	"api-test": <ApiTest />,
 	"signup": <SignUp />,
 	"api-signup": <ApiSignUp />,
-	"gameroom" : <Game />,
+	"gameroom" : <Game/>,
 	"welcome" : <Welcome/>,
 	"lobby": <Lobby />,
 	"test" : <Test />,
+	"lobby" : <Lobby />,
 }
 
 export default function router() {
