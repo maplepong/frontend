@@ -51,7 +51,7 @@ const Lobby = (props) => {
             </div>
             <div id="modal" className="hidden">
                 <div id="modal-content">
-                    <form id="room-form" onSubmit={create_game}>
+                    <form id="room-form">
                         <div id="modal-title">방 제목</div>
                         <input type="text" id="room-name" name="room-name" placeholder="방 제목 입력"></input>
                         <div id="checkbox-container">
@@ -61,7 +61,7 @@ const Lobby = (props) => {
                         <input type="password" id="room-password" name="room-password" placeholder="비밀번호 입력"></input>
                         <div id="modal-buttons">
                             <input type="button" id="cancelbtn" value="취소"></input>
-                            <input type="submit" id="confirmbtn" value="확인"></input>
+                            <input type="button" id="confirmbtn" onClick={create_game} value="확인"></input>
                         </div>
                     </form>
                 </div>
@@ -69,6 +69,7 @@ const Lobby = (props) => {
 			<button onclick={updateList}>방이 있을까?</button>
             <div id="lobby-body">
                 <p>sibal</p>
+                <p>size : {lobbyData.length}</p>
             <ul>
            {lobbyData.length > 0 ? lobbyData.map(room => (
                 <li key={room.id}>
