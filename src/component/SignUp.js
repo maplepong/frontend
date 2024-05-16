@@ -102,7 +102,7 @@ const SignUp = () => {
             return false;
         }
         const response = await api.validCheck("email", email);
-
+        console.log("EMAIL RESPONSE", response);
         // 이메일 유효성 검사 로직 추가 가능
         if (response.status !== 200) {
             errorDisplay.innerHTML = "이미 사용 중인 이메일입니다.";
