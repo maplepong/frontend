@@ -21,7 +21,6 @@ import UserInfo from '../component/UserInfo';
 
 const pathList = {
 	"/": <App />,
-	// "/": <div><ApiTest /><FriendList /></div>, //test develope
 	"userinfo": <UserInfoPage />,
 	"login": <Login />,
 	"home": <Home />,
@@ -40,7 +39,6 @@ const pathList = {
 export default function router() {
 	var path;
     path = window.location.pathname.split('/')[1] || window.location.pathname;
-	console.log("router called: path: ", path);
     console.log(window.location.pathname.split('/')[1])
 	const component = pathList[path];
 	console.log("component", component);
