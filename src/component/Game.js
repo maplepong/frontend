@@ -4,22 +4,20 @@ import "../css/Pingpong.css"
 
 const PingPong = () => {
 	const [score, setScore] = useState({left:0, right:0});
-	const [socket, setSocket] = useState(null);
-	const newSocket = new WebSocket("ws://192.168.45.188:8000/ws/game/");
-
+	const [socket, setSocket] = useState(new WebSocket("ws://10.18.236.7:8000/ws/game/siwon/"));
+	// if (socket == null) {
+	// 	setSocket(new WebSocket("ws://10.19.247.54:8000/ws/game/siwon/"));
+	// }
+	socket.onopen = function() {
+		console.log("서버 연결 완료");
+	}
+	socket.onmessage = (event) => {
+		const data = JSON.parse(event.data);
+		console.log("data : ", data);
+	};
+	
 	useEffect(() =>  {
-		WebSocket.onopen = function() {
-			console.log("서버 연결 완료");
-		}
-		setSocket(newSocket);
-
-		newSocket.onmessage = (event) => {
-			const data = JSON.parse(event.data);
-			console.log("data : ", data);
-			setScore(data);
-		};
-
-		return () => newSocket.close();
+		return () => socket.close();
 	}, []);
 	
 	function updateScore (leftAdd, rightAdd) {
