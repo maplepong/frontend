@@ -13,7 +13,7 @@ const Navbar = () => {
 			{/* <Link to="login"><button id="btn-nav-login">로그인</button></Link> */}
 			{/* <Link to="api-login"><button id="btn-nav-42login">42로그인</button></Link> */}
 			<div class="btn-class">
-				<Link to="gameroom"><button class="btn-nav">게임</button></Link>
+				<button id="btn-nav-logout" onclick={() => {api.logout()}}>로그아웃</button>
 			</div>
 			<div class="btn-class">
 				<Link to="myinfo"><button class="btn-nav">정보</button></Link>
