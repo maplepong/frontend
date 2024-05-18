@@ -2,9 +2,11 @@
 import myReact , { useEffect, useState} from "../core/myReact.js";
 import { requestLobbyList, requestCreateGame } from "../core/ApiGame.js";
 import api from "../core/Api_.js"
+import GameRoom from "./GameRoom.js";
 
 const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
+    const [selectGameId, setSelectGameId] = useState(null);
 	async function requestLogin() {
 		const res = await api.login(() => {return ["test", "4545"]})
 		console.log(res);
@@ -15,7 +17,11 @@ const Lobby = (props) => {
 	}
 
     const resultCreateGame = (responsedata) => {
-        console.log("responsedata : ", responsedata);
+        console.log("responsedata.data.id : ", responsedata.data.id);
+        if (responsedata && responsedata.data.id) {
+            console.log("set game id")
+            setSelectGameId(responsedata.data.id); // 게임 방 생성 후 해당 방으로 이동
+          }
     }
 
     const create_game = async () => {
@@ -36,11 +42,17 @@ const Lobby = (props) => {
         setLobbyData(res);
     }
 
+    //const 방 제목 눌렀을때 거기로 들어가는거
+
 	useEffect(updateList, []);
 
     console.log("lobbyData", lobbyData);
 
 	return (
+        selectGameId ? (
+            <GameRoom roomId = {selectGameId} />
+
+            ) : (
         <div id="container-lobby" className="modal">
 			<button onclick={requestLogin}>login: test</button>
             <div id="lobby-headline">
@@ -68,11 +80,9 @@ const Lobby = (props) => {
             </div>
 			<button onclick={updateList}>방이 있을까?</button>
             <div id="lobby-body">
-                <p>sibal</p>
-                <p>size : {lobbyData.length}</p>
             <ul>
            {lobbyData.length > 0 ? lobbyData.map(room => (
-                <li key={room.id}>
+                <li key={room.id} onClick={() => setSelectGameId(room.id)}>
                     <ul>
                     <li>Room Number: {room.id}</li>
                     <li>Room Title: {room.name}</li>
@@ -83,14 +93,14 @@ const Lobby = (props) => {
                         ))}
                     </ul>
                     <li>Room Status: {room.status}</li>
-                    <li>Locked: {room.password}</li>
+                    <li>Locked: {room.password ? "Yes" : "No"}</li>
                     </ul>
                 </li>
                 )) : <li>방이 없다고 만들라고</li>}
             </ul>
             </div>
         </div>
-    );
+    ) );
 }
 
 export default Lobby;
