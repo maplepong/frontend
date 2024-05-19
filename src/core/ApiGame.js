@@ -97,7 +97,7 @@ const requestCreateGame = async (room_title, password) => {
 		.catch(error => {
 			return null;
 		});
-		if (typeof result === "undefined" || result.status != 200){
+		if (typeof result === "undefined" || result.status != 201){
 			console.log("room create Error")
 			console.log(result);
 			return;
