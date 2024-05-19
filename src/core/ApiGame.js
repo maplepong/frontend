@@ -3,7 +3,7 @@ import myReact  from "./myReact";
 import axios from "axios";
 
 const baseUrl = () => {
-	return "http://localhost:8000/";
+	return "http://localhost:12649/";
 }
 
 const requestLobbyList = async () => {

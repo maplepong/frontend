@@ -37,6 +37,7 @@ const Home = () => {
 			setList(friendRequests);
 			setFriendList(friends);
 			if (response) {
+				console.log("받아온 내정보", response)
 				console.log("정보 받아옴")
 				setData(response);
 			} else {
