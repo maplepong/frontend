@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:8002/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -90,7 +90,28 @@ const api = {
 		}).catch(error => {
 			return error;
 		})
-	},
+	},sendEmailVerifyPin(email) {
+        console.log("YOUR EMAIL", email)
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data'
+			},
+            method: "POST",
+            url: "user/generate_email_pin",
+			data: {
+				email: email
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
 	sendFriendRequest(nickname) {
 		setToken();
 		return apiInstance.request({
