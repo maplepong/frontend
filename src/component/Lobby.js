@@ -1,48 +1,92 @@
 /* @jsx myReact.createElement */
-import myReact , { useEffect, useState} from "../core/myReact.js";
-import { requestLobbyList, requestCreateGame } from "../core/ApiGame.js";
-import api from "../core/Api_.js"
+import myReact, { useEffect, useState } from "../core/myReact.js";
+import { requestLobbyList, requestCreateGame, requestGameInfo, requestJoinGame } from "../core/ApiGame.js";
+import api from "../core/Api_.js";
+import router from "../core/Router.js";
 
 const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([]);
-	async function requestLogin() {
-		const res = await api.login(() => {return ["test", "4545"]})
-		console.log(res);
-	}
 
-	const resultLobby = (responsedata) => {
+    async function requestLogin() {
+        const res = await api.login(() => ["test", "4545"]);
+        console.log(res);
+    }
+
+    const resultLobby = (responsedata) => {
+        console.log("Received lobby data:", responsedata);
         setLobbyData(responsedata);
-	}
+    };
 
     const resultCreateGame = (responsedata) => {
-        console.log("responsedata : ", responsedata);
-    }
+        if (responsedata && responsedata.data.id) {
+            setTimeout(() => {
+                history.pushState({}, "", `/gameroom/${responsedata.data.id}`);
+                router();
+            }, 1000);
+        }
+        else
+            alert("게임 생성 실패");
+    };
 
     const create_game = async () => {
         console.log("create_game");
-        const room_title = document.querySelector("#room-name").value;
-        const password = document.querySelector("#room-password").value;
-        const vibration = document.querySelector("#vibration").checked;
-        console.log("room_title: ", room_title, "password: ", password, "vibration: ", vibration);
-        resultCreateGame(await requestCreateGame(room_title, password));
-        const res = await requestLobbyList();
-        if (res === null) return console.log("requestLobbyList error");
-        resultLobby(res);
-    }
+        const roomTitleElement = document.querySelector("#room-name");
+        const passwordElement = document.querySelector("#room-password");
+        const vibrationElement = document.querySelector("#vibration");
 
-	const updateList  = async () => {
+        if (!roomTitleElement || !passwordElement || !vibrationElement) {
+            console.error("Required DOM elements are not found");
+            return;
+        }
+
+        const room_title = roomTitleElement.value;
+        const password = passwordElement.value;
+        const vibration = vibrationElement.checked;
+
+        console.log("room_title:", room_title, "password:", password, "vibration:", vibration);
+
+        const createGameResponse = await requestCreateGame(room_title, password);
+        if (createGameResponse === null) {
+            return console.error("Failed to create game");
+        }
+        resultCreateGame(createGameResponse);
+    };
+
+    const updateList = async () => {
         const res = await requestLobbyList();
-        if (res === null) return console.log("requestLobbyList error");
+        if (res === null) {
+            return console.log("requestLobbyList error");
+        }
+        console.log("Received lobby list:", res);
         setLobbyData(res);
+    };
+
+    const joinGame = async (gameId) => {
+        const gameInfo = await requestGameInfo(gameId);
+        if (gameInfo.status !== 200)
+            return console.error("Failed to get game info:", gameInfo);
+        let password = null;
+        if (gameInfo.data.password !== null)
+            password = prompt("비밀번호를 입력하세요");
+        const joinGameResponse = await requestJoinGame(gameId, password);
+        if (joinGameResponse && joinGameResponse.status === 201) {
+            history.pushState({}, "", `/gameroom/${gameId}`);
+            router();
+        }
+        else if (joinGameResponse.status === 400) alert("비밀번호가 필요합니다.");
+        else if (joinGameResponse.status === 403) alert("비밀번호가 틀렸습니다.");
+        else if (joinGameResponse.status === 409) alert("방에 입장할 수 없습니다.");
+        else alert("게임 입장 실패");
     }
 
-	useEffect(updateList, []);
+
+    useEffect(updateList, []);
 
     console.log("lobbyData", lobbyData);
 
-	return (
+    return (
         <div id="container-lobby" className="modal">
-			<button onclick={requestLogin}>login: test</button>
+            <button onClick={requestLogin}>login: test</button>
             <div id="lobby-headline">
                 <p>Pingpong🏓</p>
                 <button>X</button>
@@ -66,31 +110,20 @@ const Lobby = (props) => {
                     </form>
                 </div>
             </div>
-			<button onclick={updateList}>방이 있을까?</button>
+            <button onClick={updateList}>방이 있을까?</button>
             <div id="lobby-body">
-                <p>sibal</p>
-                <p>size : {lobbyData.length}</p>
-            <ul>
-           {lobbyData.length > 0 ? lobbyData.map(room => (
-                <li key={room.id}>
-                    <ul>
-                    <li>Room Number: {room.id}</li>
-                    <li>Room Title: {room.name}</li>
-                    <li>Players:</li>
-                    <ul>
-                        {room.players.map((player, i) => ( // player id, nickname으로 들어오지 않고 nickname만 배열로 들어옵니다
-                        <li key={i}>{player}</li>
-                        ))}
-                    </ul>
-                    <li>Room Status: {room.status}</li>
-                    <li>Locked: {room.password}</li>
-                    </ul>
-                </li>
-                )) : <li>방이 없다고 만들라고</li>}
-            </ul>
+                <ul>
+                    {lobbyData.length > 0 ? (lobbyData.map((room, index) => (
+                        <li key={index} onClick={() => { joinGame(room.id) }} >
+                            <ul>
+                                <li>{room.id} : {room.name}</li>
+                            </ul>
+                        </li>
+                    ))) : (<li>방이 없다고 만들라고</li>)}
+                </ul>
             </div>
         </div>
     );
-}
+};
 
 export default Lobby;

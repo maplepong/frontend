@@ -6,6 +6,48 @@ const baseUrl = () => {
 	return "http://localhost:12649/";
 }
 
+const requestGameInfo = async (gameId) => {
+	var result = null;
+	return await axios.request({
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+		method: "GET",
+		url: `${baseUrl()}game/game_info/${gameId}`,
+	})
+	.then(response => {
+		result = response;
+		console.log('Response:', response);
+		return result;
+	})
+	.catch(error => {
+		console.error('Error:', error);
+		return null;
+	});
+}
+
+const requestJoinGame = async (gameId, password) => {
+	var result = null;
+	const formData = new FormData();
+		formData.append('id', gameId);
+		if (password) formData.append('password', password);
+		return await axios.post(baseUrl() + "game/enter", formData, {
+			headers: {
+				Authorization: `Bearer ${localStorage.accessToken}`,
+			},
+		})
+	.then(response => {
+		result = response;
+		console.log('Response:', response);
+		return result;
+	})
+	.catch(error => {
+		console.error('Error:', error);
+		return error.response;
+	});
+}
+
+
 const requestLobbyList = async () => {
 	var result = null;
 	console.log("request Lobby List")
@@ -53,12 +95,12 @@ const requestCreateGame = async (room_title, password) => {
 			console.log('Response:', response);
 		})
 		.catch(error => {
-			console.error('Error:', error);
+			return null;
 		});
-		if (typeof result === "undefined" || result.status != 200){
+		if (typeof result === "undefined" || result.status != 201){
 			console.log("room create Error")
 			console.log(result);
-			return ;
+			return;
 		}
 		return result;
 	} catch (error) {
@@ -66,4 +108,4 @@ const requestCreateGame = async (room_title, password) => {
 	}
 }
 
-export { requestLobbyList, requestCreateGame };
+export { requestLobbyList, requestCreateGame, requestGameInfo, requestJoinGame };
