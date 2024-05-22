@@ -4,7 +4,8 @@ import { requestGameInfo } from "../core/ApiGame.js";
 import "../css/GameRoom.css"
 
 const GameRoom = () => {
-  const [socket, setSocket] = useState(null);
+    const socket = localStorage.getItem("socket");
+
     const [gameInfo, setGameInfo] = useState({
         id: "",
         name: "",
@@ -17,6 +18,40 @@ const GameRoom = () => {
         owner_info : {},
         player_info : {},
     });
+
+    const setSocket = () => {
+    if (!socket && gameInfo.id)
+    {
+        const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+        
+        localStorage.setItem("socket", newSocket);
+        newSocket.onopen = function() {
+            console.log("서버 연결 완료");
+            newSocket.send(JSON.stringify({type: 'client_connected', nickname: localStorage.getItem("nickname")}));
+        };
+    
+        newSocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("data : ", data);
+            if (data.type === "game_ready")
+            {
+            console.log("game_ready")
+            console.log("data.player_info : ", data.player_info)
+            setGameInfo({...gameInfo,
+                isGameReady: true,
+                player_info: data.player_info
+            });
+            }
+        };
+    
+        newSocket.onclose = function() {
+            console.log("서버 연결 종료");
+            localStorage.removeItem("socket");
+        };
+    }
+    }
+
+    console.log("gameInfo : ", gameInfo)
 
     useEffect(() => {
         const fetchGameInfo = async () => {
@@ -46,47 +81,16 @@ const GameRoom = () => {
         fetchGameInfo();
 
         return () => {
-          if (newSocket) {
-              newSocket.close();
+          if (socket) {
+            localStorage.removeItem("socket");
+            socket.close();
           }
       };
     }, []);
 
     useEffect(() => {
-        if (gameInfo) {
-          console.log("gameInfo : ", gameInfo)
-          if (gameInfo.id && !socket)
-            {
-              const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
-    
-              newSocket.onopen = function() {
-                  console.log("서버 연결 완료");
-                  setSocket(newSocket);
-                  newSocket.send(JSON.stringify({type: 'client_connected', nickname: localStorage.getItem("nickname")}));
-              };
-    
-              newSocket.onmessage = (event) => {
-                  const data = JSON.parse(event.data);
-                  console.log("data : ", data);
-                  if (data.type === "game_ready")
-                  {
-                    console.log("game_ready")
-                    console.log("data.player_info : ", data.player_info)
-                    // 들어오는데 gameInfo 업데이트가 안되는 문제가 있음
-                    setGameInfo(prevGameInfo => ({
-                      ...prevGameInfo,
-                      isGameReady: true,
-                      player_info: data.player_info
-                    }));
-                  }
-              };
-    
-              newSocket.onclose = function() {
-                  console.log("서버 연결 종료");
-                  setSocket(null);
-              };
-            }
-        }
+        if (!socket)
+            setSocket();
     }, [gameInfo.id]);
 
     const startGame = () => {
