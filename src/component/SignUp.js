@@ -102,7 +102,6 @@ const SignUp = () => {
             return false;
         }
         const response = await api.validCheck("email", email);
-        console.log("EMAIL RESPONSE", response);
         // 이메일 유효성 검사 로직 추가 가능
         if (response.status !== 200) {
             errorDisplay.innerHTML = "이미 사용 중인 이메일입니다.";
@@ -124,7 +123,24 @@ const SignUp = () => {
     async function verifyEmail() {
         const email = document.querySelector("#new-mail").value;
         const response = await api.sendEmailVerifyPin(email);
-        console.log("EMAIL EMAIL", response)
+        const errorDisplay = document.querySelector("#p-verify-error");
+        if (!email) {
+            errorDisplay.innerHTML = "";
+            return false;
+        }
+        if (response.status != 200) {
+            errorDisplay.innerHTML = "인증 코드를 보내는데 실패했어요."
+        } else {
+            errorDisplay.innerHTML = "인증 코드가 전송되었어요."
+        }
+    }
+
+    async function checkEmailPin() {
+        const email = document.querySelector("#new-mail").value
+        const verifyPin = document.querySelector("#verfiyPin").value
+        const response = await api.checkEmailVerifyPin(email, verifyPin);
+        const errorDisplay = document.querySelector("#p-check-error");
+        console.log(response);
     }
 
     const handlePasswordInput = () => {
@@ -172,10 +188,16 @@ const SignUp = () => {
                 <button class="verify" onclick={verifyEmail}>인증</button>
                 <p id="p-mail-error" className="errMessage"></p>
             </div>
+            <div>
+                <p id="p-verify-error" className="errMessage"></p>
+            </div>
             <div id="mailBox">
                 <input id="verfiyPin" type="email" placeholder="인증번호를 입력해주세요"></input>
-                <button class="verify">확인</button>
+                <button class="verify" onclick={checkEmailPin}>확인</button>
                 <p id="p-mail-error" className="errMessage"></p>
+            </div>
+            <div>
+                <p id="p-check-error" className="errMessage"></p>
             </div>
             <div id="interact">
                 <button class="btns" onClick={getInfo}>회원가입</button>
