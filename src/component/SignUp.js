@@ -121,6 +121,12 @@ const SignUp = () => {
         return strength;
     }
 
+    async function verifyEmail() {
+        const email = document.querySelector("#new-mail").value;
+        const response = await api.sendEmailVerifyPin(email);
+        console.log("EMAIL EMAIL", response)
+    }
+
     const handlePasswordInput = () => {
         const password = document.querySelector("#new-password").value;
         const strength = checkPassword(password);
@@ -161,8 +167,14 @@ const SignUp = () => {
                 <input id="new-nickname" placeholder="닉네임" onBlur={validcheckNickname}></input>
                 <p id="p-nick-error" className="errMessage"></p>
             </div>
-            <div className="inputBox">
+            <div id="mailBox">
                 <input id="new-mail" type="email" placeholder="이메일" onBlur={validcheckEmail}></input>
+                <button class="verify" onclick={verifyEmail}>인증</button>
+                <p id="p-mail-error" className="errMessage"></p>
+            </div>
+            <div id="mailBox">
+                <input id="verfiyPin" type="email" placeholder="인증번호를 입력해주세요"></input>
+                <button class="verify">확인</button>
                 <p id="p-mail-error" className="errMessage"></p>
             </div>
             <div id="interact">
