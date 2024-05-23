@@ -3,8 +3,11 @@ import myReact from "../core/myReact.js";
 import api, { requestSignup, requestValidCheck } from "../core/Api_.js";
 import "../css/Signup.css"
 import { Link } from "../core/myReact.js";
+import router from "../core/Router.js";
 
 const SignUp = () => {
+    let time;
+    var CorrectPin = false;
     async function getInfo () {
         // 검증 로직
         if (!validateFields()) {
@@ -27,9 +30,11 @@ const SignUp = () => {
     
         if (response.status !== 201)
             alert("회원가입에 실패했습니다. Error: " + response.status);
-        else
-            alert(username, "의 회원가입 완료")
-    };
+        else {
+            alert(username + "의 회원가입 완료")
+            router("/home");
+        };
+    }
 
     const validateFields = () => {
         const usernameValid = validcheckUsername();
@@ -37,8 +42,7 @@ const SignUp = () => {
         const confirmPasswordValid = validcheckPassword();
         const emailValid = validcheckEmail();
         const passwordValid = handlePasswordInput();
-
-        return usernameValid && passwordValid && confirmPasswordValid && nicknameValid && emailValid;
+        return usernameValid && passwordValid && confirmPasswordValid && nicknameValid && emailValid && CorrectPin;
     }
 
     async function validcheckUsername() {
@@ -102,7 +106,6 @@ const SignUp = () => {
             return false;
         }
         const response = await api.validCheck("email", email);
-        console.log("EMAIL RESPONSE", response);
         // 이메일 유효성 검사 로직 추가 가능
         if (response.status !== 200) {
             errorDisplay.innerHTML = "이미 사용 중인 이메일입니다.";
@@ -112,15 +115,75 @@ const SignUp = () => {
             return true;
         }    
     }
+    
+    function setVerifyTimer() {
+        time = 600;
+        var curMin = document.querySelector("#remain_min");
+        var curSec = document.querySelector("#remain_sec");
+        var checkBtn = document.querySelector("#check")
+        const errorDisplay = document.querySelector("#p-verify-error");
+        const timerInterval = setInterval(function () {
+            if (time > 0) {
+                time = time - 1;
+                let min = Math.floor(time / 60);
+                let sec = String(time % 60).padStart(2, "0");
+                curMin.innerHTML = min;
+                curSec.innerHTML = sec;
+            } else {
+                clearInterval(timerInterval);
+                checkBtn.disabled = true;
+                errorDisplay.innerHTML = "10분이 경과했어요. 인증번호를 다시 받아주세요."
+            }
+        }, 1000);
+    }
+    
+    async function verifyEmail() {
+        const email = document.querySelector("#new-mail").value;
+        const errorDisplay = document.querySelector("#p-verify-error");
+        if (!email) {
+            errorDisplay.innerHTML = "";
+            return false;
+        }
+        console.log("VERIFY EMAIL!")
+        const response = await api.sendEmailVerifyPin(email);
+        if (response.status != 200) {
+            errorDisplay.innerHTML = "인증 코드를 보내는데 실패했어요."
+        } else {
+            errorDisplay.innerHTML = "인증 코드가 전송되었어요."
+            setVerifyTimer();
+        }
+    }
+    
+    async function checkEmailPin() {
+        const email = document.querySelector("#new-mail").value
+        const verifyPin = document.querySelector("#verfiyPin").value
+        const errorDisplay = document.querySelector("#p-check-error");
+        const checkBtn = document.querySelector("#check");
+        if (!verifyPin) {
+            errorDisplay.innerHTML = ""
+            return ;
+        }
+        console.log("CHECK PIN!!")
+        const response = await api.checkEmailVerifyPin(email, verifyPin);
+        if (response.status != 200) {
+            errorDisplay.innerHTML = "인증번호 대조에 실패했어요..."
+        } else {
+            checkBtn.disabled = true; // 버튼 비활성화
+            checkBtn.classList.add("disabled"); // 비활성화 스타일 추가
+            CorrectPin = true;
+            errorDisplay.innerHTML = "인증번호가 일치해요!"
+        }
+        console.log(response);
+    }
 
     function checkPassword(password) {
         let strength = 0;
-        if (password.length >= 8) strength += 1;    // 길이 체크
+        if (password.length >= 4) strength += 1;    // 길이 체크
         if (/[a-z]/.test(password)) strength += 1;  // 소문자 체크
         if (/[0-9]/.test(password)) strength += 1;  // 숫자 체크
         return strength;
     }
-
+    
     const handlePasswordInput = () => {
         const password = document.querySelector("#new-password").value;
         const strength = checkPassword(password);
@@ -132,7 +195,7 @@ const SignUp = () => {
             strengthDisplay.innerHTML = strengthText;
             return false;
         } else if (strength != 3){
-            strengthText = "비밀번호는 8자리 이상, 영어 소문자와 숫자를 포함해야 합니다.";
+            strengthText = "비밀번호는 4자리 이상, 영어 소문자와 숫자를 포함해야 합니다.";
             strengthDisplay.innerHTML = strengthText;
             return false;
         } else {
@@ -161,9 +224,23 @@ const SignUp = () => {
                 <input id="new-nickname" placeholder="닉네임" onBlur={validcheckNickname}></input>
                 <p id="p-nick-error" className="errMessage"></p>
             </div>
-            <div className="inputBox">
+            <div id="mailBox">
                 <input id="new-mail" type="email" placeholder="이메일" onBlur={validcheckEmail}></input>
+                <button id="verify" onclick={verifyEmail}>인증</button>
                 <p id="p-mail-error" className="errMessage"></p>
+            </div>
+            <div>
+                <p id="p-verify-error" className="errMessage"></p>
+                <p id="p-timer" className="errMessage"></p>
+            </div>
+            <div id="mailBox">
+                <input id="verfiyPin" type="email" placeholder="인증번호를 입력해주세요"></input>
+                <button id="check" onclick={checkEmailPin}>확인</button>
+                <p id="p-check-error" className="errMessage"></p>
+            </div>
+            <div>
+                <span id="remain_min">10</span>:
+                <span id="remain_sec">00</span>
             </div>
             <div id="interact">
                 <button class="btns" onClick={getInfo}>회원가입</button>

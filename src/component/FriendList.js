@@ -8,6 +8,7 @@ import RequestFriend from "./RequestFriend.js";
 // import { requestFriendList } from "../core/Api.js";
 
 const FriendList = ( props ) => {
+
     return (
         <div id="box">
             <span id="manage">친구 관리</span>
