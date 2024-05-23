@@ -2,9 +2,12 @@
 import myReact, { useEffect, useState } from "../core/myReact.js";
 import { requestGameInfo } from "../core/ApiGame.js";
 import "../css/GameRoom.css"
+import PingPong from "./Game.js";
 
 const GameRoom = () => {
     const socket = localStorage.getItem("socket");
+
+    const [ready, setReady] = useState(false);
 
     const [gameInfo, setGameInfo] = useState({
         id: "",
@@ -22,7 +25,7 @@ const GameRoom = () => {
     const setSocket = () => {
     if (!socket && gameInfo.id)
     {
-        const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+        const newSocket = new WebSocket("ws://localhost:8004/ws/game/" + gameInfo.id + "/");
         
         localStorage.setItem("socket", newSocket);
         newSocket.onopen = function() {
@@ -94,14 +97,18 @@ const GameRoom = () => {
     }, [gameInfo.id]);
 
     const startGame = () => {
-      if (gameInfo.isGameReady)
-        alert("게임 시작");
-      else
-        alert("아직 안 됨!!");
+    //   if (gameInfo.isGameReady) {
+    //     alert("게임 시작");
+        setReady(true);
+    //   }
+    //   else
+    //     alert("아직 안 됨!!");
     }
 
     return (
-        gameInfo.id ? (
+        ready ? <PingPong gameinfo={gameInfo} />
+        : 
+        (gameInfo.id ? (
             <div class="bg">
                 <div class="room">
                     <div class="room_header">
@@ -156,7 +163,7 @@ const GameRoom = () => {
             <div>
                 <h2>Room Number: No Room</h2>
             </div>
-        )
+        ))
     );
 };
 
