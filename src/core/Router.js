@@ -18,6 +18,7 @@ import ApiTest from "../component/ApiTest"
 import Lobby from "../component/Lobby.js"
 import FriendList from '../component/FriendList';
 import UserInfo from '../component/UserInfo';
+import GameRoom from '../component/GameRoom';
 
 const pathList = {
 	"/": <App />,
@@ -38,9 +39,17 @@ const pathList = {
 
 export default function router() {
 	var path;
+    let component;
     path = window.location.pathname.split('/')[1] || window.location.pathname;
     console.log(window.location.pathname.split('/')[1])
-	const component = pathList[path];
+	const gameIdMatch = window.location.pathname.match(/^\/gameroom\/(\d+)$/);
+    if (gameIdMatch) {
+        const gameId = gameIdMatch[1];
+        component = <GameRoom />;
+    } else {
+        component = pathList[path];
+    }
+
 	console.log("component", component);
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
