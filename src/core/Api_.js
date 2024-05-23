@@ -91,6 +91,48 @@ const api = {
 			return error;
 		})
 	},
+    sendEmailVerifyPin(_email) {
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/generate_email_pin",
+			data: {
+				email: _email
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
+    checkEmailVerifyPin(_email, _pin){
+        console.log("YOUR EMAIL", _email, "YOUR PIN", _pin);
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/verify_pin",
+			data: {
+				email: _email,
+                pin: _pin
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
 	sendFriendRequest(nickname) {
 		setToken();
 		return apiInstance.request({
