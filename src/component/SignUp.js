@@ -188,7 +188,6 @@ const SignUp = () => {
             strengthText = "OK";
         }
 
-        console.log("PASSWORD", password, "CONFIRM", confirmPassword);
         if (password !== confirmPassword) {
             if (confirmPassword) {
                 errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치하지 않습니다."
