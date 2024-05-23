@@ -19,6 +19,7 @@ import Lobby from "../component/Lobby.js"
 import FriendList from '../component/FriendList';
 import UserInfo from '../component/UserInfo';
 import GameRoom from '../component/GameRoom';
+import PingPong from "../component/Game.js";
 
 const pathList = {
 	"/": <App />,
@@ -35,6 +36,7 @@ const pathList = {
 	"lobby": <Lobby />,
 	"test" : <Test />,
 	"lobby" : <Lobby />,
+	"pingpong" : <PingPong />
 }
 
 export default function router() {
