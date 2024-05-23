@@ -42,7 +42,6 @@ const SignUp = () => {
         const confirmPasswordValid = validcheckPassword();
         const emailValid = validcheckEmail();
         const passwordValid = handlePasswordInput();
-
         return usernameValid && passwordValid && confirmPasswordValid && nicknameValid && emailValid && CorrectPin;
     }
 
