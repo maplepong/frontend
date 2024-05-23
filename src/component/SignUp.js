@@ -140,6 +140,15 @@ const SignUp = () => {
         const verifyPin = document.querySelector("#verfiyPin").value
         const response = await api.checkEmailVerifyPin(email, verifyPin);
         const errorDisplay = document.querySelector("#p-check-error");
+        if (!verifyPin) {
+            errorDisplay.innerHTML = ""
+            return ;
+        }
+        if (response.status != 200) {
+            errorDisplay.innerHTML = "인증번호 대조에 실패했어요..."
+        } else {
+            errorDisplay.innerHTML = "인증번호가 일치해요."
+        }
         console.log(response);
     }
 
