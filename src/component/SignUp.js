@@ -8,6 +8,7 @@ import router from "../core/Router.js";
 const SignUp = () => {
     let time;
     var CorrectPin = false;
+    var Confirm = false;
     async function getInfo () {
         // 검증 로직
         if (!validateFields()) {
@@ -28,21 +29,23 @@ const SignUp = () => {
         
         const response = await api.signup(username, password, nickname, email);
     
-        if (response.status !== 201)
+        if (response.status !== 201) {
             alert("회원가입에 실패했습니다. Error: " + response.status);
+            return ;
+        }
         else {
             alert(username + "의 회원가입 완료")
-            router("/home");
         };
+        myReact.redirect("/");
     }
 
     const validateFields = () => {
         const usernameValid = validcheckUsername();
         const nicknameValid = validcheckNickname();
-        const confirmPasswordValid = validcheckPassword();
         const emailValid = validcheckEmail();
         const passwordValid = handlePasswordInput();
-        return usernameValid && passwordValid && confirmPasswordValid && nicknameValid && emailValid && CorrectPin;
+        
+        return usernameValid && Confirm && nicknameValid && emailValid && CorrectPin;
     }
 
     async function validcheckUsername() {
@@ -78,26 +81,7 @@ const SignUp = () => {
             return true;
         }
     }
-
-    async function validcheckPassword() {
-        const password = document.querySelector('#new-password').value;
-        const confirmPassword = document.querySelector("#confirm-password").value;
-        const errorDisplay = document.querySelector("#p-pass-error");
-        console.log(confirmPassword);
-        if (!confirmPassword) {
-            errorDisplay.innerHTML = "";
-            return false;
-        }
-        else if (password !== confirmPassword) {
-            errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치하지 않습니다."
-            return false;
-        }
-        else if (password === confirmPassword) {
-            errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치합니다.";
-            return true;
-        }
-    }
-
+    
     async function validcheckEmail() {
         const email = document.querySelector("#new-mail").value;
         const errorDisplay = document.querySelector("#p-mail-error");
@@ -175,7 +159,7 @@ const SignUp = () => {
         }
         console.log(response);
     }
-
+    
     function checkPassword(password) {
         let strength = 0;
         if (password.length >= 4) strength += 1;    // 길이 체크
@@ -188,6 +172,8 @@ const SignUp = () => {
         const password = document.querySelector("#new-password").value;
         const strength = checkPassword(password);
         const strengthDisplay = document.querySelector("#p-pass-strength");
+        const confirmPassword = document.querySelector("#confirm-password").value;
+        const errorDisplay = document.querySelector("#p-pass-error");
         let strengthText = "";
         
         if (!password) {
@@ -201,10 +187,41 @@ const SignUp = () => {
         } else {
             strengthText = "OK";
         }
+
+        if (password !== confirmPassword) {
+            if (confirmPassword) {
+                errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치하지 않습니다."
+                Confirm = false;
+            }       
+        }
+        else if (password === confirmPassword) {
+            errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치합니다.";
+            Confirm = true;
+        }
+    
         strengthDisplay.innerHTML = strengthText;
         return true;
     }
 
+    async function validcheckPassword() {
+        const password = document.querySelector('#new-password').value;
+        const confirmPassword = document.querySelector("#confirm-password").value;
+        const errorDisplay = document.querySelector("#p-pass-error");
+        console.log(confirmPassword);
+        if (!confirmPassword) {
+            errorDisplay.innerHTML = "";
+            Confirm = false;
+        }
+        else if (password !== confirmPassword) {
+            errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치하지 않습니다."
+            Confirm = false;
+        }
+        else if (password === confirmPassword) {
+            errorDisplay.innerHTML = "비밀번호와 확인 비밀번호가 일치합니다.";
+            Confirm = true;
+        }
+    }
+    
     return (
         <div id="signup-container">
             <div id="welcome">MAPLEPONG</div>
