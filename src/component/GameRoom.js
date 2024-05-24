@@ -60,13 +60,14 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (gameInfo.id && !socket) {
-            socket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            socket = new WebSocket("ws://10.19.247.54:8000/ws/game/" + gameInfo.id + "/");
             console.log("Creating new WebSocket connection...");
             socket.onopen = () => {
                 console.log("서버 연결 완료");
                 socket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
-
+		}
+		if (socket){
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("data : ", data);
@@ -107,20 +108,20 @@ const GameRoom = () => {
                 socket = null;
             };
         }
-    }, [gameInfo.id]);
+    }), [gameInfo];
 
     const startGame = () => {
         setReady(true);
     };
 
     const exitGame = async () => {
-        if (socket) {
-            socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
-            socket.close();
-        }
+		console.log("--------exit");
         const response = await requestExitGame(gameInfo.id);
         if (response && response.status === 200)
             console.log("exitGame success")
+		if (socket) {
+			socket.close();
+		}
         history.pushState({}, "", "/lobby");
         router();
     };
