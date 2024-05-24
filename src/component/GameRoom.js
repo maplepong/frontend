@@ -1,3 +1,5 @@
+let socket = null; // 전역 변수로 WebSocket 인스턴스 선언
+
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useState } from "../core/myReact.js";
 import { requestGameInfo } from "../core/ApiGame.js";
@@ -5,8 +7,6 @@ import "../css/GameRoom.css"
 import PingPong from "./Game.js";
 
 const GameRoom = () => {
-    const socket = localStorage.getItem("socket");
-
     const [ready, setReady] = useState(false);
 
     const [gameInfo, setGameInfo] = useState({
@@ -18,43 +18,9 @@ const GameRoom = () => {
         players: [],
         status: "",
         isGameReady: false,
-        owner_info : {},
-        player_info : {},
+        owner_info: {},
+        player_info: {},
     });
-
-    const setSocket = () => {
-    if (!socket && gameInfo.id)
-    {
-        const newSocket = new WebSocket("ws://localhost:8004/ws/game/" + gameInfo.id + "/");
-        
-        localStorage.setItem("socket", newSocket);
-        newSocket.onopen = function() {
-            console.log("서버 연결 완료");
-            newSocket.send(JSON.stringify({type: 'client_connected', nickname: localStorage.getItem("nickname")}));
-        };
-    
-        newSocket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("data : ", data);
-            if (data.type === "game_ready")
-            {
-            console.log("game_ready")
-            console.log("data.player_info : ", data.player_info)
-            setGameInfo({...gameInfo,
-                isGameReady: true,
-                player_info: data.player_info
-            });
-            }
-        };
-    
-        newSocket.onclose = function() {
-            console.log("서버 연결 종료");
-            localStorage.removeItem("socket");
-        };
-    }
-    }
-
-    console.log("gameInfo : ", gameInfo)
 
     useEffect(() => {
         const fetchGameInfo = async () => {
@@ -66,10 +32,10 @@ const GameRoom = () => {
                 try {
                     const data = await requestGameInfo(gameId);
                     if (data.status === 200) {
-                      const updatedGameInfo = data.data;
-                      updatedGameInfo.owner_info = updatedGameInfo.players.find(player => player.nickname === updatedGameInfo.owner);
-                      updatedGameInfo.player_info = updatedGameInfo.players.find(player => player.nickname !== updatedGameInfo.owner);
-                      setGameInfo(updatedGameInfo);
+                        const updatedGameInfo = data.data;
+                        updatedGameInfo.owner_info = updatedGameInfo.players.find(player => player.nickname === updatedGameInfo.owner);
+                        updatedGameInfo.player_info = updatedGameInfo.players.find(player => player.nickname !== updatedGameInfo.owner);
+                        setGameInfo(updatedGameInfo);
                     } else {
                         console.error("Failed to fetch game info:", data);
                     }
@@ -84,26 +50,45 @@ const GameRoom = () => {
         fetchGameInfo();
 
         return () => {
-          if (socket) {
-            localStorage.removeItem("socket");
-            socket.close();
-          }
-      };
+            if (socket) {
+                socket.close();
+                socket = null;
+            }
+        };
     }, []);
 
     useEffect(() => {
-        if (!socket)
-            setSocket();
+        if (gameInfo.id && !socket) {
+            socket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            console.log("Creating new WebSocket connection...");
+            socket.onopen = () => {
+                console.log("서버 연결 완료");
+                socket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
+            };
+
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log("data : ", data);
+                if (data.type === "game_ready") {
+                    console.log("game_ready");
+                    console.log("data.player_info : ", data.player_info);
+                    setGameInfo({...gameInfo,
+                        isGameReady: true,
+                        player_info: data.player_info
+                    });
+                }
+            };
+
+            socket.onclose = () => {
+                console.log("서버 연결 종료");
+                socket = null;
+            };
+        }
     }, [gameInfo.id]);
 
     const startGame = () => {
-    //   if (gameInfo.isGameReady) {
-    //     alert("게임 시작");
         setReady(true);
-    //   }
-    //   else
-    //     alert("아직 안 됨!!");
-    }
+    };
 
     return (
         ready ? <PingPong gameinfo={gameInfo} />
