@@ -3,7 +3,7 @@ import myReact  from "./myReact";
 import axios from "axios";
 
 const baseUrl = () => {
-	return "http://localhost:12649/";
+	return "http://localhost:8000/";
 }
 
 const requestGameInfo = async (gameId) => {
