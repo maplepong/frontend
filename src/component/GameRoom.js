@@ -2,7 +2,8 @@ let socket = null; // 전역 변수로 WebSocket 인스턴스 선언
 
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useState } from "../core/myReact.js";
-import { requestGameInfo } from "../core/ApiGame.js";
+import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
+import router from "../core/Router.js";
 import "../css/GameRoom.css"
 import PingPong from "./Game.js";
 
@@ -77,6 +78,28 @@ const GameRoom = () => {
                         player_info: data.player_info
                     });
                 }
+                else if (data.type === "client_left")
+                {
+                    console.log("client_left");
+
+                    if (gameInfo.owner === localStorage.getItem("nickname"))
+                    {
+                        console.log("나는 오너");
+                        setGameInfo({...gameInfo,
+                            isGameReady: false,
+                            player_info: {},
+                        });
+                    } else 
+                    {
+                        console.log("나는 플레이어");
+                        setGameInfo({...gameInfo,
+                            isGameReady: false,
+                            owner : localStorage.getItem("nickname"),
+                            owner_info: gameInfo.player_info,
+                            player_info: {},
+                        });
+                    }
+                }
             };
 
             socket.onclose = () => {
@@ -88,6 +111,18 @@ const GameRoom = () => {
 
     const startGame = () => {
         setReady(true);
+    };
+
+    const exitGame = async () => {
+        if (socket) {
+            socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
+            socket.close();
+        }
+        const response = await requestExitGame(gameInfo.id);
+        if (response && response.status === 200)
+            console.log("exitGame success")
+        history.pushState({}, "", "/lobby");
+        router();
     };
 
     return (
@@ -103,7 +138,7 @@ const GameRoom = () => {
                     </div>
                     <div class="game_interface">
                         <div class="closebtn-section">
-                            <input type="button" class="closebtn"/>
+                            <input type="button" class="closebtn" onClick={exitGame}/>
                         </div>
                         <div class="top-section">
                           <div class = "owner">

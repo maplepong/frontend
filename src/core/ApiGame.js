@@ -108,4 +108,22 @@ const requestCreateGame = async (room_title, password) => {
 	}
 }
 
-export { requestLobbyList, requestCreateGame, requestGameInfo, requestJoinGame };
+const requestExitGame = async (gameId) => {
+	var result = null;
+	return await axios.delete(`${baseUrl()}game/exit/${gameId}`, {
+		headers: {
+			Authorization: `Bearer ${localStorage.accessToken}`,
+		},
+	})
+	.then(response => {
+		result = response;
+		console.log('Response:', response);
+		return result;
+	})
+	.catch(error => {
+		console.error('Error:', error);
+		return null;
+	});
+}
+
+export { requestLobbyList, requestCreateGame, requestGameInfo, requestJoinGame, requestExitGame };
