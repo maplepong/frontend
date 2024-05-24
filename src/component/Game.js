@@ -3,14 +3,13 @@ import myReact, { useState, useEffect } from "../core/myReact.js";
 import GameRoom from "./GameRoom.js";
 import "../css/Pingpong.css";
 
-const PingPong = ({gameinfo, socket}) => {
+const PingPong = ({gameinfo}) => {
     let ctx, ball, ballRadius, x, y, dx, dy;
     let paddleHeight, paddleWidth, paddleX, paddleY, rightPressed, leftPressed, topleftPressed, toprightPressed;
     let interval;
 
     const [score, setScore] = useState({ left: 0, right: 0 });
     const [canvas, setCanvas] = useState(null);
-    const socket = socket;
 
     if (!gameinfo || !socket) {
         console.log("something is wrong...");
