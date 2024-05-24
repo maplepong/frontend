@@ -91,7 +91,7 @@ const GameRoom = () => {
     };
 
     return (
-        ready ? <PingPong gameinfo={gameInfo} />
+        ready ? <PingPong gameinfo={gameInfo} socket={socket} />
         : 
         (gameInfo.id ? (
             <div class="bg">
