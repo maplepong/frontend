@@ -3,7 +3,7 @@ import myReact, { useState, useEffect } from "../core/myReact.js";
 import GameRoom from "./GameRoom.js";
 import "../css/Pingpong.css";
 
-const PingPong = ({gameinfo}) => {
+const NewPingPong = ({gameinfo}) => {
 
     const canvas = document.querySelector("myCanvas");
 
@@ -84,8 +84,6 @@ const PingPong = ({gameinfo}) => {
                 enemy.score = message.user.score;
             }
         }
-
-        draw();
     };
 
     function sendUserPosition() {
@@ -167,6 +165,7 @@ const PingPong = ({gameinfo}) => {
     document.addEventListener("keydown", topkeyDownHandler, false);
     document.addEventListener("keyup", topkeyUpHandler, false);
     
+    //마우스로 패들을 조종한다고 합니다
     // function movePaddle(evt) {
     //     let rectangle = canvas.getBoundingClientRect();
        
@@ -222,38 +221,40 @@ const PingPong = ({gameinfo}) => {
         ball.x += ball.velocityX;
         ball.y += ball.velocityY;
 
-    let player = (ball.x < canvas.width/2);
+        let player = (ball.x < canvas.width/2);
 
-    if(collision(ball, player)) {
-    // 공이 플레이어에 부딪힌 위치
-    let collidePoint = ball.y - (player.y + player.height/2);
+        if(collision(ball, player)) {
+        // 공이 플레이어에 부딪힌 위치
+            let collidePoint = ball.y - (player.y + player.height/2);
 
-    // 정규화
-    collidePoint = collidePoint / (player.height/2);
+        // 정규화
+            collidePoint = collidePoint / (player.height/2);
 
-    // 라디안 각도 계산
-    let angleRad = collidePoint * Math.PI/4;
+        // 라디안 각도 계산
+            let angleRad = collidePoint * Math.PI/4;
 
-    // 부딪힐 때 공의 X 방향
-    let direction = (ball.x < canvas.width/2) ? 1 : -1;
+        // 부딪힐 때 공의 X 방향
+            let direction = (ball.x < canvas.width/2) ? 1 : -1;
 
 
-    // X 및 Y 속도 변경
-    ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+        // X 및 Y 속도 변경
+            ball.velocityX = direction * ball.speed * Math.cos(angleRad);
 
-    ball.velocityY = ball.speed * Math.sin(angleRad);
+            ball.velocityY = ball.speed * Math.sin(angleRad);
 
-    // 패들이 공을 받을 때 마다 속도 증가
-    ball.speed += 0.5;
-    }
-    // 점수 업데이트
-    if(ball.x - ball.radius < 0) {
-    // 컴퓨터 1점 획득
-        resetBall();
-    } else if(ball.x + ball.radius > canvas.width){
-    // 사용자 1점 획득
-        resetBall();
-    }
+        // 패들이 공을 받을 때 마다 속도 증가
+            ball.speed += 0.5;
+        }
+        // 점수 업데이트
+        if(ball.x - ball.radius < 0) {
+        // 컴퓨터 1점 획득
+            enemy.score++;
+            resetBall();
+        } else if(ball.x + ball.radius > canvas.width){
+        // 사용자 1점 획득
+            user.score++;
+            resetBall();
+        }
     }
 
     // 게임 초기화 함수
@@ -261,19 +262,22 @@ const PingPong = ({gameinfo}) => {
         if(!gameRunning) {
             return; // 일시 중지된 경우 애니메이션을 계속하지 마세요.
         }
-        update();
-        render();
-        sendUserPosition();
+        update();//공 위치 업데이트 함수 호출
+        render();//게임 렌더링 함수 호출
+        sendUserPosition(); // 유저 위치 전송 함수 호출
         animationId = requestAnimationFrame(animate);
     }
 
-
+    //게임시작버튼
     startBtn.addEventListener("click", () => {
         if (!gameRunning) {
             gameRunning = true;
             animate();
         }
     });
+
+    //점수판
+    var resultValue = user.score + " : " + enemy.score;
 
     return (
         <div className="game-container">
@@ -286,4 +290,4 @@ const PingPong = ({gameinfo}) => {
     );
 }
 
-export default PingPong;
+export default NewPingPong;
