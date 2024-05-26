@@ -1,8 +1,9 @@
+import { request42ApiLogin, requestApiSignup } from "./Api";
 import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+	baseURL: "http://localhost:12649/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -91,6 +92,105 @@ const api = {
 			return error;
 		})
 	},
+	request42ApiLogin(code) {
+		if (code === null) {
+			console.log("failed to get Code");
+			return ;
+		}
+		console.log("Code", code);
+		return apiInstance.request({
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data'
+			},
+			url: 'user/api-login'
+		}).
+		then(response => {
+			if (response.status === 202) {
+				const username = response.data.id;
+				console.log("id: " + username, "님은 회원가입 필요");
+				localStorage.setItem('username', username);
+				myReact.redirect("api-signup");
+			} else if (response.status === 200) {
+				console.log(response.data.username);
+				const username = response.data.username;
+				localStorage.setItem('username', username);
+				localStorage.setItem('nickname', response.data.nickname);
+				localStorage.setItem('accessToken', response.data.access_token)
+				axios.defaults.headers.common['Authorization'] = response.data.access_token;
+				console.log("이미 있는 회원입니당");
+				console.log(localStorage.getItem('accessToken'));
+				console.log(localStorage.getItem('nickname'))
+			}
+		}).
+		catch(error => {
+			console.log("42 API LOGIN ERROR", error)
+			return error;
+		})
+	},
+	requestApiSignup(username, nickname) {
+		return apiInstance.request({
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'), 
+				'Content-Type': 'multipart/form-data'
+			},
+			url: "user/api-signup",
+			data: {
+				id: username,
+				nickname: nickname
+			}
+		}).
+		then(response => {
+			console.log("API SIGNUP: ", response);
+			return response;
+		}).
+		catch(error => {
+			console.log("API SIGNUP ERROR: ", error);
+			return error;
+		})
+	},
+    sendEmailVerifyPin(_email) {
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/generate_email_pin",
+			data: {
+				email: _email
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
+    checkEmailVerifyPin(_email, _pin){
+        console.log("YOUR EMAIL", _email, "YOUR PIN", _pin);
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/verify_pin",
+			data: {
+				email: _email,
+                pin: _pin
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
 	sendFriendRequest(nickname) {
 		setToken();
 		return apiInstance.request({

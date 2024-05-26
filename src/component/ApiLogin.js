@@ -21,7 +21,6 @@ const ApiLogin = () => {
 	if(!getCode())
 		useEffect(redirect, []);
 
-
 	const code = getCode();
 	if (code) {
 		console.log("code:", code);
