@@ -166,7 +166,7 @@ const GameRoom = () => {
                             }
                             </div>
                             <div class="player">
-                                  {gameInfo.player_info ? ( <div>
+                                  {gameInfo.player_info && gameInfo.player_info.nickname ? ( <div>
                                           <img src={gameInfo.player_info.image} class="player-img"></img>
                                           <div class="player_name">{gameInfo.player_info.nickname}</div>
                                           <div class="player_stat">{gameInfo.player_info.win_rate}</div>
