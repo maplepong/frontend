@@ -6,6 +6,7 @@ import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
 import router from "../core/Router.js";
 import "../css/GameRoom.css"
 import PingPong from "./Game.js";
+import { redirect } from "react-router-dom";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
@@ -60,7 +61,7 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (gameInfo.id && !socket) {
-            socket = new WebSocket("ws://10.19.247.54:8000/ws/game/" + gameInfo.id + "/");
+            socket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
             console.log("Creating new WebSocket connection...");
             socket.onopen = () => {
                 console.log("서버 연결 완료");
@@ -87,18 +88,16 @@ const GameRoom = () => {
                     {
                         console.log("나는 오너");
                         setGameInfo({...gameInfo,
+                            players: gameInfo.players.filter(player => player.nickname === gameInfo.owner),
                             isGameReady: false,
                             player_info: {},
                         });
-                    } else 
+                    }
+                    else
                     {
-                        console.log("나는 플레이어");
-                        setGameInfo({...gameInfo,
-                            isGameReady: false,
-                            owner : localStorage.getItem("nickname"),
-                            owner_info: gameInfo.player_info,
-                            player_info: {},
-                        });
+                        if (socket) socket.close();
+                        alert("방장이 나갔습니다!");
+                        myReact.redirect("lobby");
                     }
                 }
             };
@@ -116,14 +115,15 @@ const GameRoom = () => {
 
     const exitGame = async () => {
 		console.log("--------exit");
+        if (socket) {
+            socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
+			socket.close();
+		}
         const response = await requestExitGame(gameInfo.id);
         if (response && response.status === 200)
             console.log("exitGame success")
-		if (socket) {
-			socket.close();
-		}
-        history.pushState({}, "", "/lobby");
-        router();
+
+        myReact.redirect("lobby");
     };
 
     return (
