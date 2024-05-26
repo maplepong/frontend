@@ -1,17 +1,18 @@
 /* @jsx myReact.createElement */
 import myReact , { Link, useEffect } from "../core/myReact.js";
-import { requestApiSignup } from "../core/Api.js";
+// import { requestApiSignup } from "../core/Api.js";
+import api from "../core/Api_.js";
 
 const ApiSignUp = () => {
-    const getInfo = () => {
+    async function getInfo() {
         const username = localStorage.getItem('username');
         const nickname = document.querySelector("#new-nickname").value;
         console.log("nickname: ", nickname, "username: ", username);
-        requestApiSignup(username ,nickname);
+        api.requestApiSignup(username, nickname)
         localStorage.removeItem('username');
-        history.pushState({}, "", "/home");
-	};
-
+        myReact.redirect("/");
+    }
+    
     return (
         <div id="Signup-container">
             <input id="new-nickname" placeholder="nickname"></input>
