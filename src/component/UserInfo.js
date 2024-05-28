@@ -46,11 +46,14 @@ const UserInfo = (props) => {
 			</div>
 			<div id="myinfo-body" onclick={() => console.log(data)}>
 				<img id="myinfo-img" src={data.image}></img>
-				<ul>
+				<ul id="info-body">
 					<li>id {data.id}</li>
 					<li>information {data.introduction}</li>
 					<li>lose {data.losses}</li>
-					<li>nickname {data.nickname}</li>
+					<li>nickname 
+						<span> {data.nickname} </span>
+						<button>변경</button>
+					</li>
 					<li>totalgame {data.total_games}</li>
 					<li>username {data.username}</li>
 					<li>wins {data.wins}</li>
