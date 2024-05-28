@@ -242,7 +242,7 @@ const api = {
 		apiInstance.defaults.headers.common['Authorization'] = null;
 		apiInstance.defaults.withCredentials = false;
 		alert("로그아웃되었습니다");
-		myReact.redirect("");
+		myReact.redirect("/");
 	},
 	getFriendList(){
 		setToken();
