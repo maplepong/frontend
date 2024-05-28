@@ -1,4 +1,4 @@
-let socket = null; // 전역 변수로 WebSocket 인스턴스 선언
+// let socket = null;
 
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useState } from "../core/myReact.js";
@@ -6,11 +6,12 @@ import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
 import router from "../core/Router.js";
 import "../css/GameRoom.css"
 import PingPong from "./Game.js";
+import Chat from "./Chat.js";
 import { redirect } from "react-router-dom";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
-
+    const [socket, setSocket] = useState(null);
     const [gameInfo, setGameInfo] = useState({
         id: "",
         name: "",
@@ -54,18 +55,19 @@ const GameRoom = () => {
         return () => {
             if (socket) {
                 socket.close();
-                socket = null;
+                setSocket(null);
             }
         };
     }, []);
 
     useEffect(() => {
         if (gameInfo.id && !socket) {
-            socket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            setSocket(newSocket);
             console.log("Creating new WebSocket connection...");
-            socket.onopen = () => {
+            newSocket.onopen = () => {
                 console.log("서버 연결 완료");
-                socket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
+                newSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
 		}
 		if (socket){
@@ -104,7 +106,7 @@ const GameRoom = () => {
 
             socket.onclose = () => {
                 console.log("서버 연결 종료");
-                socket = null;
+                setSocket(null);
             };
         }
     }), [gameInfo];
@@ -118,6 +120,7 @@ const GameRoom = () => {
         if (socket) {
             socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
 			socket.close();
+            setSocket(null);
 		}
         const response = await requestExitGame(gameInfo.id);
         if (response && response.status === 200)
@@ -179,6 +182,7 @@ const GameRoom = () => {
                         </div>
                     </div>
                 </div>
+                <Chat socket={socket}/>
             </div>
         ) : (
             <div>
