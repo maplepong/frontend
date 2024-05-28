@@ -1,6 +1,6 @@
 import myReact from "./myReact.js";
 import router from "./Router.js";
-import { exist, isEmptyObj } from "./utils.js"
+import { exist, isEmptyObj, isObjNode } from "./utils.js"
 
 const eventType = [
     "onclick",
@@ -137,7 +137,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 	if (oldfNode && !newfNode){
 		// Need to remove EventListner or onClick;
 		if (oldfNode.isEvent){}; 
-		if (!isEmptyObj(oldfNode.willUnmount)){
+		if (isObjNode(oldfNode) && !isEmptyObj(oldfNode.willUnmount)){
 			oldfNode.willUnmount.forEach((c) => { c() })
 		}
 		return parent.removeChild(parent.childNodes[index]);
