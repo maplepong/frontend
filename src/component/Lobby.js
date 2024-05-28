@@ -76,7 +76,7 @@ const Lobby = (props) => {
             return console.log("requestLobbyList error");
         }
         console.log("Received lobby list:", res);
-        // setLobbyData(res);
+        setLobbyData(res);
     };
 
 	function renderRooms() {}
@@ -132,7 +132,7 @@ const Lobby = (props) => {
     }
 
 
-    // useEffect(updateList, []);
+    useEffect(updateList, []);
 	// useEffect(renderRooms, lobbyData);
 
     console.log("lobbyData", lobbyData);
@@ -183,14 +183,14 @@ const Lobby = (props) => {
                             <span class="room_number">방 번호</span>
                             <span class="room_title">방 제목</span>
                             <span class="players">인원</span>
-                            <span class="room_status">방 상태</span>
+                            <span class="room_status">상태</span>
                         </li>
                         {lobbyData.length > 0 ? lobbyData.map((room, index) => (
                         <li class="room " onClick={() => { joinGame(room.id) }}>
-                            <span class="room_number">${room.id}</span>
-                            <span class="room_title" >${room.title}</span>
-                            <span class="players">${room.players}</span>
-                            <span class="room_status">${room.status}</span>
+                            <span class="room_number">{room.id}</span>
+                            <span class="room_title" >{room.name}</span>
+                            <span class="players">{room.current_players_num}</span>
+                            <span class="room_status">{room.status}</span>
                         </li>
                         )) : "dfs"}
                     </ul>

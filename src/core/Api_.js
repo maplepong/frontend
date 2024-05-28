@@ -1,14 +1,14 @@
 import myReact from "./myReact";
 import axios from "axios";
 
-const apiInstance = axios.create({
-	baseURL: "http://localhost:8000/",
+export const apiInstance = axios.create({
+	baseURL: "http://localhost:9000/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
 	timeout: 3000,
 	withCredentials: false, //develope
-})
+}) //정리 필요
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
