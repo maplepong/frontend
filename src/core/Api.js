@@ -10,7 +10,7 @@ function getCookie(name) {
 
 const baseUrl = () => {
 	// return "http://10.19.247.54:/";
-	return "http://10.19.247.54:8000/";
+	return "http://127.0.0.1:7000/";
 }
 
 const redirect = (page) => {

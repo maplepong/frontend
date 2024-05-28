@@ -2,7 +2,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://10.19.247.54:8000/",
+	baseURL: "http://127.0.0.1:7000/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
