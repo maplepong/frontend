@@ -2,6 +2,20 @@
 	color: white;
 }
 
+#info-body > li {
+	display: flex;
+	margin: 10px;
+	align-items: center;
+}
+
+#info-body li button {
+	margin: 10px;
+	width: 100px;
+	height: auto;
+	background-color: gray;
+	font-size: 12px;
+}
+
 #container-myinfo{
 	width: 400px;
 	height: 540px;
