@@ -36,7 +36,7 @@ const Home = () => {
 			
 			setList(friendRequests);
 			setFriendList(friends);
-      setData(response);
+			setData(response);
         };
         fetchData();
     }, []);
