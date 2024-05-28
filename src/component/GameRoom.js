@@ -60,7 +60,7 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (gameInfo.id && !socket) {
-            socket = new WebSocket("ws://10.19.247.54:8000/ws/game/" + gameInfo.id + "/");
+            socket = new WebSocket("ws://127.0.0.1:7000/ws/game/" + gameInfo.id + "/");
             console.log("Creating new WebSocket connection...");
             socket.onopen = () => {
                 console.log("서버 연결 완료");
