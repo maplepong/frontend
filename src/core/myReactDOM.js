@@ -197,28 +197,33 @@ function createMyReactDOM (){
 	rootNode : document.querySelector("#root"),
 	DOM : null,
 	fiberRoot: null,
+	inited: false,
 
 	initDOM : function initDOM(fNode){
-		document.addEventListener("DOMContentLoaded", () => {
-			window.addEventListener("routeChange", router);
-			window.addEventListener("popstate", router);
-		});
+		if (this.inited === false) {
+			document.addEventListener("DOMContentLoaded", () => {
+				window.addEventListener("routeChange", router);
+				window.addEventListener("popstate", router);
+				});
+				this.inited = true;
+			addEvent(this.rootNode, "click", "a", ({ target }) => {
+				const route = target.closest("a").getAttribute('href');
+				console.log("routing?", route)
+				if (typeof route === "string") {
+					const newPath = "/" + route;
+					console.log(newPath);
+					history.pushState({}, "", newPath);
+					router();
+				}}
+			)
+		}
 		if (!exist(this.rootNode)){
 			return console.error("ROOT: cannot find");
 		}	
 		this.fiberRoot = fNode;
 		this.DOM = createDOM(fNode);
 		this.rootNode.appendChild(this.DOM);
-		addEvent(this.rootNode, "click", "a", ({ target }) => {
-			const route = target.closest("a").getAttribute('href');
-			console.log("routing?", route)
-			if (typeof route === "string") {
-				const newPath = "/" + route;
-				console.log(newPath);
-				history.pushState({}, "", newPath);
-				router();
-			}}
-		)
+
 	},
 	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);

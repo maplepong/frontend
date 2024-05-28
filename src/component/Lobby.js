@@ -146,7 +146,7 @@ const Lobby = (props) => {
             </div> */}
             <div id="modal" className="hidden">
                 <div id="modal-content">
-                    <form id="room-form">
+                    <form id="room-form" onSubmit={create_game}>
                         <div id="modal-title">방 제목</div>
                         <input type="text" id="room-name" name="room-name" placeholder="방 제목 입력"></input>
                         <div id="checkbox-container">
