@@ -7,7 +7,6 @@ import router from "../core/Router.js";
 import "../css/GameRoom.css"
 import PingPong from "./Game.js";
 import Chat from "./Chat.js";
-import { redirect } from "react-router-dom";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
@@ -62,7 +61,7 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (gameInfo.id && !socket) {
-            const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            const newSocket = new WebSocket("ws://localhost:9000/ws/game/" + gameInfo.id + "/");
             setSocket(newSocket);
             console.log("Creating new WebSocket connection...");
             newSocket.onopen = () => {

@@ -19,6 +19,12 @@ const Chat = ( {socket} ) => {
 		}
 	}, []);
 
+    const socket_chat_message = (data) => {
+        const message = data.message;
+        const sender = data.nickname;
+        setMessages([...messages, { sender, message }]);
+    }
+
 	const sendMessage = (message) => {
         if (socket) {
             socket.send(JSON.stringify({ type: "chat", message: message, nickname: localStorage.getItem("nickname") }));
