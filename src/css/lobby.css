@@ -30,7 +30,7 @@ body {
     font-weight: bold;
     flex-direction: row;
     display: flex;
-    left: 11%;
+    /* left: 11%; ??????? */
 }
 
 /* game_interface */
