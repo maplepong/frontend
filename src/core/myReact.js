@@ -136,17 +136,21 @@ function createMyReact() {
 		this.fiberRoot = newFiberRoot;
 	},
 	redirect: function (param) {
-		if (!param){
-			console.error("redirect err: no path");
-			return
+			if (!param){
+				console.error("redirect err: no path");
+				return
+			}
+			console.log("redirect call")
+			var path;
+			if (path !== "/")
+				path = "/" + param;
+			else
+				path = "/";
+			console.log(path);
+			history.pushState({}, "", path);
+			router();
 		}
-		console.log("redirect call")
-		const path = "/" + param;
-		console.log(path);
-		history.pushState({}, "", path);
-		router();
 	}
-}
 }
 
 const myReact = createMyReact();
