@@ -4,6 +4,7 @@ import myReact from "../core/myReact.js";
 import '../css/UserStatus.css';
 
 const UserStatus = (props) => {
+	console.log("프롭스의 데이터", props.data)
 	return <div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>

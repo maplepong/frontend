@@ -140,6 +140,9 @@ function createMyReact() {
 			console.error("redirect err: no path");
 			return
 		}
+        else if (param === "/") {
+            param = "";
+        }
 		console.log("redirect call")
 		var path;
 		if (param !== "/")
