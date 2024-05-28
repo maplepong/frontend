@@ -4,7 +4,7 @@ import apiInstance from "./Api_.js";
 import axios from "axios";
 
 const baseUrl = () => {
-	return "http://127.0.0.1/8000";
+	return "http://localhost:9000";
 }
                                   
 const requestGameInfo = async (gameId) => {
