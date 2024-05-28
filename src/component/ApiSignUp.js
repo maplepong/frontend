@@ -10,7 +10,7 @@ const ApiSignUp = () => {
         console.log("nickname: ", nickname, "username: ", username);
         api.requestApiSignup(username, nickname)
         localStorage.removeItem('username');
-        myReact.redirect("/");
+        myReact.redirect("");
     }
     
     return (
