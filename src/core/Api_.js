@@ -97,20 +97,25 @@ const api = {
 			console.log("failed to get Code");
 			return ;
 		}
-		console.log("Code", code);
+		// console.log("Code", code);
 		return apiInstance.request({
 			headers: {
 				'X-CSRFToken': getCookie('csrftoken'),
 				'Content-Type': 'multipart/form-data'
 			},
-			url: 'user/api-login'
+			url: 'user/api-login',
+			method: "POST",
+			data: {
+				code: code,
+			}
 		}).
 		then(response => {
 			if (response.status === 202) {
 				const username = response.data.id;
 				console.log("id: " + username, "님은 회원가입 필요");
-				localStorage.setItem('username', username);
+				const signupResponse = localStorage.setItem('username', username);
 				myReact.redirect("api-signup");
+				return signupResponse;
 			} else if (response.status === 200) {
 				console.log(response.data.username);
 				const username = response.data.username;
@@ -119,8 +124,10 @@ const api = {
 				localStorage.setItem('accessToken', response.data.access_token)
 				axios.defaults.headers.common['Authorization'] = response.data.access_token;
 				console.log("이미 있는 회원입니당");
+				myReact.redirect("home");
 				console.log(localStorage.getItem('accessToken'));
 				console.log(localStorage.getItem('nickname'))
+				return response;
 			}
 		}).
 		catch(error => {
@@ -135,6 +142,7 @@ const api = {
 				'Content-Type': 'multipart/form-data'
 			},
 			url: "user/api-signup",
+			method: "POST",
 			data: {
 				id: username,
 				nickname: nickname
