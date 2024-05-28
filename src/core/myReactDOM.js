@@ -57,26 +57,6 @@ function updateProps(target, newProps, oldProps){
 	}
 }
 
-function disassembleChildren(children, result){
-	result = result || [];
-	if (!Array.isArray(children)){
-		result.push(children);
-		return result;
-	}
-	children.forEach((child) => {
-		if (Array.isArray(child)){
-			result = disassembleChildren(child);
-		}
-		else if (child == undefined || child == null){
-			result.push("no value"); //수정 및 확인 필요
-		}
-		else {
-			result.push(child);
-		}
-	})
-	return result;
-}
-
 function addChild(target, child){
 	if (typeof child === 'number') 
 				child = child.toString();
@@ -89,9 +69,7 @@ function addChild(target, child){
 }
 
 function updateChildren(target, newChildren, oldChildren){
-	newChildren = disassembleChildren(newChildren);
 	if (oldChildren) {
-		oldChildren = disassembleChildren(oldChildren);
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
 		// for (let i = maxLength - 1; i >= 0; i--){
 		for (let i = 0; i < maxLength; i++){
