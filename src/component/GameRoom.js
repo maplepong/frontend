@@ -11,6 +11,7 @@ import Chat from "./Chat.js";
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
     const [socket, setSocket] = useState(null);
+    const [exit, setExit] = useState(false);
     const [gameInfo, setGameInfo] = useState({
         id: "",
         name: "",
@@ -60,8 +61,8 @@ const GameRoom = () => {
     }, []);
 
     useEffect(() => {
-        if (gameInfo.id && !socket) {
-            const newSocket = new WebSocket("ws://localhost:9000/ws/game/" + gameInfo.id + "/");
+        if (gameInfo.id && !socket && !exit) {
+            const newSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
             setSocket(newSocket);
             console.log("Creating new WebSocket connection...");
             newSocket.onopen = () => {
@@ -69,7 +70,7 @@ const GameRoom = () => {
                 newSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
 		}
-		if (socket){
+		if (socket && !exit){
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("data : ", data);
@@ -92,13 +93,20 @@ const GameRoom = () => {
                             players: gameInfo.players.filter(player => player.nickname === gameInfo.owner),
                             isGameReady: false,
                             player_info: {},
+                            current_players_num:1,
                         });
                     }
                     else
                     {
-                        if (socket) socket.close();
-                        alert("방장이 나갔습니다!");
-                        myReact.redirect("lobby");
+                        console.log("나는 게스트");
+                        setGameInfo({...gameInfo,
+                            players: gameInfo.players.filter(player => player.nickname !== gameInfo.owner),
+                            owner: localStorage.getItem("nickname"),
+                            owner_info: gameInfo.player_info,
+                            isGameReady: false,
+                            player_info: {},
+                            current_players_num:1,
+                        });
                     }
                 }
             };
@@ -120,6 +128,7 @@ const GameRoom = () => {
             socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
 			socket.close();
             setSocket(null);
+            setExit(true);
 		}
         const response = await requestExitGame(gameInfo.id);
         if (response && response.status === 200)
@@ -181,7 +190,7 @@ const GameRoom = () => {
                         </div>
                     </div>
                 </div>
-                <Chat socket={socket}/>
+                {/* <Chat socket={socket}/> */}
             </div>
         ) : (
             <div>

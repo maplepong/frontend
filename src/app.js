@@ -17,7 +17,7 @@ import api from "./core/Api_.js";
 
 const setAxios = () => {
 	axios.defaults.baseURL = "http://10.19.247.54:8000/";
-	// axios.defaults.baseURL = "http://10.19.247.54:localhost:9000/";
+	// axios.defaults.baseURL = "http://10.19.247.54:localhost:8000/";
 	axios.defaults.timeout = 3000;
 }
 
