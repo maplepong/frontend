@@ -1,4 +1,4 @@
-let socket = null; // 전역 변수로 WebSocket 인스턴스 선언
+// let socket = null;
 
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useState } from "../core/myReact.js";
@@ -6,10 +6,12 @@ import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
 import router from "../core/Router.js";
 import "../css/GameRoom.css"
 import PingPong from "./Game.js";
+import Chat from "./Chat.js";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
-
+    const [socket, setSocket] = useState(null);
+    const [exit, setExit] = useState(false);
     const [gameInfo, setGameInfo] = useState({
         id: "",
         name: "",
@@ -53,21 +55,22 @@ const GameRoom = () => {
         return () => {
             if (socket) {
                 socket.close();
-                socket = null;
+                setSocket(null);
             }
         };
     }, []);
 
     useEffect(() => {
-        if (gameInfo.id && !socket) {
-            socket = new WebSocket("ws://localhost:9000/ws/game/" + gameInfo.id + "/");
+        if (gameInfo.id && !socket && !exit) {
+            const newSocket = new WebSocket("ws://localhost:9000/ws/game/" + gameInfo.id + "/");
+            setSocket(newSocket);
             console.log("Creating new WebSocket connection...");
-            socket.onopen = () => {
+            newSocket.onopen = () => {
                 console.log("서버 연결 완료");
-                socket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
+                newSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
 		}
-		if (socket){
+		if (socket && !exit){
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("data : ", data);
@@ -87,17 +90,22 @@ const GameRoom = () => {
                     {
                         console.log("나는 오너");
                         setGameInfo({...gameInfo,
+                            players: gameInfo.players.filter(player => player.nickname === gameInfo.owner),
                             isGameReady: false,
                             player_info: {},
+                            current_players_num:1,
                         });
-                    } else 
+                    }
+                    else
                     {
-                        console.log("나는 플레이어");
+                        console.log("나는 게스트");
                         setGameInfo({...gameInfo,
-                            isGameReady: false,
-                            owner : localStorage.getItem("nickname"),
+                            players: gameInfo.players.filter(player => player.nickname !== gameInfo.owner),
+                            owner: localStorage.getItem("nickname"),
                             owner_info: gameInfo.player_info,
+                            isGameReady: false,
                             player_info: {},
+                            current_players_num:1,
                         });
                     }
                 }
@@ -105,7 +113,7 @@ const GameRoom = () => {
 
             socket.onclose = () => {
                 console.log("서버 연결 종료");
-                socket = null;
+                setSocket(null);
             };
         }
     }), [gameInfo];
@@ -116,14 +124,17 @@ const GameRoom = () => {
 
     const exitGame = async () => {
 		console.log("--------exit");
+        if (socket) {
+            socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
+			socket.close();
+            setSocket(null);
+            setExit(true);
+		}
         const response = await requestExitGame(gameInfo.id);
         if (response && response.status === 200)
             console.log("exitGame success")
-		if (socket) {
-			socket.close();
-		}
-        history.pushState({}, "", "/lobby");
-        router();
+
+        myReact.redirect("lobby");
     };
 
     return (
@@ -166,7 +177,7 @@ const GameRoom = () => {
                             }
                             </div>
                             <div class="player">
-                                  {gameInfo.player_info ? ( <div>
+                                  {gameInfo.player_info && gameInfo.player_info.nickname ? ( <div>
                                           <img src={gameInfo.player_info.image} class="player-img"></img>
                                           <div class="player_name">{gameInfo.player_info.nickname}</div>
                                           <div class="player_stat">{gameInfo.player_info.win_rate}</div>
@@ -179,6 +190,7 @@ const GameRoom = () => {
                         </div>
                     </div>
                 </div>
+                {/* <Chat socket={socket}/> */}
             </div>
         ) : (
             <div>
