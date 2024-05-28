@@ -1,12 +1,12 @@
 import router from "./Router";
 import myReact  from "./myReact";
-import {apiInstance} from "./Api_.js";
+import apiInstance from "./Api_.js";
 import axios from "axios";
 
 const baseUrl = () => {
-	return "http://127.0.0.1:7000/";
+	return "http://127.0.0.1/8000";
 }
-
+                                  
 const requestGameInfo = async (gameId) => {
 	var result = null;
 	return await axios.request({

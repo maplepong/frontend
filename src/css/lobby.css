@@ -1,6 +1,5 @@
-/* @font-face {
-    font-family: 'Maplestory';
-    src: url('asset/Lobby/Maplestory OTF Bold.otf') format('truetype'); /* 폰트 파일 경로에 맞게 수정하세요 */
+
+/*    src: url('asset/Lobby/Maplestory OTF Bold.otf') format('truetype'); /* 폰트 파일 경로에 맞게 수정하세요 */
 
 /* 로비 */
 
@@ -18,6 +17,7 @@ body {
     flex-direction: column;
     top: 10%;
     display:flex;
+    background-color: aliceblue;
 }
 
 .lobby_header {
@@ -41,7 +41,7 @@ body {
     margin: 0 auto;
     color: white;
     text-shadow: 1px 1px 1px rgb(0, 0, 0);
-    font-family: 'Maplestory';
+    /* font-family: 'Maplestory'; */
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     border-bottom-left-radius: 15px;
@@ -121,6 +121,7 @@ body {
 .lobby_body {
     height: 100%;
     overflow-y: auto;
+    width: 1181px;
 }
 
 .lobby_body::-webkit-scrollbar {
@@ -157,6 +158,7 @@ body {
 .room {
     margin-top: 10px;
     margin-bottom: 10px;
+    height: fit-content;
 }
 
 .room_number {

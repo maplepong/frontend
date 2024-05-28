@@ -9,15 +9,17 @@ const Lobby = (props) => {
     // const [lobbyData, setLobbyData] = useState([]);
     const [lobbyData, setLobbyData] = useState([{ //test
 		id: 1234,
+        number: 1,
 		title: "title1",
 		players: ["pl1", "pl2"],
-		status: "게임중",
-		password: 1234,
+		status: 0,
+		password: "1234",
 	},{
 		id: 1234,
+        number: 2,
 		title: "title2",
 		players: ["pl1", "pl2"],
-		status: "게임중",
+		status: 1,
 		password: "",
 	}
 ]); 
@@ -74,42 +76,42 @@ const Lobby = (props) => {
             return console.log("requestLobbyList error");
         }
         console.log("Received lobby list:", res);
-        setLobbyData(res);
+        // setLobbyData(res);
     };
 
-	function renderRooms() {
-        const roomList = document.getElementById("roomList");
-        if (lobbyData.length == 0) {
-            const noRoomList = document.createElement("p");
-            noRoomList.textContent = "생성된 방이 없습니다.";
-            noRoomList.align = "center";
-            noRoomList.style.marginTop = "50px";
-            roomList.appendChild(noRoomList);
-            return;
-        }
+	function renderRooms() {}
+    //     const roomList = document.getElementById("roomList");
+    //     if (lobbyData.length == 0) {
+    //         const noRoomList = document.createElement("p");
+    //         noRoomList.textContent = "생성된 방이 없습니다.";
+    //         noRoomList.align = "center";
+    //         noRoomList.style.marginTop = "50px";
+    //         roomList.appendChild(noRoomList);
+    //         return;
+    //     }
 
-        lobbyData.forEach((room, index) => {
-            const li = document.createElement("li");
-            li.classList.add("room");
+    //     lobbyData.forEach((room, index) => {
+    //         const li = document.createElement("li");
+    //         li.classList.add("room");
 
-            if (lobbyData.status === "대기중") {
-                li.classList.add("waiting");
-            } else if (lobbyData.status === "게임중") {
-                li.classList.add("playing");
-            }
+    //         if (lobbyData.status === "대기중") {
+    //             li.classList.add("waiting");
+    //         } else if (lobbyData.status === "게임중") {
+    //             li.classList.add("playing");
+    //         }
 
-            li.innerHTML = `
-                <span class="room_number">${room.number}</span>
-                <span class="room_title" onclick="showPasswordPrompt('${room.name}', '${room.password}', '${room.status}', '${room.players}')">${room.name}</span>
-                <span class="players">${room.players}</span>
-                <span class="room_status">${room.status}</span>
-                <span class="locked">
-                    ${room.password ? '<img src="lock.png" alt="🔒">' : '<img src="unlock.png" alt="🔓">' }
-                </span>
-            `;
-            roomList.appendChild(li);
-        });
-    }
+    //         li.innerHTML = `
+    //             <span class="room_number">${room.number}</span>
+    //             <span class="room_title" onclick="showPasswordPrompt('${room.name}', '${room.password}', '${room.status}', '${room.players}')">${room.name}</span>
+    //             <span class="players">${room.players}</span>
+    //             <span class="room_status">${room.status}</span>
+    //             <span class="locked">
+    //                 ${room.password ? '<img src="lock.png" alt="🔒">' : '<img src="unlock.png" alt="🔓">' }
+    //             </span>
+    //         `;
+    //         roomList.appendChild(li);
+    //     });
+    // }
 
     const joinGame = async (gameId) => {
         const gameInfo = await requestGameInfo(gameId);
@@ -131,7 +133,7 @@ const Lobby = (props) => {
 
 
     // useEffect(updateList, []);
-	useEffect(renderRooms, lobbyData);
+	// useEffect(renderRooms, lobbyData);
 
     console.log("lobbyData", lobbyData);
 
@@ -174,27 +176,26 @@ const Lobby = (props) => {
                     ))) : (<li>방이 없다고 만들라고</li>)}
                 </ul>
             </div> */}
-			<div class="lobby_body">
-				<ul class="room_info" id="roomList">
-					<li class="room_header">
-						<span class="room_number">방 번호</span>
-						<span class="room_title">방 제목</span>
-						<span class="players">인원</span>
-						<span class="room_status">방 상태</span>
-					</li>
-					{lobbyData.forEach((room, index) => (
-					<li key={index} onClick={() => { joinGame(room.id) }}>
-						<span class="room_number">${room.id}</span>
-						<span class="room_title" onclick="showPasswordPrompt('${room.title}', '${room.locked}', '${room.status}', '${room.players}')">${room.title}</span>
-						<span class="players">${room.players}</span>
-						<span class="room_status">${room.status}</span>
-						{/* <span class="locked">
-							${room.password ? '<img src="lock.png" alt="🔒">' : '<img src="unlock.png" alt="🔓">'}
-						</span> */}
-					</li>
-					))}
-				</ul>
-			</div>
+            <div class="game_interface">
+                <div class="lobby_body">
+                    <ul class="room_info" id="roomList">
+                        <li class="room_header" key="0">
+                            <span class="room_number">방 번호</span>
+                            <span class="room_title">방 제목</span>
+                            <span class="players">인원</span>
+                            <span class="room_status">방 상태</span>
+                        </li>
+                        {lobbyData.length > 0 ? lobbyData.map((room, index) => (
+                        <li class="room " onClick={() => { joinGame(room.id) }}>
+                            <span class="room_number">${room.id}</span>
+                            <span class="room_title" >${room.title}</span>
+                            <span class="players">${room.players}</span>
+                            <span class="room_status">${room.status}</span>
+                        </li>
+                        )) : "dfs"}
+                    </ul>
+                </div>
+            </div>
         </div>
     );
 };
