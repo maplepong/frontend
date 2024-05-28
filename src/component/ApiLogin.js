@@ -24,7 +24,6 @@ const ApiLogin = () => {
 
 	const code = getCode();
 	if (code) {
-		console.log("code:", code);
 		api.request42ApiLogin(code)
 			.then(response => {
 				console.log("response:", response);

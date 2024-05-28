@@ -8,9 +8,11 @@ const ApiSignUp = () => {
         const username = localStorage.getItem('username');
         const nickname = document.querySelector("#new-nickname").value;
         console.log("nickname: ", nickname, "username: ", username);
-        api.requestApiSignup(username, nickname)
+        const response = api.requestApiSignup(username, nickname)
         localStorage.removeItem('username');
-        myReact.redirect("");
+        console.log("API SIGNUP RESPONSE STATUS", response.status)
+        if (response.status === 201)
+            myReact.redirect("/");
     }
     
     return (
