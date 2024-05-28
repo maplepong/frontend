@@ -36,12 +36,7 @@ const Home = () => {
 			
 			setList(friendRequests);
 			setFriendList(friends);
-			if (response) {
-				console.log("정보 받아옴")
-				setData(response);
-			} else {
-				console.error("No data returned from API");
-			}
+			setData(response);
         };
         fetchData();
     }, []);
