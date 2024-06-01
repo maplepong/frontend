@@ -6,7 +6,7 @@ import UserStatus from "./UserStatus.js";
 
 const Navbar = () => {
 	return (<nav>
-		<Chat></Chat>
+		{/* <Chat socket={null}></Chat> */}
 		{/* <UserStatus username={localStorage.username}></UserStatus> */}
 		<div id="btn-box">
 			<div id="nav-btn-container">
