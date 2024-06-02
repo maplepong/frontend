@@ -1,16 +1,16 @@
-// let socket = null;
+// let gameSocket = null;
 
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useState } from "../core/myReact.js";
 import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
-import router from "../core/Router.js";
 import "../css/GameRoom.css"
+import "../css/Pingpong.css";
 import PingPong from "./Game.js";
 import Chat from "./Chat.js";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
-    const [socket, setSocket] = useState(null);
+    const [gameSocket, setgameSocket] = useState(null);
     const [exit, setExit] = useState(false);
     const [gameInfo, setGameInfo] = useState({
         id: "",
@@ -53,25 +53,25 @@ const GameRoom = () => {
         fetchGameInfo();
 
         return () => {
-            if (socket) {
-                socket.close();
-                setSocket(null);
+            if (gameSocket) {
+                gameSocket.close();
+                setgameSocket(null);
             }
         };
     }, []);
 
     useEffect(() => {
-        if (gameInfo.id && !socket && !exit) {
-            const newSocket = new WebSocket("ws://localhost:9000/ws/game/" + gameInfo.id + "/");
-            setSocket(newSocket);
-            console.log("Creating new WebSocket connection...");
-            newSocket.onopen = () => {
+        if (gameInfo.id && !gameSocket && !exit) {
+            const newgameSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
+            setgameSocket(newgameSocket);
+            console.log("Creating new WebgameSocket connection...");
+            newgameSocket.onopen = () => {
                 console.log("서버 연결 완료");
-                newSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
+                newgameSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
 		}
-		if (socket && !exit){
-            socket.onmessage = (event) => {
+		if (gameSocket && !exit){
+            gameSocket.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("data : ", data);
                 if (data.type === "game_ready") {
@@ -81,6 +81,11 @@ const GameRoom = () => {
                         isGameReady: true,
                         player_info: data.player_info
                     });
+                }
+                else if (data.type === "game_start")
+                {
+                    console.log("game_start");
+                    setReady(true);
                 }
                 else if (data.type === "client_left")
                 {
@@ -111,23 +116,24 @@ const GameRoom = () => {
                 }
             };
 
-            socket.onclose = () => {
+            gameSocket.onclose = () => {
                 console.log("서버 연결 종료");
-                setSocket(null);
+                setgameSocket(null);
             };
         }
-    }), [gameInfo];
+    }), [gameInfo.id];
 
     const startGame = () => {
-        setReady(true);
+        if (gameSocket)
+            gameSocket.send(JSON.stringify({ type: 'game_start', nickname: localStorage.getItem("nickname") }));
     };
 
     const exitGame = async () => {
 		console.log("--------exit");
-        if (socket) {
-            socket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
-			socket.close();
-            setSocket(null);
+        if (gameSocket) {
+            gameSocket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
+			gameSocket.close();
+            setgameSocket(null);
             setExit(true);
 		}
         const response = await requestExitGame(gameInfo.id);
@@ -138,7 +144,11 @@ const GameRoom = () => {
     };
 
     return (
-        ready ? <PingPong gameinfo={gameInfo} socket={socket} />
+        ready ? 
+        (<div className="game-container">
+            <canvas id="myCanvas" width="240" height="160"></canvas>
+            <PingPong gameinfo={gameInfo} gameSocket={gameSocket} />
+        </div>)
         : 
         (gameInfo.id ? (
             <div class="bg">
@@ -190,7 +200,7 @@ const GameRoom = () => {
                         </div>
                     </div>
                 </div>
-                {/* <Chat socket={socket}/> */}
+                {/* <Chat gameId={gameInfo.id}/> */}
             </div>
         ) : (
             <div>
