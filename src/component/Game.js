@@ -2,41 +2,63 @@
 import myReact, { useState, useEffect } from "../core/myReact.js";
 import "../css/Pingpong.css";
 
-const PingPong = () => {
+const PingPong = ({ gameinfo, gameSocket }) => {
+    let ctx, ballRadius, x, y, dx, dy, canvas;
+    let paddleHeight, paddleWidth, paddleX, rightPressed, leftPressed, enemyPaddleX;
+    let interval;
+
     const [score, setScore] = useState({ left: 0, right: 0 });
-    const [socket, setSocket] = useState(null);
-    const [isGameReady, setIsGameReady] = useState(false); // 게임 준비 상태를 나타내는 상태 추가
 
     useEffect(() => {
-        const newSocket = new WebSocket("ws://10.18.236.7:8000/ws/game/test/");
+        if (!gameinfo || !gameSocket) {
+            console.log("something is wrong...");
+            return;
+        }
 
-        newSocket.onopen = function() {
-            console.log("서버 연결 완료");
-            setSocket(newSocket);
-            newSocket.send(JSON.stringify({ type: 'client_connected' })); // 서버에 클라이언트 연결됨을 알림
-        };
+        console.log("PingPong useEffect");
+        console.log("gameInfo:", gameinfo);
+        console.log("gameSocket:", gameSocket.readyState);
 
-        newSocket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("data : ", data);
-            if (data.type === "game_ready") {
-        		setIsGameReady(true);
-            } else if (data.type === "game_update") {
-                setScore(data.data);
+        canvas = document.getElementById("myCanvas");
+
+        if (canvas && canvas.getContext) {
+            ctx = canvas.getContext("2d");
+            initGame(canvas);
+            interval = setInterval(draw, 20);
+
+            gameSocket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                handleSocketMessage(message);
+            };
+
+            return () => {
+                clearInterval(interval);
+                document.removeEventListener("keydown", keyDownHandler);
+                document.removeEventListener("keyup", keyUpHandler);
+            };
+        } else {
+            console.log("Canvas context not supported");
+        }
+    }, [gameSocket]);
+
+    function handleSocketMessage(message) {
+        if (message.type === "paddle_move") {
+            const { data } = message;
+            enemyPaddleX = data.x;
+            console.log("enemy : ", enemyPaddleX)
+        } else if (message.type === "game_update") {
+            const { ball, paddle } = message.data;
+            if (ball) {
+                x = canvas.width - ball.x;
+                y = canvas.height - ball.y;
+                dx = -ball.dx;
+                dy = -ball.dy;
             }
-        };
-
-        newSocket.onclose = function() {
-            console.log("서버 연결 종료");
-            setSocket(null);
-        };
-
-        return () => {
-            if (newSocket) {
-                newSocket.close();
+            if (paddle) {
+                enemyPaddleX = canvas.width - paddle.x;
             }
-        };
-    }, []);
+        }
+    }
 
     function updateScore(leftAdd, rightAdd) {
         const newScore = {
@@ -44,56 +66,45 @@ const PingPong = () => {
             right: score.right + rightAdd,
         };
         setScore(newScore);
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ data: newScore, type: "game_update" }));
-        } else {
-            console.error('WebSocket is not open. ReadyState: ' + (socket ? socket.readyState : 'null'));
-        }
+        if (score.left < 3 && score.right < 3) resetGame();
     }
 
-    let canvas, ctx, ballRadius, x, y, dx, dy;
-    let paddleHeight, paddleWidth, paddleX, paddleY, rightPressed, leftPressed, topleftPressed, toprightPressed;
-    let ball;
-    let interval;
-
-    function initGame() {
-        canvas = document.getElementById("myCanvas");
-        ctx = canvas.getContext("2d");
+    function initGame(newCanvas) {
         ballRadius = 10;
-        x = canvas.width / 2;
-        y = canvas.height - 30;
+        x = newCanvas.width / 2;
+        y = newCanvas.height / 2;
         dx = 2;
-        dy = -2;
+        dy = 2;
 
         paddleHeight = 10;
         paddleWidth = 75;
-        paddleX = (canvas.width - paddleWidth) / 2;
-        paddleY = (canvas.width - paddleWidth) / 2;
+        paddleX = (newCanvas.width - paddleWidth) / 2;
+        enemyPaddleX = (newCanvas.width - paddleWidth) / 2;
         rightPressed = false;
         leftPressed = false;
-        toprightPressed = false;
-        topleftPressed = false;
-
-        ball = new Image();
-        ball.src = "asset/game/mushroom.gif";
 
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
-        document.addEventListener("keydown", topkeyDownHandler, false);
-        document.addEventListener("keyup", topkeyUpHandler, false);
     }
 
-    useEffect(() => {
-		console.log("effect ready : " + isGameReady)
-        if (isGameReady) {
-            initGame();
-            interval = setInterval(draw, 20);
-        }
-        return () => clearInterval(interval);
-    }, [isGameReady]);
+
+    function resetGame() {
+        clearInterval(interval);
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        dx = 2;
+        dy = 2;
+        paddleX = (canvas.width - paddleWidth) / 2;
+        enemyPaddleX = (canvas.width - paddleWidth) / 2;
+        interval = setInterval(draw, 20);
+    }
 
     function drawBall() {
-        ctx.drawImage(ball, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
     }
 
     function drawPaddle() {
@@ -106,7 +117,7 @@ const PingPong = () => {
 
     function drawEnemyPaddle() {
         ctx.beginPath();
-        ctx.rect(paddleY, paddleHeight - 10, paddleWidth, paddleHeight);
+        ctx.rect(enemyPaddleX, 0, paddleWidth, paddleHeight);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
@@ -125,22 +136,6 @@ const PingPong = () => {
             rightPressed = false;
         } else if (e.key === "Left" || e.key === "ArrowLeft") {
             leftPressed = false;
-        }
-    }
-
-    function topkeyDownHandler(e) {
-        if (e.key === "d") {
-            toprightPressed = true;
-        } else if (e.key === "a") {
-            topleftPressed = true;
-        }
-    }
-
-    function topkeyUpHandler(e) {
-        if (e.key === "d") {
-            toprightPressed = false;
-        } else if (e.key === "a") {
-            topleftPressed = false;
         }
     }
 
@@ -164,7 +159,7 @@ const PingPong = () => {
             }
         }
         if (y + dy < ballRadius) {
-            if (x > paddleY && x < paddleY + paddleWidth) {
+            if (x > enemyPaddleX && x < enemyPaddleX + paddleWidth) {
                 dy = -dy;
             } else {
                 clearInterval(interval);
@@ -175,24 +170,34 @@ const PingPong = () => {
 
         if (rightPressed) {
             paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+            sendPaddlePosition();
         } else if (leftPressed) {
             paddleX = Math.max(paddleX - 7, 0);
-        }
-
-        if (toprightPressed) {
-            paddleY = Math.min(paddleY + 7, canvas.width - paddleWidth);
-        } else if (topleftPressed) {
-            paddleY = Math.max(paddleY - 7, 0);
+            sendPaddlePosition();
         }
 
         x += dx;
         y += dy;
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        sendGameState();
+    }
+
+    function sendPaddlePosition() {
+        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
+            gameSocket.send(JSON.stringify({
+                type: "paddle_move",
+                data: { x: paddleX },
+                nickname: localStorage.getItem("nickname"),
+            }));
+        }
+    }
+
+    function sendGameState() {
+        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
             const data = {
-                ball: { x: x, y: y },
-                paddle: { x: paddleX, y: paddleY },
+                ball: { x: canvas.width - x, y: canvas.height - y, dx: -dx, dy: -dy },
+                paddle: { x: canvas.width - paddleX }
             };
-            socket.send(JSON.stringify({ "data": data, "type": "game_update" }));
+            gameSocket.send(JSON.stringify({ data: data, type: "game_update", nickname: localStorage.getItem("nickname") }));
         }
     }
 
@@ -202,11 +207,9 @@ const PingPong = () => {
     }
 
     return (
-        <div className="game-container">
-            <canvas id="myCanvas" width="240" height="160"></canvas>
-            <div id="score">
-                <p>{resultValue}</p>
-            </div>
+        <div id="score">
+            <p>{resultValue}</p>
+            <canvas id="myCanvas" width="480" height="320"></canvas>
         </div>
     );
 }

@@ -29,7 +29,7 @@ const Home = () => {
 	const [ friendlist, setFriendList ] = useState([]); 
 
     useEffect(() => {
-        const fetchData = async () => {
+      const fetchData = async () => {
 			const response = await api.getUserInfomation(localStorage.nickname);
 			const friendRequests = await api.getRequestFriendList();
 			const friends = await api.getFriendList();

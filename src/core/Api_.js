@@ -9,7 +9,7 @@ const apiInstance = axios.create({
 	},
 	timeout: 5000,
 	withCredentials: false, //develope
-})
+}) //정리 필요
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
