@@ -1,10 +1,10 @@
 import router from "./Router";
 import myReact  from "./myReact";
-import apiInstance from "./Api_.js";
+import { apiInstance } from "./Api_.js";
 import axios from "axios";
 
 const baseUrl = () => {
-	return "http://localhost:9000";
+	return "http://localhost:8000/";
 }
                                   
 const requestGameInfo = async (gameId) => {

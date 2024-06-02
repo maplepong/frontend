@@ -22,7 +22,7 @@ import GameRoom from '../component/GameRoom';
 import PingPong from "../component/Game.js";
 
 const pathList = {
-	"/": <Lobby />,
+	"/": <App />,
 	"userinfo": <UserInfoPage />,
 	"login": <Login />,
 	"home": <Home />,
