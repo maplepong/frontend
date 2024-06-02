@@ -11,6 +11,7 @@ export default class fiberNode {
 			this.sibling = []; // Sibling component
 			this.return = null; // Parent component
 			this.stateNode = null; // Associated DOM node or component state
+			this.iscopied = 0;
 			
 			//state
 			this.state = []; //useState state
@@ -36,6 +37,7 @@ export default class fiberNode {
 			this.sibling = []; // Sibling component
 			this.return = null; // Parent component
 			this.stateNode = ref.stateNode // Associated DOM node or component state
+			this.iscopied = ref.iscopied + 1;
 			
 			//state
 			this.state = ref.state; //useState state

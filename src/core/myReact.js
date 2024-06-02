@@ -234,13 +234,13 @@ export function useEffect(callback, deps){
 	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
 	// console.log("useEffect deps new", deps)
 	// console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
-	if (isEqualArray(fiber.useEffect[i].deps, deps)) {
-		// console.log("nocallback")
+	if (deps !== undefined && isEqualArray(fiber.useEffect[i].deps, deps)) {
+		console.log("!!!!!!!!!!!!!!----------------------snocallback")
 		return;
 	}
 	//if deps not changed || include both are empth array [], just return
 
-	// calling callback :
+	// calling callback :s
 	// 1. deps === undefined
 	// 2. deps === [] (but first call)
 	// 3. deps changed

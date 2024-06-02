@@ -3,12 +3,30 @@ import myReact, { useEffect, useState } from "../core/myReact.js";
 import { requestLobbyList, requestCreateGame, requestGameInfo, requestJoinGame } from "../core/ApiGame.js";
 import api from "../core/Api_.js";
 import router from "../core/Router.js";
+import GameList from "./GameList.js";
 
 const Lobby = (props) => {
-    const [lobbyData, setLobbyData] = useState([]);
+    // const [lobbyData, setLobbyData] = useState([]);
+    const [lobbyData, setLobbyData] = useState([{ //test
+		id: 1234,
+        number: 1,
+		title: "title1",
+		players: ["pl1", "pl2"],
+		status: 0,
+		password: "1234",
+	},{
+		id: 1234,
+        number: 2,
+		title: "title2",
+		players: ["pl1", "pl2"],
+		status: 1,
+		password: "",
+	}
+]); 
+	console.log(lobbyData);
 
     async function requestLogin() {
-        const res = await api.login(() => ["test", "4545"]);
+        const res = await api.login(() => ["test1", "1234"]);
         console.log(res);
     }
 
@@ -61,6 +79,40 @@ const Lobby = (props) => {
         setLobbyData(res);
     };
 
+	function renderRooms() {}
+    //     const roomList = document.getElementById("roomList");
+    //     if (lobbyData.length == 0) {
+    //         const noRoomList = document.createElement("p");
+    //         noRoomList.textContent = "생성된 방이 없습니다.";
+    //         noRoomList.align = "center";
+    //         noRoomList.style.marginTop = "50px";
+    //         roomList.appendChild(noRoomList);
+    //         return;
+    //     }
+
+    //     lobbyData.forEach((room, index) => {
+    //         const li = document.createElement("li");
+    //         li.classList.add("room");
+
+    //         if (lobbyData.status === "대기중") {
+    //             li.classList.add("waiting");
+    //         } else if (lobbyData.status === "게임중") {
+    //             li.classList.add("playing");
+    //         }
+
+    //         li.innerHTML = `
+    //             <span class="room_number">${room.number}</span>
+    //             <span class="room_title" onclick="showPasswordPrompt('${room.name}', '${room.password}', '${room.status}', '${room.players}')">${room.name}</span>
+    //             <span class="players">${room.players}</span>
+    //             <span class="room_status">${room.status}</span>
+    //             <span class="locked">
+    //                 ${room.password ? '<img src="lock.png" alt="🔒">' : '<img src="unlock.png" alt="🔓">' }
+    //             </span>
+    //         `;
+    //         roomList.appendChild(li);
+    //     });
+    // }
+
     const joinGame = async (gameId) => {
         const gameInfo = await requestGameInfo(gameId);
         if (gameInfo.status !== 200)
@@ -81,21 +133,22 @@ const Lobby = (props) => {
 
 
     useEffect(updateList, []);
+	// useEffect(renderRooms, lobbyData);
 
     console.log("lobbyData", lobbyData);
 
     return (
         <div id="container-lobby" className="modal">
             <button onClick={requestLogin}>login: test</button>
-            <div id="lobby-headline">
+            {/* <div id="lobby-headline">
                 <p>Pingpong🏓</p>
                 <button>X</button>
                 <button id="open-modal" onClick={create_game}>게임 만들기</button>
                 <div id="modal-backdrop" className="hidden"></div>
-            </div>
+            </div> */}
             <div id="modal" className="hidden">
                 <div id="modal-content">
-                    <form id="room-form">
+                    <form id="room-form" onSubmit={create_game}>
                         <div id="modal-title">방 제목</div>
                         <input type="text" id="room-name" name="room-name" placeholder="방 제목 입력"></input>
                         <div id="checkbox-container">
@@ -110,8 +163,9 @@ const Lobby = (props) => {
                     </form>
                 </div>
             </div>
+			{/* <GameList /> */}
             <button onClick={updateList}>방이 있을까?</button>
-            <div id="lobby-body">
+            {/* <div id="lobby-body">
                 <ul>
                     {lobbyData.length > 0 ? (lobbyData.map((room, index) => (
                         <li key={index} onClick={() => { joinGame(room.id) }} >
@@ -121,6 +175,26 @@ const Lobby = (props) => {
                         </li>
                     ))) : (<li>방이 없다고 만들라고</li>)}
                 </ul>
+            </div> */}
+            <div class="game_interface">
+                <div class="lobby_body">
+                    <ul class="room_info" id="roomList">
+                        <li class="room_header" key="0">
+                            <span class="room_number">방 번호</span>
+                            <span class="room_title">방 제목</span>
+                            <span class="players">인원</span>
+                            <span class="room_status">상태</span>
+                        </li>
+                        {lobbyData.length > 0 ? lobbyData.map((room, index) => (
+                        <li class="room " onClick={() => { joinGame(room.id) }}>
+                            <span class="room_number">{room.id}</span>
+                            <span class="room_title" >{room.name}</span>
+                            <span class="players">{room.current_players_num}</span>
+                            <span class="room_status">{room.status}</span>
+                        </li>
+                        )) : "dfs"}
+                    </ul>
+                </div>
             </div>
         </div>
     );
