@@ -25,6 +25,7 @@ const UserInfo = (props) => {
     useEffect(() => {
         const fetchData = async () => {
 			const response = await api.getUserInfomation(props.nickname);
+			console.log("USERINFO", response)
 			if (response) {
 				setData(response);
 			} else {
@@ -45,13 +46,14 @@ const UserInfo = (props) => {
 		if (flag === 1) {
 			var newIntro = document.querySelector("#newIntro").value
 			console.log(newIntro)
-			var response = api.patchUserInfomation(flag, newIntro);
+			var response = await api.patchUserInfomation(flag, newIntro);
 		} else {
 			var newNick = document.querySelector("#newNickname").value
-			var response = api.patchUserInfomation(flag, newNick);
+			var response = await api.patchUserInfomation(flag, newNick);
 		} 
 		patchBox[flag - 1].style.display = "none";
-		console.log(response);
+		console.log("ㅜㅠ푸ㅠㅜㅠㅜ",response); 
+		setData(response)
 	}
 
 	return (
