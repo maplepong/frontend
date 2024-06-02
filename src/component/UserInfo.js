@@ -4,9 +4,11 @@ import myReact , { useEffect, useState } from "../core/myReact.js";
 import "../css/MyInfo.css"
 
 const UserInfo = (props) => {
+
     if (window.location.pathname != "/myinfo"){
         props.nickname = window.location.pathname.split('/')[2];
     }
+
 	const [data, setData] = useState({
 		id: "",
         username: "",
@@ -23,6 +25,7 @@ const UserInfo = (props) => {
     useEffect(() => {
         const fetchData = async () => {
 			const response = await api.getUserInfomation(props.nickname);
+			console.log("USERINFO", response)
 			if (response) {
 				setData(response);
 			} else {
@@ -32,32 +35,90 @@ const UserInfo = (props) => {
         fetchData();
     }, []);
 
-	useEffect(() => console.log(data), [data]);
+	function patchInfo(flag) {
+		var patchBox = document.querySelectorAll(".infoPatchBox");
+		console.log(patchBox);
+		patchBox[flag - 1].style.display = "block";
+	}
 
-	useEffect(() => {
-		console.log("변동사항", data);  // 이 위치에서 data 상태 로그를 확인
-	}, [data]);  // data가 변경될 때마다 실행
-	
+	async function changeInfo(flag) {
+		var patchBox = document.querySelectorAll(".infoPatchBox");
+		if (flag === 1) {
+			var newIntro = document.querySelector("#newIntro").value
+			console.log(newIntro)
+			var response = await api.patchUserInfomation(flag, newIntro);
+		} else {
+			var newNick = document.querySelector("#newNickname").value
+			var response = await api.patchUserInfomation(flag, newNick);
+		} 
+		patchBox[flag - 1].style.display = "none";
+		console.log("ㅜㅠ푸ㅠㅜㅠㅜ",response); 
+		setData(response)
+	}
+
 	return (
-		<div id="container-myinfo" class="modal">
-			<div id="myinfo-headline">
-				<p>내정보</p>
-				<button>X</button>	
+		<div style="display:flex;">
+			<div id="container-myinfo" class="modal">
+				<div id="myinfo-headline">
+					<p>내정보</p>
+					<button>X</button>
+				</div>
+				<div id="myinfo-body" onclick={() => console.log(data)}>
+					<img id="myinfo-img" src={data.image}></img>
+					<ul id="info-body">
+						<li>
+							<span> id </span>
+							<span> {data.id} </span>
+						</li>
+						<li>
+							<span> introduction </span>
+							<span> {data.introduction} </span>
+							<button onclick={() => patchInfo(1)}>변경</button>
+						</li>
+						<li>
+							<span> lose </span>
+							<span> {data.losses} </span>
+						</li>
+						<li>
+							<span> nickname </span>
+							<span> {data.nickname} </span>
+							<button onclick={() => patchInfo(2)}>변경</button>
+						</li>
+						<li>
+							<span> totalgame </span>
+							<span> {data.total_games} </span>
+						</li>
+						<li>
+							<span> username </span>
+							<span> {data.username} </span>
+						</li>
+						<li>
+							<span> wins </span>
+							<span> {data.wins} </span>
+						</li>
+						<li>
+							<span> win_rate </span>
+							<span> {data.win_rate} </span>
+						</li>
+						<li>
+							<span> email </span>
+							<span> {data.email} </span>
+						</li>
+						{/* <li>image {data.image}</li> */}
+					</ul>
+				</div>
 			</div>
-			<div id="myinfo-body" onclick={() => console.log(data)}>
-				<img id="myinfo-img" src={data.image}></img>
-				<ul>
-					<li>id {data.id}</li>
-					<li>information {data.introduction}</li>
-					<li>lose {data.losses}</li>
-					<li>nickname {data.nickname}</li>
-					<li>totalgame {data.total_games}</li>
-					<li>username {data.username}</li>
-					<li>wins {data.wins}</li>
-					<li>win_rate {data.win_rate}</li>
-					<li>email {data.email}</li>
-					{/* <li>image {data.image}</li> */}
-				</ul>
+			<div id="patchBox">
+				<div class="infoPatchBox">
+					수정할 자기소개를 알려주세요.
+					<input id="newIntro"></input>
+					<button onclick={() => changeInfo(1)}>변경</button>
+				</div>
+				<div class="infoPatchBox">
+					수정할 닉네임을 알려주세요.
+					<input id="newNickname"></input>
+					<button onclick={() => changeInfo(2)}>변경</button>
+				</div>
 			</div>
 		</div>
 	)
