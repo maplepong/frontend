@@ -114,14 +114,15 @@ const Lobby = (props) => {
     // }
 
     const joinGame = async (gameId) => {
+        console.log(gameId);
         const gameInfo = await requestGameInfo(gameId);
-        if (gameInfo.status !== 200)
+        if (!gameInfo.status || gameInfo.status !== 200)
             return console.error("Failed to get game info:", gameInfo);
         let password = null;
         if (gameInfo.data.password !== null)
             password = prompt("비밀번호를 입력하세요");
         const joinGameResponse = await requestJoinGame(gameId, password);
-        if (joinGameResponse && joinGameResponse.status === 201) {
+        if (joinGameResponse.status && joinGameResponse.status === 201) {
             history.pushState({}, "", `/gameroom/${gameId}`);
             router();
         }
