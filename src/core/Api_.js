@@ -3,11 +3,11 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:8001/",
+	baseURL: "http://localhost:10144/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
-	timeout: 3000,
+	timeout: 5000,
 	withCredentials: false, //develope
 }) //정리 필요
 
@@ -331,23 +331,33 @@ const api = {
 			return error 
 		});
 	},
-	patchUserInfomation(changedValue){ //409 conflict
+	patchUserInfomation(flag, changedValue){ //409 conflict
 		setToken();
-		const nickname = localStorage.nickname;
+		console.log(flag);
+		console.log(localStorage.nickname);
+		console.log(changedValue)
+		const formData = new FormData();
+		if (flag === 1) {
+			formData.append('introduction', changedValue)
+		} else if (flag === 2) {
+			formData.append('nickname', changedValue)
+			localStorage.nickname = changedValue;
+			console.log("바꼈냐?", localStorage.nickname)
+		}
 		return apiInstance.request({
 			method: "PATCH",
 			url: "user/information",
-			data: changedValue,
+			data: formData,
 			headers: {
 				'Content-Type' : 'application/json',
 			},
 		})
 		.then(response => {
-			console.log(nickname + "의 정보를 변경했습니다.")
+			console.log(localStorage.nickname + "의 정보를 변경했습니다.")
 			return response.data;
 		})
 		.catch(error => { 
-			console.log(nickname + "의 정보를 변경하지 못했습니다.")
+			console.log(localStorage.nickname + "의 정보를 변경하지 못했습니다.")
 			return error });
 	},
 	userImage(type, src){

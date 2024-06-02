@@ -2,6 +2,22 @@
 	color: white;
 }
 
+#info-body > li {
+	display: flex;
+	align-items: center;
+}
+
+#info-body li button {
+	width: 100px;
+	height: auto;
+	background-color: gray;
+	font-size: 12px;
+}
+
+#info-body li span {
+	margin: 10px;
+}
+
 #container-myinfo{
 	width: 400px;
 	height: 540px;
@@ -38,7 +54,7 @@
 
 #myinfo-body{
 	width: 100%;
-	height: calc(100% - 40px);
+	height: calc(100% - 20px);
 	display: flex;
 	flex-direction: column;
 	background-color: rgb(0,0,0,0.3);
@@ -49,4 +65,14 @@
 #myinfo-img {
 	width: 150px;
 	height: 150px;
+}
+
+#patchBox {
+	display: flex;
+	flex-direction: column;
+}
+
+.infoPatchBox {
+	display: none;
+	margin: 10px;
 }
