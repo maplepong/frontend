@@ -1,6 +1,6 @@
 import myReact from "./myReact.js";
 import router from "./Router.js";
-import { exist, isEmptyObj } from "./utils.js"
+import { exist, isEmptyObj, isObjNode } from "./utils.js"
 
 const eventType = [
     "onclick",
@@ -57,26 +57,6 @@ function updateProps(target, newProps, oldProps){
 	}
 }
 
-function disassembleChildren(children, result){
-	result = result || [];
-	if (!Array.isArray(children)){
-		result.push(children);
-		return result;
-	}
-	children.forEach((child) => {
-		if (Array.isArray(child)){
-			result = disassembleChildren(child);
-		}
-		else if (child == undefined || child == null){
-			result.push("no value"); //수정 및 확인 필요
-		}
-		else {
-			result.push(child);
-		}
-	})
-	return result;
-}
-
 function addChild(target, child){
 	if (typeof child === 'number') 
 				child = child.toString();
@@ -89,9 +69,7 @@ function addChild(target, child){
 }
 
 function updateChildren(target, newChildren, oldChildren){
-	newChildren = disassembleChildren(newChildren);
 	if (oldChildren) {
-		oldChildren = disassembleChildren(oldChildren);
 		const maxLength = Math.max(newChildren.length , oldChildren.length);
 		// for (let i = maxLength - 1; i >= 0; i--){
 		for (let i = 0; i < maxLength; i++){
@@ -159,7 +137,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 	if (oldfNode && !newfNode){
 		// Need to remove EventListner or onClick;
 		if (oldfNode.isEvent){}; 
-		if (!isEmptyObj(oldfNode.willUnmount)){
+		if (isObjNode(oldfNode) && !isEmptyObj(oldfNode.willUnmount)){
 			oldfNode.willUnmount.forEach((c) => { c() })
 		}
 		return parent.removeChild(parent.childNodes[index]);
@@ -197,28 +175,33 @@ function createMyReactDOM (){
 	rootNode : document.querySelector("#root"),
 	DOM : null,
 	fiberRoot: null,
+	inited: false,
 
 	initDOM : function initDOM(fNode){
-		document.addEventListener("DOMContentLoaded", () => {
-			window.addEventListener("routeChange", router);
-			window.addEventListener("popstate", router);
-		});
+		if (this.inited === false) {
+			document.addEventListener("DOMContentLoaded", () => {
+				window.addEventListener("routeChange", router);
+				window.addEventListener("popstate", router);
+				});
+				this.inited = true;
+			addEvent(this.rootNode, "click", "a", ({ target }) => {
+				const route = target.closest("a").getAttribute('href');
+				console.log("routing?", route)
+				if (typeof route === "string") {
+					const newPath = "/" + route;
+					console.log(newPath);
+					history.pushState({}, "", newPath);
+					router();
+				}}
+			)
+		}
 		if (!exist(this.rootNode)){
 			return console.error("ROOT: cannot find");
 		}	
 		this.fiberRoot = fNode;
 		this.DOM = createDOM(fNode);
 		this.rootNode.appendChild(this.DOM);
-		addEvent(this.rootNode, "click", "a", ({ target }) => {
-			const route = target.closest("a").getAttribute('href');
-			console.log("routing?", route)
-			if (typeof route === "string") {
-				const newPath = "/" + route;
-				console.log(newPath);
-				history.pushState({}, "", newPath);
-				router();
-			}}
-		)
+
 	},
 	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);

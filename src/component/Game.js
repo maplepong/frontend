@@ -1,42 +1,37 @@
 /* @jsx myReact.createElement */
 import myReact, { useState, useEffect } from "../core/myReact.js";
+import GameRoom from "./GameRoom.js";
 import "../css/Pingpong.css";
 
-const PingPong = () => {
+const PingPong = ({gameinfo}) => {
+    let ctx, ball, ballRadius, x, y, dx, dy;
+    let paddleHeight, paddleWidth, paddleX, paddleY, rightPressed, leftPressed, topleftPressed, toprightPressed;
+    let interval;
+
     const [score, setScore] = useState({ left: 0, right: 0 });
-    const [socket, setSocket] = useState(null);
-    const [isGameReady, setIsGameReady] = useState(false); // 게임 준비 상태를 나타내는 상태 추가
+    const [canvas, setCanvas] = useState(null);
+
+    if (!gameinfo || !socket) {
+        console.log("something is wrong...");
+        return null;
+    }
 
     useEffect(() => {
-        const newSocket = new WebSocket("ws://10.18.236.7:8000/ws/game/test/");
-
-        newSocket.onopen = function() {
-            console.log("서버 연결 완료");
-            setSocket(newSocket);
-            newSocket.send(JSON.stringify({ type: 'client_connected' })); // 서버에 클라이언트 연결됨을 알림
-        };
-
-        newSocket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("data : ", data);
-            if (data.type === "game_ready") {
-        		setIsGameReady(true);
-            } else if (data.type === "game_update") {
-                setScore(data.data);
-            }
-        };
-
-        newSocket.onclose = function() {
-            console.log("서버 연결 종료");
-            setSocket(null);
-        };
-
-        return () => {
-            if (newSocket) {
-                newSocket.close();
-            }
-        };
+        const newCanvas = document.getElementById("myCanvas");
+        if (newCanvas && newCanvas.getContext) {
+            ctx = newCanvas.getContext("2d");
+            setCanvas(newCanvas);
+        }
     }, []);
+
+    useEffect(() => {
+        if (canvas) {
+            console.log("Starting game loop");
+            initGame(canvas);
+            interval = setInterval(draw, 20);
+            return () => clearInterval(interval);
+        }
+    }, [canvas]);
 
     function updateScore(leftAdd, rightAdd) {
         const newScore = {
@@ -51,46 +46,29 @@ const PingPong = () => {
         }
     }
 
-    let canvas, ctx, ballRadius, x, y, dx, dy;
-    let paddleHeight, paddleWidth, paddleX, paddleY, rightPressed, leftPressed, topleftPressed, toprightPressed;
-    let ball;
-    let interval;
-
-    function initGame() {
-        canvas = document.getElementById("myCanvas");
-        ctx = canvas.getContext("2d");
+    function initGame(newCanvas) {
         ballRadius = 10;
-        x = canvas.width / 2;
-        y = canvas.height - 30;
+        x = newCanvas.width / 2;
+        y = newCanvas.height - 30;
         dx = 2;
         dy = -2;
 
         paddleHeight = 10;
         paddleWidth = 75;
-        paddleX = (canvas.width - paddleWidth) / 2;
-        paddleY = (canvas.width - paddleWidth) / 2;
+        paddleX = (newCanvas.width - paddleWidth) / 2;
+        paddleY = (newCanvas.width - paddleWidth) / 2;
         rightPressed = false;
         leftPressed = false;
         toprightPressed = false;
         topleftPressed = false;
 
         ball = new Image();
-        ball.src = "asset/game/mushroom.gif";
 
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
         document.addEventListener("keydown", topkeyDownHandler, false);
         document.addEventListener("keyup", topkeyUpHandler, false);
     }
-
-    useEffect(() => {
-		console.log("effect ready : " + isGameReady)
-        if (isGameReady) {
-            initGame();
-            interval = setInterval(draw, 20);
-        }
-        return () => clearInterval(interval);
-    }, [isGameReady]);
 
     function drawBall() {
         ctx.drawImage(ball, x - ballRadius, y - ballRadius, ballRadius * 2, ballRadius * 2);
