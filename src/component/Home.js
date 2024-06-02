@@ -29,20 +29,14 @@ const Home = () => {
 	const [ friendlist, setFriendList ] = useState([]); 
 
     useEffect(() => {
-        const fetchData = async () => {
+      const fetchData = async () => {
 			const response = await api.getUserInfomation(localStorage.nickname);
 			const friendRequests = await api.getRequestFriendList();
 			const friends = await api.getFriendList();
 			
 			setList(friendRequests);
 			setFriendList(friends);
-			if (response) {
-				console.log("받아온 내정보", response)
-				console.log("정보 받아옴")
-				setData(response);
-			} else {
-				console.error("No data returned from API");
-			}
+			setData(response);
         };
         fetchData();
     }, []);

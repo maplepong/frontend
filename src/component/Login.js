@@ -56,6 +56,11 @@ const Login = () => {
 						<button class="btns">회원가입</button>
 					</Link>
 				</div>
+				<div>
+					<Link to="api-login">
+						<button class="btns">42 API 로그인</button>
+					</Link>
+				</div>
 			</div>
 		</div>
 	)
