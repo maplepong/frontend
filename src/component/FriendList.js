@@ -16,7 +16,7 @@ const FriendList = ( props ) => {
             <div class="content">
                 <span id="request">받은 친구 요청</span>
                 <ul>
-					{props.list && props.list.receives.length > 0 ? 
+					{props.list && props.list.receives && props.list.receives.length > 0 ? 
 					props.list.receives.map((req) => <div>
                         <li class="exchange">
                         {req.from_user}
@@ -30,7 +30,7 @@ const FriendList = ( props ) => {
             <div class="content">
                 <span id="request">보낸 친구 요청</span>
 				<ul>
-					{props.list && props.list.sends.length > 0 ? 
+					{props.list && props.list.sends &&  props.list.sends.length > 0 ? 
 					props.list.sends.map((req) => <div>
                         <li class="exchange">{req.to_user}
                         <button class="inter" onClick={() => api.handleFriendRequest(req.to_user, "DELETE")}>취소</button>
@@ -42,7 +42,7 @@ const FriendList = ( props ) => {
             <div class="content">
                 <span id="request">내 친구들</span>
                 <ul>
-					{props.friendlist && props.friendlist.length > 0 ? 
+					{props.friendlist && props.friendlist.length && props.friendlist.length > 0 ? 
 					props.friendlist.map((item) => <div>
                         <li class="exchange" key={item.id}>
 							<NicknameHover nickname={item.nickname} />
