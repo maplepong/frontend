@@ -335,7 +335,7 @@ const api = {
 		setToken();
 		console.log(flag);
 		console.log(localStorage.nickname);
-		console.log(changedValue);
+		console.log(changedValue)
 		const formData = new FormData();
 		if (flag === 1) {
 			formData.append('introduction', changedValue)
