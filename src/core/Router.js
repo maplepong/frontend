@@ -56,7 +56,7 @@ export default function router() {
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
 	}
-	else if (path === "login" || path === "/" || path === "signup") {
+	else if (path === "login" || path === "/" || path === "signup" || path === "api-login" || path === "api-signup") {
 		myReact.render(<div>{component}</div>, "newPage");
 	}
 	else {
