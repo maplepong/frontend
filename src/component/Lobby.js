@@ -10,18 +10,11 @@ const Lobby = (props) => {
     const [lobbyData, setLobbyData] = useState([{ //test
 		id: 1234,
         number: 1,
-		title: "title1",
+		title: "로딩 중입니다...",
 		players: ["pl1", "pl2"],
 		status: 0,
 		password: "1234",
-	},{
-		id: 1234,
-        number: 2,
-		title: "title2",
-		players: ["pl1", "pl2"],
-		status: 1,
-		password: "",
-	}
+	},
 ]); 
 	console.log(lobbyData);
 
@@ -141,13 +134,13 @@ const Lobby = (props) => {
     return (
         <div id="container-lobby" className="modal">
             <button onClick={requestLogin}>login: test</button>
-            {/* <div id="lobby-headline">
+            <div id="lobby-headline">
                 <p>Pingpong🏓</p>
                 <button>X</button>
                 <button id="open-modal" onClick={create_game}>게임 만들기</button>
-                <div id="modal-backdrop" className="hidden"></div>
-            </div> */}
-            <div id="modal" className="hidden">
+                <div id="modal-backdrop" class="hidden"></div>
+            </div>
+            <div id="modal" class="hidden">
                 <div id="modal-content">
                     <form id="room-form" onSubmit={create_game}>
                         <div id="modal-title">방 제목</div>
@@ -179,7 +172,7 @@ const Lobby = (props) => {
             </div> */}
             <div class="game_interface">
                 <div class="lobby_body">
-                    <ul class="room_info" id="roomList">
+                    <ul class="room_list" id="roomList">
                         <li class="room_header" key="0">
                             <span class="room_number">방 번호</span>
                             <span class="room_title">방 제목</span>
@@ -187,7 +180,7 @@ const Lobby = (props) => {
                             <span class="room_status">상태</span>
                         </li>
                         {lobbyData.length > 0 ? lobbyData.map((room, index) => (
-                        <li class="room " onClick={() => { joinGame(room.id) }}>
+                        <li class="room_info " onClick={() => { joinGame(room.id) }}>
                             <span class="room_number">{room.id}</span>
                             <span class="room_title" >{room.name}</span>
                             <span class="players">{room.current_players_num}</span>
