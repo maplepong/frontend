@@ -247,3 +247,11 @@ export function useEffect(callback, deps){
 	myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	fiber.useEffect[i].deps = deps;
 }
+
+export function useRef(newRef){
+	const fiber = window.currentFiberNode;
+	const i = fiber.refPosition;
+	fiber.refPosition++;
+	fiber.ref[i]  = fiber.ref[i] || {current : newRef};
+	return fiber.ref[i];
+}
