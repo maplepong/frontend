@@ -81,7 +81,7 @@ function updateChildren(target, newChildren, oldChildren){
 		// 				target.childNodes[i]);
 		// 			return ;
 		// 		}
-			if (!oldChildren[i]){
+			if (oldChildren[i] === undefined){ //일단 undefined만 처리하게 해둠. null은 의도된 값일 수 있으니까
 				return addChild(target, newChildren[i]);
 			}
 			diffDom(target, newChildren[i], oldChildren[i], i);
