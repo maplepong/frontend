@@ -3,7 +3,7 @@ import myReact from "./myReact";
 import axios from "axios";
 
 const apiInstance = axios.create({
-	baseURL: "http://localhost:10144/",
+	baseURL: "http://localhost:8000/",
 	headers: {
 		'Content-Type' : 'application/json',
 	},
@@ -397,5 +397,7 @@ const api = {
 			return error });
 	}
 }
+
+export { apiInstance };
 
 export default api;
