@@ -3,7 +3,12 @@ import myReact, { useState, useEffect } from "../core/myReact.js";
 import GameRoom from "./GameRoom.js";
 import "../css/Pingpong.css";
 
-const PingPong = ({gameinfo}) => {
+function useRef(initialValue) {
+    const [ref] = useState(() => ({ current: initialValue }));
+    return ref;
+}
+
+const PingPong = ({ socket, gameinfo }) => {
     let ctx, ball, ballRadius, x, y, dx, dy;
     let paddleHeight, paddleWidth, paddleX, paddleY, rightPressed, leftPressed, topleftPressed, toprightPressed;
     let interval;
@@ -19,12 +24,15 @@ const PingPong = ({gameinfo}) => {
     useEffect(() => {
         const newCanvas = document.getElementById("myCanvas");
         if (newCanvas && newCanvas.getContext) {
+            console.log("Setting up canvas");
             ctx = newCanvas.getContext("2d");
+            console.log("newcanvas :", newCanvas);
             setCanvas(newCanvas);
         }
     }, []);
 
     useEffect(() => {
+        console.log("canvas : " , canvas);
         if (canvas) {
             console.log("Starting game loop");
             initGame(canvas);
@@ -178,6 +186,7 @@ const PingPong = ({gameinfo}) => {
     if (score.left > 2 || score.right > 2) {
         resultValue = (score.left > score.right ? "left win by " : "right win by ") + resultValue;
     }
+
 
     return (
         <div className="game-container">
