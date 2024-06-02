@@ -140,6 +140,9 @@ function createMyReact() {
 			console.error("redirect err: no path");
 			return
 		}
+        else if (param === "/") {
+            param = "";
+        }
 		console.log("redirect call")
 		var path;
 		if (param !== "/")
@@ -231,16 +234,24 @@ export function useEffect(callback, deps){
 	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
 	// console.log("useEffect deps new", deps)
 	// console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
-	if (isEqualArray(fiber.useEffect[i].deps, deps)) {
-		// console.log("nocallback")
+	if (deps !== undefined && isEqualArray(fiber.useEffect[i].deps, deps)) {
+		console.log("!!!!!!!!!!!!!!----------------------snocallback")
 		return;
 	}
 	//if deps not changed || include both are empth array [], just return
 
-	// calling callback :
+	// calling callback :s
 	// 1. deps === undefined
 	// 2. deps === [] (but first call)
 	// 3. deps changed
 	myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	fiber.useEffect[i].deps = deps;
+}
+
+export function useRef(newRef){
+	const fiber = window.currentFiberNode;
+	const i = fiber.refPosition;
+	fiber.refPosition++;
+	fiber.ref[i]  = fiber.ref[i] || {current : newRef};
+	return fiber.ref[i];
 }
