@@ -1,7 +1,7 @@
 import fiberNode from "./fiberNode.js";
 import myReactDOM from "./myReactDOM.js";
 import createElement from "./createElement.js";
-import { makeProps, exist, isEmptyObj, isEqualArray } from "./utils.js"
+import { exist, isEqualObj } from "./utils.js"
 import router from "./Router.js";
 
 export function Link(props){
@@ -233,8 +233,8 @@ export function useEffect(callback, deps){
 	// if (fiber.useEffect[i])
 	// 	console.log("useEffect deps old", fiber.useEffect[i].deps)
 	// console.log("useEffect deps new", deps)
-	// console.log("isEqual", isEqualArray(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
-	if (deps !== undefined && isEqualArray(fiber.useEffect[i].deps, deps)) {
+	// console.log("isEqual", isEqualObj(fiber.useEffect[i].deps, deps), fiber.useEffect[i].deps, deps);
+	if (deps !== undefined && isEqualObj(fiber.useEffect[i].deps, deps)) {
 		console.log("!!!!!!!!!!!!!!----------------------snocallback")
 		return;
 	}
