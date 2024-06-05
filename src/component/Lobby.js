@@ -182,8 +182,8 @@ const Lobby = (props) => {
                         {lobbyData.length > 0 ? lobbyData.map((room, index) => (
                         <li class="room_info " onClick={() => { joinGame(room.id) }}>
                             <span class="room_number">{room.id}</span>
-                            <span class="room_title" >{room.name}</span>
-                            <span class="players">{room.current_players_num}</span>
+                            <span class="room_title" >{room.title}</span>
+                            <span class="players">{room.players}</span>
                             <span class="room_status">{room.status}</span>
                         </li>
                         )) : "dfs"}
