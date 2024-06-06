@@ -8,7 +8,7 @@ const Chat = ({ gameId }) => {
 
     useEffect(() => {
         if (gameId && !chatSocket) {
-            const newChatSocket = new WebSocket("ws://localhost:9080/ws/chat/" + gameId + "/");
+            const newChatSocket = new WebSocket("ws://localhost:8000/ws/chat/" + gameId + "/");
             setChatSocket(newChatSocket);
 
             newChatSocket.onopen = () => {
