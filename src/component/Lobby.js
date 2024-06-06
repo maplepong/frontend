@@ -162,12 +162,3 @@ const Lobby = (props) => {
 };
 
 export default Lobby;
-
-// {lobbyData.length > 0 ? lobbyData.map((room, index) => (
-// <li class="room_info " onClick={() => { joinGame(room.id) }}>
-// 	<span class="room_number">{room.id}</span>
-// 	<span class="room_title" >{room.title}</span>
-// 	<span class="players">{room.players}</span>
-// 	<span class="room_status">{room.status}</span>
-// </li>
-// )) : ""}
