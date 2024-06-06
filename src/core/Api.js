@@ -10,7 +10,7 @@ function getCookie(name) {
 
 const baseUrl = () => {
 	// return "http://localhost:/";
-	return "http://localhost:9080/";
+	return "http://localhost:8000/";
 }
 
 const redirect = (page) => {
