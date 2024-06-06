@@ -121,7 +121,8 @@ body {
 .lobby_body {
     height: 100%;
     overflow-y: auto;
-    width: 1181px;
+    /* width: 1181px; DEV*/ 
+	width: 100%;
 }
 
 .lobby_body::-webkit-scrollbar {
@@ -137,6 +138,15 @@ body {
     border-radius: 10px;
   }
 
+/* 방 목록 스타일 */
+.room_list {
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+
 .room_header {
     width: 100%;
     background-color: black;
@@ -146,16 +156,8 @@ body {
     padding-bottom: 7px;
 }
 
-/* 방 목록 스타일 */
-.room_info {
-    position: relative;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
 /* 각 방 스타일 */
-.room {
+.room_info {
     margin-top: 10px;
     margin-bottom: 10px;
     height: fit-content;
