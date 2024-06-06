@@ -141,7 +141,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 
 	// created :: index++;
 	else if (!oldfNode && newfNode) {
-		return parent.prepend(createDOM(newfNode));
+		return parent.append(createDOM(newfNode)); ///??????
 	}
 
 	// changed tag ::
@@ -198,6 +198,7 @@ function createMyReactDOM (){
 	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
+		this.fiberRoot = newFiberRoot;
 	},
 	erase(){
 		if(this.DOM)
