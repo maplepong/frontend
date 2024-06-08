@@ -10,7 +10,7 @@ const Chat = ({ gameId }) => {
     useEffect(() => {
 		console.log(chatSocket);
         if (gameId && !chatSocket) {
-            const newChatSocket = new WebSocket("ws://localhost:8000/ws/chat/" + gameId + "/");
+            const newChatSocket = new WebSocket("ws://localhost:9080/ws/chat/" + gameId + "/");
             setChatSocket(newChatSocket);
             newChatSocket.onopen = () => {
                 console.log("chat socket opened");
@@ -20,7 +20,7 @@ const Chat = ({ gameId }) => {
         }
 		else if (!chatSocket){
 			console.log(ws);
-			const ws = new WebSocket(`ws://localhost:8000/ws/chat/?token=${localStorage.getItem("accessToken")}`);
+			const ws = new WebSocket(`ws://localhost:9080/ws/chat/?token=${localStorage.getItem("accessToken")}`);
 			ws.onopen = () => {
                 console.log("chat socket opened");
                 ws.send(JSON.stringify({ type: "connect", message: "hello", nickname: localStorage.getItem("nickname") }));
