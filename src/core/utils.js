@@ -52,3 +52,11 @@ export function makeProps(props, children){
 		children: children.length === 1 ? children[0] : children
 	}
 }
+
+export function isObjNode(node){
+	if (typeof node === "string" || typeof node === "number"){
+		return false;
+	}
+	else 
+		return true;
+}

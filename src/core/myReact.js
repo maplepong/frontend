@@ -140,13 +140,20 @@ function createMyReact() {
 			console.error("redirect err: no path");
 			return
 		}
+        else if (param === "/") {
+            param = "";
+        }
 		console.log("redirect call")
-		const path = "/" + param;
+		var path;
+		if (param !== "/")
+			path = "/" + param;
+		else
+			path = "/";
 		console.log(path);
 		history.pushState({}, "", path);
 		router();
 	}
-}
+	}
 }
 
 const myReact = createMyReact();
@@ -239,4 +246,12 @@ export function useEffect(callback, deps){
 	// 3. deps changed
 	myReact.callback.push({callback, willUnmount: fiber.willUnmount});
 	fiber.useEffect[i].deps = deps;
+}
+
+export function useRef(newRef){
+	const fiber = window.currentFiberNode;
+	const i = fiber.refPosition;
+	fiber.refPosition++;
+	fiber.ref[i]  = fiber.ref[i] || {current : newRef};
+	return fiber.ref[i];
 }
