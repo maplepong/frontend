@@ -6,7 +6,7 @@ import UserStatus from "./UserStatus.js";
 
 const Navbar = () => {
 	return (<nav>
-		<Chat socket={null}></Chat>
+		{/* <Chat socket={null}></Chat> */}
 		<div id="btn-box">
 			<div id="nav-btn-container">
 				<Link to="login"><button id="btn-nav-login">로그인</button></Link>
