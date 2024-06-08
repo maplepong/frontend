@@ -1,3 +1,4 @@
+import { request42ApiLogin, requestApiSignup } from "./Api";
 import myReact from "./myReact";
 import axios from "axios";
 
@@ -6,9 +7,9 @@ const apiInstance = axios.create({
 	headers: {
 		'Content-Type' : 'application/json',
 	},
-	timeout: 3000,
+	timeout: 5000,
 	withCredentials: false, //develope
-})
+}) //정리 필요
 
 function getCookie(name) {
 	const value = `; ${document.cookie}`;
@@ -91,6 +92,113 @@ const api = {
 			return error;
 		})
 	},
+	request42ApiLogin(code) {
+		if (code === null) {
+			console.log("failed to get Code");
+			return ;
+		}
+		// console.log("Code", code);
+		return apiInstance.request({
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+				'Content-Type': 'multipart/form-data'
+			},
+			url: 'user/api-login',
+			method: "POST",
+			data: {
+				code: code,
+			}
+		}).
+		then(response => {
+			if (response.status === 202) {
+				const username = response.data.id;
+				console.log("id: " + username, "님은 회원가입 필요");
+				const signupResponse = localStorage.setItem('username', username);
+				myReact.redirect("api-signup");
+				return signupResponse;
+			} else if (response.status === 200) {
+				console.log(response.data.username);
+				const username = response.data.username;
+				localStorage.setItem('username', username);
+				localStorage.setItem('nickname', response.data.nickname);
+				localStorage.setItem('accessToken', response.data.access_token)
+				axios.defaults.headers.common['Authorization'] = response.data.access_token;
+				console.log("이미 있는 회원입니당");
+				myReact.redirect("home");
+				console.log(localStorage.getItem('accessToken'));
+				console.log(localStorage.getItem('nickname'))
+				return response;
+			}
+		}).
+		catch(error => {
+			console.log("42 API LOGIN ERROR", error)
+			return error;
+		})
+	},
+	requestApiSignup(username, nickname) {
+		return apiInstance.request({
+			headers: {
+				'X-CSRFToken': getCookie('csrftoken'), 
+				'Content-Type': 'multipart/form-data'
+			},
+			url: "user/api-signup",
+			method: "POST",
+			data: {
+				id: username,
+				nickname: nickname
+			}
+		}).
+		then(response => {
+			console.log("API SIGNUP: ", response);
+			return response;
+		}).
+		catch(error => {
+			console.log("API SIGNUP ERROR: ", error);
+			return error;
+		})
+	},
+    sendEmailVerifyPin(_email) {
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/generate_email_pin",
+			data: {
+				email: _email
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
+    checkEmailVerifyPin(_email, _pin){
+        console.log("YOUR EMAIL", _email, "YOUR PIN", _pin);
+        return apiInstance.request({
+            headers: {
+				'X-CSRFToken': getCookie('csrftoken'),
+			},
+            method: "POST",
+            url: "user/verify_pin",
+			data: {
+				email: _email,
+                pin: _pin
+			}
+        })
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(error => { 
+            console.log(error)
+            return error 
+        })
+    },
 	sendFriendRequest(nickname) {
 		setToken();
 		return apiInstance.request({
@@ -134,7 +242,7 @@ const api = {
 		apiInstance.defaults.headers.common['Authorization'] = null;
 		apiInstance.defaults.withCredentials = false;
 		alert("로그아웃되었습니다");
-		//need::redirect to home
+		myReact.redirect("/");
 	},
 	getFriendList(){
 		setToken();
@@ -223,23 +331,33 @@ const api = {
 			return error 
 		});
 	},
-	patchUserInfomation(changedValue){ //409 conflict
+	patchUserInfomation(flag, changedValue){ //409 conflict
 		setToken();
-		const nickname = localStorage.nickname;
+		console.log(flag);
+		console.log(localStorage.nickname);
+		console.log(changedValue)
+		const formData = new FormData();
+		if (flag === 1) {
+			formData.append('introduction', changedValue)
+		} else if (flag === 2) {
+			formData.append('nickname', changedValue)
+			localStorage.nickname = changedValue;
+			console.log("바꼈냐?", localStorage.nickname)
+		}
 		return apiInstance.request({
 			method: "PATCH",
 			url: "user/information",
-			data: changedValue,
+			data: formData,
 			headers: {
 				'Content-Type' : 'application/json',
 			},
 		})
 		.then(response => {
-			console.log(nickname + "의 정보를 변경했습니다.")
+			console.log(localStorage.nickname + "의 정보를 변경했습니다.")
 			return response.data;
 		})
 		.catch(error => { 
-			console.log(nickname + "의 정보를 변경하지 못했습니다.")
+			console.log(localStorage.nickname + "의 정보를 변경하지 못했습니다.")
 			return error });
 	},
 	userImage(type, src){
@@ -279,5 +397,7 @@ const api = {
 			return error });
 	}
 }
+
+export { apiInstance };
 
 export default api;

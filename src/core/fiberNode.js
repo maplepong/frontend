@@ -22,6 +22,10 @@ export default class fiberNode {
 			this.useEffect = []; //useEffect state : {callback f, deps []};
 			this.willUnmount = []; // cleanup arr;
 			this.effectPosition = 0; //useEffect position
+			
+			//useRef
+			this.ref = []; // useRef
+			this.refPositon = 0; //useRef position
 
 			//event
 			this.isEvent = false; // eventListner added?
@@ -48,6 +52,7 @@ export default class fiberNode {
 				ref.changed = false;
 				ref.changedState = [];
 			}
+			this.ref = ref.ref;
 			
 			this.useEffect = ref.useEffect; //useEffect state : {callback f, deps []};
 			this.willUnmount = ref.willUnmount;; // cleanup arr;
@@ -86,6 +91,7 @@ export default class fiberNode {
 			this.changed === ref.changed ? null : console.log("comparefiber Error: changed", this.changed, ref.changed);
 			this.changedState === ref.changedState ? null : console.log("comparefiber Error: changedState", this.changedState, ref.changedState);
 			this.statePosition === ref.statePosition ? null : console.log("comparefiber Error: statePosition", this.statePosition, ref.statePosition);
+			this.ref === ref.ref ? null : console.log("comparefiber Error: useRef", this.ref, ref.ref);
 			
 			this.useEffect === ref.useEffect ? null : console.log("comparefiber Error: useEffect", this.useEffect, ref.useEffect);
 			this.willUnmount === ref.willUnmount ? null : console.log("comparefiber Error: willUnmount", this.willUnmount, ref.willUnmount);
