@@ -52,10 +52,15 @@ const GameRoom = () => {
 
         fetchGameInfo();
 
-        return () => {
-            if (gameSocket) {
+        return async () => {
+            if (gameSocket && !exit) {
+                gameSocket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
                 gameSocket.close();
                 setgameSocket(null);
+                setExit(true);
+                const response = await requestExitGame(gameInfo.id);
+                if (response && response.status === 200)
+                    console.log("exitGame success")
             }
         };
     }, []);
