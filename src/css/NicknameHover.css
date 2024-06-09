@@ -7,12 +7,17 @@
 	margin-top: 40px;
 }
 
-/* .nicknameContainer > p {
-	
-} */
-
 .hovermenu{
 	background-color: aqua;
-	position: relative;
+	position: sticky;
 	left: 0px;
+	top: 0px;
+	box-shadow: 2px 2px 3px black;
+	padding: 5px 10px;
 }
+ul {
+	list-style: none;
+}
+/* .hidden :hover {
+	background-color: rgba(234, 200, 150, 0.3);
+} */
