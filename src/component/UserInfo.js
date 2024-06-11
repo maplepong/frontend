@@ -46,15 +46,33 @@ const UserInfo = (props) => {
 		if (flag === 1) {
 			var newIntro = document.querySelector("#newIntro").value
 			console.log(newIntro)
+			if (newIntro === null || newIntro === undefined)
+				return ;
 			var response = await api.patchUserInfomation(flag, newIntro);
 		} else {
 			var newNick = document.querySelector("#newNickname").value
+				if (newNick === null || newNick === undefined)
+					return ;
 			var response = await api.patchUserInfomation(flag, newNick);
 		} 
 		patchBox[flag - 1].style.display = "none";
 		console.log("ㅜㅠ푸ㅠㅜㅠㅜ",response); 
 		setData(response)
 	}
+
+	async function changeImage() {
+		console.log("이미지를 바꿔볼거에요")
+	}
+
+	const onFileChange = (e) => {
+		const {
+			target: {files},
+		} = e;
+		const filefile = files[0]; //우선 1개만 보여줄꺼니까 크기 1로 지정
+		
+		patchImage(filefile);
+	}
+
 
 	return (
 		<div style="display:flex;">
@@ -65,6 +83,7 @@ const UserInfo = (props) => {
 				</div>
 				<div id="myinfo-body" onclick={() => console.log(data)}>
 					<img id="myinfo-img" src={data.image}></img>
+					<button onclick={() => patchInfo(3)}>이미지 변경</button>
 					<ul id="info-body">
 						<li>
 							<span> id </span>
@@ -118,6 +137,11 @@ const UserInfo = (props) => {
 					수정할 닉네임을 알려주세요.
 					<input id="newNickname"></input>
 					<button onclick={() => changeInfo(2)}>변경</button>
+				</div>
+				<div class="infoPatchBox">
+					이미지를 업로드 해주세요.
+					<input type="file" accept="image/*"  id="testUpload" onchange={onFileChange}></input>
+					<button onclick={() => changeImage()}>업로드</button>
 				</div>
 			</div>
 		</div>
