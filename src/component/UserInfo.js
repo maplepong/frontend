@@ -69,7 +69,6 @@ const UserInfo = (props) => {
 			target: {files},
 		} = e;
 		const filefile = files[0]; //우선 1개만 보여줄꺼니까 크기 1로 지정
-		
 		patchImage(filefile);
 	}
 
