@@ -18,13 +18,13 @@ const NicknameHover = ({nickname}) => {
 		myReact.redirect("userinfo/"+nickname);
 	}
 	return <div class="nicknameContainer" id={nickname} onclick={showmenu} > 
-		<p>{nickname}</p>
+		<p class="nickname">{nickname}</p>
 		<div class="hidden hovermenu">
 			<ul>
-				<li><span onclick={()=>{ (routeToFriend(nickname))}}>{nickname} 정보보기</span></li>
-				<li>친구신청하기</li>
-				<li>게임초대하기</li>
-				<li>대화하기</li>
+				<li><span onclick={()=>{ (routeToFriend(nickname))}}>🔍 {nickname} 정보보기</span></li>
+				<li>👐 친구신청하기</li>
+				<li>🏓 게임초대하기</li>
+				<li>💌 대화하기</li>
 			</ul>
 		</div>
 	</div>
