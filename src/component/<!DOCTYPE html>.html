@@ -17,7 +17,7 @@
 
         const chatArea = document.getElementById('chatArea');
         const messageInput = document.getElementById('messageInput');
-        const ws = new WebSocket(`ws://localhost:9080/ws/chat/?token=${token}`);  // 여기 백틱 사용 확인
+        const ws = new WebSocket(`ws://localhost:8000/ws/chat/?token=${token}`);  // 여기 백틱 사용 확인
 
         ws.onopen = function () {
             console.log('WebSocket connected');
