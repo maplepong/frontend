@@ -77,7 +77,7 @@ const UserInfo = (props) => {
 		console.log("del", del);
 		const post = await api.userImage("POST", FILE)
 		console.log("post", post);
-		setData(post.data);
+		setData({...data, image : post.data.image});
 	}
 
 	return (
