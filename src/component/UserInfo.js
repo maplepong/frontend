@@ -72,6 +72,13 @@ const UserInfo = (props) => {
 		patchImage(filefile);
 	}
 
+	async function patchImage(FILE){
+		const Dresponse = await api.userImage("DELETE")
+		console.log(Dresponse);
+		const Presponse = await api.userImage("POST", FILE)
+		console.log(Presponse);
+		// setData(Presponse);
+	}
 
 	return (
 		<div style="display:flex;">
