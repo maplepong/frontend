@@ -15,7 +15,7 @@ module.exports = {
 		filename: 'bundle.js',
 	},
 	devServer:{
-		compress: true,
+		compress: false,
 		port: 5050,
 	},
 	module: { //3트랜스파일러
