@@ -8,7 +8,6 @@ import "../css/login.css";
 
 const Login = () => {
 	async function login () {
-		console.log("asd")
 		const username = document.querySelector("#input-username").value;
 		const password = document.querySelector("#input-password").value;
 		const getInfo = () => {
