@@ -145,9 +145,11 @@ const UserInfo = (props) => {
 					<button onclick={() => changeInfo(2)}>변경</button>
 				</div>
 				<div class="infoPatchBox">
-					이미지를 업로드 해주세요.
-					<input type="file" accept="image/*"  id="testUpload" onchange={onFileChange}></input>
-					<button onclick={() => changeImage()}>업로드</button>
+					<p>이미지를 업로드 해주세요.</p>
+					<p>파일을 선택하면 이미지가 변경됩니다.</p>
+					<div>
+						<input type="file" accept="image/*"  id="testUpload" onchange={onFileChange}></input>
+					</div>
 				</div>
 			</div>
 		</div>
