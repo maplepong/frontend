@@ -378,7 +378,7 @@ const api = {
 				},
 			}).then(response => {
 				console.log("사진을 올렸다")
-				return response.status;
+				return response;
 			})
 			.catch(error => { 
 				console.log("사진을 올리지 못했다...")
@@ -390,7 +390,7 @@ const api = {
 		})
 		.then(response => {
 			console.log("사진을 " + type + " 했다")
-			return response.data;
+			return response;
 		})
 		.catch(error => { 
 			console.log("사진을 " + type + " 하지 못했다...")

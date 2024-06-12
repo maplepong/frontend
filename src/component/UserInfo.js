@@ -73,11 +73,11 @@ const UserInfo = (props) => {
 	}
 
 	async function patchImage(FILE){
-		const Dresponse = await api.userImage("DELETE")
-		console.log(Dresponse);
-		const Presponse = await api.userImage("POST", FILE)
-		console.log(Presponse);
-		// setData(Presponse);
+		const del = await api.userImage("DELETE")
+		console.log("del", del);
+		const post = await api.userImage("POST", FILE)
+		console.log("post", post);
+		setData(post.data);
 	}
 
 	return (
