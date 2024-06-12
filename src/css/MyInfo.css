@@ -20,7 +20,7 @@
 
 #container-myinfo{
 	width: 400px;
-	height: 540px;
+	height: 100%;
 	padding: 0;
 }
 
@@ -75,4 +75,8 @@
 .infoPatchBox {
 	display: none;
 	margin: 10px;
+}
+
+#intro-error, #nick-error {
+	display: none;
 }
