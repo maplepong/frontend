@@ -76,3 +76,7 @@
 	display: none;
 	margin: 10px;
 }
+
+#intro-error, #nick-error {
+	display: none;
+}

@@ -38,25 +38,33 @@ const UserInfo = (props) => {
 	function patchInfo(flag) {
 		var patchBox = document.querySelectorAll(".infoPatchBox");
 		console.log(patchBox);
-		patchBox[flag - 1].style.display = "block";
+		if (patchBox[flag - 1].style.display === "block")
+			patchBox[flag - 1].style.display = "none";
+		else
+			patchBox[flag - 1].style.display = "block";
 	}
 
 	async function changeInfo(flag) {
 		var patchBox = document.querySelectorAll(".infoPatchBox");
 		if (flag === 1) {
+			var introError = document.querySelector("#intro-error")
 			var newIntro = document.querySelector("#newIntro").value
 			console.log(newIntro)
-			if (newIntro === null || newIntro === undefined)
+			if (newIntro === null || newIntro === undefined || !newIntro || newIntro === data.introduction) {
+				introError.style.display = "block"
 				return ;
+			}
 			var response = await api.patchUserInfomation(flag, newIntro);
 		} else {
+			var nickError = document.querySelector("#nick-error")
 			var newNick = document.querySelector("#newNickname").value
-				if (newNick === null || newNick === undefined)
-					return ;
+			if (newNick === null || newNick === undefined || !newNick || newNick === data.nickname) {
+				nickError.style.display = "block"
+				return ;
+			}
 			var response = await api.patchUserInfomation(flag, newNick);
 		} 
 		patchBox[flag - 1].style.display = "none";
-		console.log("ㅜㅠ푸ㅠㅜㅠㅜ",response); 
 		setData(response)
 	}
 
@@ -135,12 +143,20 @@ const UserInfo = (props) => {
 			</div>
 			<div id="patchBox">
 				<div class="infoPatchBox">
-					수정할 자기소개를 알려주세요.
+					<p>수정할 자기소개를 알려주세요.</p>
+					<p id="intro-error">
+						적절한 자기소개를 입력해 주세요.
+						이전 자기소개와 동일하거나, 빈 자기소개는 안돼요.
+					</p>
 					<input id="newIntro"></input>
 					<button onclick={() => changeInfo(1)}>변경</button>
 				</div>
 				<div class="infoPatchBox">
-					수정할 닉네임을 알려주세요.
+					<p>수정할 닉네임을 알려주세요.</p>
+					<p id="nick-error">
+						적절한 닉네임을 입력해 주세요.
+						이전 닉네임과 동일하거나, 빈 닉네임은 안돼요.
+					</p>
 					<input id="newNickname"></input>
 					<button onclick={() => changeInfo(2)}>변경</button>
 				</div>
