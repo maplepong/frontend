@@ -1,6 +1,7 @@
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useRef, useState } from "../core/myReact.js";
 import "../css/Chat.css";
+import NicknameHover from "./NicknameHover.js";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -79,7 +80,8 @@ const Chat = () => {
         <div id="messages">
           {messages.map((msg, index) => (
             <div key={index}>
-              <strong>{msg.sender}:</strong> {msg.message}
+              <NicknameHover nickname={msg.sender} />
+              {msg.message}
             </div>
           ))}
         </div>
