@@ -2,7 +2,6 @@
 import api from "../core/Api_.js";
 import myReact, { Link } from "../core/myReact.js";
 import "../css/NicknameModal.css";
-import RequestFriend from "./RequestFriend";
 
 const NicknameModal = ({ nickname }) => {
   var show = 0; //0 hidden 1 show;
@@ -22,8 +21,9 @@ const NicknameModal = ({ nickname }) => {
     const response = await api.sendFriendRequest(nickname);
     console.log(response);
   }
-  function inviteToGame() {
-    console.log("게임초대아직미구현임");
+  async function inviteToGame() {
+    const res = await api.inviteToGame(450, nickname);
+    console.log(res);
   }
   function wisper() {
     console.log("1on1");
