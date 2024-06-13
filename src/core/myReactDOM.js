@@ -40,10 +40,6 @@ function createDOM(fNode) {
 function updateProps(target, newProps, oldProps){
 	if (oldProps){
 		for (const [key, value] of Object.entries(oldProps)){
-			// if (key.slice(0, 2) === 'on') {
-			// 	// node.onclick = value; //!!!! onClick말고 다른거쓰면 어쩔려고
-			// 	target.removeEventListener("click", value);
-			// }
 			if (oldProps[key] === newProps[key]) continue;
 			else target.removeAttribute(key);
 		}
@@ -81,9 +77,9 @@ function updateChildren(target, newChildren, oldChildren){
 		// 				target.childNodes[i]);
 		// 			return ;
 		// 		}
-			if (oldChildren[i] === undefined){ //일단 undefined만 처리하게 해둠. null은 의도된 값일 수 있으니까
-				return addChild(target, newChildren[i]);
-			}
+			// if (oldChildren[i] === undefined){ //일단 undefined만 처리하게 해둠. null은 의도된 값일 수 있으니까
+			// 	return addChild(target, newChildren[i]);
+			// }
 			diffDom(target, newChildren[i], oldChildren[i], i);
 		}
 		return ;
@@ -145,7 +141,7 @@ function diffDom(parent, newfNode, oldfNode, index){
 
 	// created :: index++;
 	else if (!oldfNode && newfNode) {
-		return parent.prepend(createDOM(newfNode));
+		return parent.append(createDOM(newfNode)); ///??????
 	}
 
 	// changed tag ::
@@ -202,6 +198,7 @@ function createMyReactDOM (){
 	updateDOM: function updateDOM(newFiberRoot){
 		// //console.log("HEEHEH", newFiberRoot);
 		diffDom(this.rootNode, newFiberRoot, this.fiberRoot, 0);
+		this.fiberRoot = newFiberRoot;
 	},
 	erase(){
 		if(this.DOM)

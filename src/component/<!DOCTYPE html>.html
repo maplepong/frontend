@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+</head>
+<body>
+    <textarea id="chatArea" rows="10" cols="50" readonly></textarea><br>
+    <input type="text" id="messageInput" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const username = "test2";
+        const nickname = "test2";
+        const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3NTc1MjA3LCJpYXQiOjE3MTc1NzM0MDcsImp0aSI6Ijg3YWI2MWY0YWQxZTRlMDk4YjYzM2ZjNDFmMzA4MjZmIiwidXNlcl9pZCI6NjEzNzczNTM4LCJ1c2VybmFtZSI6InRlc3QyIiwibmlja25hbWUiOiJOZW9OZXdUZXN0MiJ9.02XwIYr8Rs5T9Ao4mVqfj_cMWOuFa-YZb2wV5_tNlwE"; // Bearer 토큰을 여기에 입력
+
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const ws = new WebSocket(`ws://localhost:9080/ws/chat/?token=${token}`);  // 여기 백틱 사용 확인
+
+        ws.onopen = function () {
+            console.log('WebSocket connected');
+            console.log('Token:', token);  // 콘솔에 토큰 출력
+        };
+
+        ws.onmessage = function (event) {
+            console.log(event);
+            const data = JSON.parse(event.data);
+            console.log(data);
+            const message = data.message;
+            const sender = data.sender;
+            const whisper = data.whisper || false;
+            const displayMessage = whisper ? `[Whisper] ${sender}: ${message}` : `${sender}: ${message}`;
+            chatArea.value += displayMessage + '\n';
+        };
+
+        function sendMessage() {
+            const message = messageInput.value;
+            const jsonMessage = JSON.stringify({ 
+                message: message, 
+                username: username, 
+                nickname: nickname 
+            });
+            ws.send(jsonMessage);
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>
