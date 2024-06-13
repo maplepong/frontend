@@ -20,11 +20,7 @@ const NicknameModal = ({ nickname }) => {
   }
   async function requestFriend() {
     const response = await api.sendFriendRequest(nickname);
-    console.log(response.);
-    switch (response.status){
-      case 201 :
-        console.log("")
-    }
+    console.log(response);
   }
   function inviteToGame() {
     console.log("게임초대아직미구현임");
