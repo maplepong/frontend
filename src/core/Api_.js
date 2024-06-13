@@ -451,6 +451,42 @@ const api = {
         return error;
       });
   },
+  inviteToGame(roomId, nickname) {
+    return apiInstance
+      .request({
+        url: "game/invite",
+        method: "POST",
+        data: {
+          id: roomId,
+          nickname: nickname,
+        },
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          alert(res, "초대되었습니다.");
+        }
+        return res;
+      })
+      .catch((err) => {
+        switch (err.response.status) {
+          case 404:
+            alert("게임이 없습니다. 없단 말입니다."); // 상대 유저가 없을 경우도 있지만 보통은 nicknameModal에서 소환할 것. 문제 있으면 백엔드에 분기요청하시오
+            break;
+          case 400:
+            alert(
+              `초대할 수 없습니다.\n1. 이미 게임방에 있는 유저거나\n2. 스스로 초대했거나\n3. 둘 다일 수 있습니다.`
+            );
+            break;
+          case 403:
+            alert("방이 풀방입니다.");
+            break;
+          default:
+            alert("문제가 생겼습니다.");
+            console.log(err);
+        }
+        return err;
+      });
+  },
 };
 
 export { apiInstance };
