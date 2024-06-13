@@ -48,10 +48,7 @@ const Chat = () => {
     const data = JSON.parse(event.data);
     console.log("chat data :", data);
     // if (data.type === "chat") {
-    setMessages([
-      ...messages,
-      { sender: data.nickname, message: data.message },
-    ]);
+    setMessages([...messages, { sender: data.sender, message: data.message }]);
   };
 
   const sendMessage = (message) => {
