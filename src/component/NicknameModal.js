@@ -22,11 +22,11 @@ const NicknameModal = ({ nickname }) => {
     console.log(response);
   }
   async function inviteToGame() {
-    const res = await api.inviteToGame(450, nickname);
+    const res = await api.inviteToGame(450, nickname); //임의로 gameid 넣음
     console.log(res);
   }
   function wisper() {
-    console.log("1on1");
+    alert("귓속말은 아직 불가능");
   }
 
   return (
