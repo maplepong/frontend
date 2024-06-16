@@ -1,7 +1,7 @@
 /* @jsx myReact.createElement */
 import myReact, { useEffect, useRef, useState } from "../core/myReact.js";
 import "../css/Chat.css";
-import NicknameHover from "./NicknameHover.js";
+import NicknameModal from "./NicknameModal.js";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -23,7 +23,7 @@ const Chat = () => {
   });
 
   function initSocket() {
-    const ws = new WebSocket(
+    var ws = new WebSocket(
       `ws://localhost:8000/ws/chat/?token=${localStorage.getItem(
         "accessToken"
       )}`
@@ -80,7 +80,7 @@ const Chat = () => {
         <div id="messages">
           {messages.map((msg, index) => (
             <div key={index}>
-              <NicknameHover nickname={msg.sender} />
+              <NicknameModal nickname={msg.sender} />
               {msg.message}
             </div>
           ))}
