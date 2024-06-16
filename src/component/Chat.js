@@ -79,9 +79,9 @@ const Chat = () => {
       <div id="chat">
         <div id="messages">
           {messages.map((msg, index) => (
-            <div key={index}>
+            <div key={index} class="message-container">
               <NicknameModal nickname={msg.sender} />
-              {msg.message}
+              <p class="message">{msg.message}</p>
             </div>
           ))}
         </div>
