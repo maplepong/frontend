@@ -26,24 +26,8 @@ export function isEmptyArray(para){
 }
 
 //equal test for array 
-export function isEqualArray (a, b) {
-	if (!Array.isArray(a) || ! Array.isArray(b)){
-		return false;
-	}
-	if (a.length === 0 && b.length === 0)
-		return true;
-	return a.length && b.length && 
-		a.every((v, i) => {
-			if (typeof v === "object" && typeof b[i] === "object"){
-				console.log("----------------------obj compare called----------");
-				console.log(Object.entries(v).toString() );
-				console.log(Object.entries(b[i]).toString() );
-				return (Object.entries(v).toString() === Object.entries(b[i]).toString());
-			}
-			if (typeof v === "object" || typeof b[i] === "object")
-				return false ;
-			return (v === b[i])
-		})
+export function isEqualObj (a, b) {
+	return (JSON.stringify(a) === JSON.stringify(b));
 }
 
 export function makeProps(props, children){
