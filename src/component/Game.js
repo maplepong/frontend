@@ -9,15 +9,16 @@ const PingPong = ({ gameinfo, gameSocket }) => {
 
     const [score, setScore] = useState({ left: 0, right: 0 });
 
+	//
     useEffect(() => {
-        if (!gameinfo || !gameSocket) {
+        if (!gameinfo || !gameSocket.current) {
             console.log("something is wrong...");
             return;
         }
 
         console.log("PingPong useEffect");
         console.log("gameInfo:", gameinfo);
-        console.log("gameSocket:", gameSocket.readyState);
+        console.log("gameSocket.current:", gameSocket.current.readyState);
 
         canvas = document.getElementById("myCanvas");
 
@@ -26,7 +27,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
             initGame(canvas);
             interval = setInterval(draw, 20);
 
-            gameSocket.onmessage = (event) => {
+            gameSocket.current.onmessage = (event) => {
                 const message = JSON.parse(event.data);
                 handleSocketMessage(message);
             };
@@ -39,7 +40,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         } else {
             console.log("Canvas context not supported");
         }
-    }, [gameSocket]);
+    }, [score]);
 
     function handleSocketMessage(message) {
         if (message.type === "paddle_move") {
@@ -182,8 +183,8 @@ const PingPong = ({ gameinfo, gameSocket }) => {
     }
 
     function sendPaddlePosition() {
-        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
-            gameSocket.send(JSON.stringify({
+        if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
+            gameSocket.current.send(JSON.stringify({
                 type: "paddle_move",
                 data: { x: paddleX },
                 nickname: localStorage.getItem("nickname"),
@@ -192,12 +193,12 @@ const PingPong = ({ gameinfo, gameSocket }) => {
     }
 
     function sendGameState() {
-        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
+        if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
             const data = {
                 ball: { x: canvas.width - x, y: canvas.height - y, dx: -dx, dy: -dy },
                 paddle: { x: canvas.width - paddleX }
             };
-            gameSocket.send(JSON.stringify({ data: data, type: "game_update", nickname: localStorage.getItem("nickname") }));
+            gameSocket.current.send(JSON.stringify({ data: data, type: "game_update", nickname: localStorage.getItem("nickname") }));
         }
     }
 

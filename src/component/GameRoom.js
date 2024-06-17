@@ -1,7 +1,7 @@
 // let gameSocket = null;
 
 /* @jsx myReact.createElement */
-import myReact, { useEffect, useState } from "../core/myReact.js";
+import myReact, { useEffect, useState, useRef } from "../core/myReact.js";
 import { requestGameInfo, requestExitGame } from "../core/ApiGame.js";
 import "../css/GameRoom.css"
 import "../css/Pingpong.css";
@@ -10,7 +10,7 @@ import Chat from "./Chat.js";
 
 const GameRoom = () => {
     const [ready, setReady] = useState(false);
-    const [gameSocket, setgameSocket] = useState(null);
+    const gameSocket = useRef(null);
     const [exit, setExit] = useState(false);
     const [gameInfo, setGameInfo] = useState({
         id: "",
@@ -53,25 +53,25 @@ const GameRoom = () => {
         fetchGameInfo();
 
         return () => {
-            if (gameSocket) {
-                gameSocket.close();
-                setgameSocket(null);
+            if (gameSocket.current) {
+                gameSocket.current.close();
+                gameSocket.current = null;
             }
         };
     }, []);
 
     useEffect(() => {
-        if (gameInfo.id && !gameSocket && !exit) {
+        if (gameInfo.id && !gameSocket.current && !exit) {
             const newgameSocket = new WebSocket("ws://localhost:8000/ws/game/" + gameInfo.id + "/");
-            setgameSocket(newgameSocket);
             console.log("Creating new WebgameSocket connection...");
             newgameSocket.onopen = () => {
-                console.log("서버 연결 완료");
+				console.log("서버 연결 완료");
                 newgameSocket.send(JSON.stringify({ type: 'client_connected', nickname: localStorage.getItem("nickname") }));
             };
+			gameSocket.current = newgameSocket;
 		}
-		if (gameSocket && !exit){
-            gameSocket.onmessage = (event) => {
+		if (gameSocket.current && !exit){
+            gameSocket.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("data : ", data);
                 if (data.type === "game_ready") {
@@ -118,22 +118,22 @@ const GameRoom = () => {
 
             gameSocket.onclose = () => {
                 console.log("서버 연결 종료");
-                setgameSocket(null);
+                gameSocket.current = null;
             };
         }
     }), [gameInfo.id];
 
     const startGame = () => {
-        if (gameSocket)
-            gameSocket.send(JSON.stringify({ type: 'game_start', nickname: localStorage.getItem("nickname") }));
+        if (gameSocket.current)
+            gameSocket.current.send(JSON.stringify({ type: 'game_start', nickname: localStorage.getItem("nickname") }));
     };
 
     const exitGame = async () => {
 		console.log("--------exit");
-        if (gameSocket) {
-            gameSocket.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
-			gameSocket.close();
-            setgameSocket(null);
+        if (gameSocket.current) {
+            gameSocket.current.send(JSON.stringify({ type: 'client_left', nickname: localStorage.getItem("nickname") }));
+			gameSocket.current.close();
+            gameSocket.current = null;
             setExit(true);
 		}
         const response = await requestExitGame(gameInfo.id);
