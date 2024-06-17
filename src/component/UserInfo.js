@@ -2,6 +2,8 @@
 import api from "../core/Api_.js";
 import myReact , { useEffect, useState } from "../core/myReact.js";
 import "../css/MyInfo.css"
+import "./Matchhistory.js"
+import Matchhistory from "./Matchhistory.js";
 
 const UserInfo = (props) => {
 
@@ -168,6 +170,7 @@ const UserInfo = (props) => {
 					</div>
 				</div>
 			</div>
+			<Matchhistory data={data}/>
 		</div>
 	)
 }
