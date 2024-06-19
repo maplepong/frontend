@@ -20,6 +20,7 @@ import FriendList from '../component/FriendList';
 import UserInfo from '../component/UserInfo';
 import GameRoom from '../component/GameRoom';
 import PingPong from "../component/Game.js";
+import Tournament from "../component/Tournament.js";
 
 const pathList = {
 	"/": <App />,
@@ -36,7 +37,8 @@ const pathList = {
 	"lobby": <Lobby />,
 	"test" : <Test />,
 	"lobby" : <Lobby />,
-	"pingpong" : <PingPong />
+	"pingpong" : <PingPong />,
+	"tournament" : <Tournament / >
 }
 
 export default function router() {
@@ -56,7 +58,7 @@ export default function router() {
 	if (component === undefined) {
 		myReact.render(<Undefined />, "newPage");
 	}
-	else if (path === "login" || path === "/" || path === "signup" || path === "api-login" || path === "api-signup") {
+	else if (path === "login" || path === "/" || path === "signup" || path === "api-login" || path === "api-signup" || path === "tournament") {
 		myReact.render(<div>{component}</div>, "newPage");
 	}
 	else {
