@@ -1,7 +1,7 @@
 .nicknameContainer {
   display: flex;
   gap: 20px;
-  height: 20px;
+  height: max-content;
   width: max-content;
   padding: 5px;
   position: relative;
