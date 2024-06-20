@@ -71,7 +71,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
             left: score.left + leftAdd,
             right: score.right + rightAdd,
         };
-        //setScore(newScore);
+        setScore(newScore);
         if (score.left < 3 && score.right < 3) resetGame();//3점 일하라면 게임 재시작
     }
 
