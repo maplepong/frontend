@@ -2,7 +2,7 @@
   display: flex;
   gap: 20px;
   height: 20px;
-  /* width: max-content; */
+  width: max-content;
   padding: 5px;
   position: relative;
   align-items: first baseline;
@@ -10,19 +10,20 @@
 
 .nicknameContainer .hovermenu {
   background-color: rgba(249, 213, 255, 0.8);
-  /* right: -100px;
-  top: -10px; */
   box-shadow: 2px 2px 3px black;
   padding: 5px 10px;
-  width: max-content;
   z-index: 3000;
   position: absolute;
 }
-ul {
+
+.hovermenu > ul {
   list-style: none;
   line-height: 1.8;
-  width: max-content;
   color: black;
+}
+
+.hovermenu li {
+  width: max-content;
 }
 .nickname {
   position: static;
