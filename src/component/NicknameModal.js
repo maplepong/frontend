@@ -9,14 +9,18 @@ const NicknameModal = ({ nickname }) => {
     const menu = e.target
       .closest(".nicknameContainer")
       .getElementsByClassName("hovermenu");
-    console.log(menu);
     const xPos = menu[0].parentNode.children[0].offsetWidth + 30; //원래 아이디 노드의 너비
-    if (show) menu[0].classList.remove("hidden");
-    else menu[0].classList.add("hidden");
+    if (show) {
+      //다른 닉네임모달 켜져있는지 확인
+      const others = document.querySelectorAll(".hovermenu");
+      //다른 드러난 닉네임모달 히든으로 만듬
+      others.forEach((div) => {
+        if (!div.classList.contains("hidden")) div.classList.add("hidden");
+      });
+      menu[0].classList.remove("hidden");
+    } else menu[0].classList.add("hidden");
     show = show ? 0 : 1;
-    console.log(menu[0].parentNode.children[0].offsetWidth);
     menu[0].style.left = xPos + "px";
-    console.log(menu[0].parentNode.offsetWidth);
   }
   function routeToFriend() {
     myReact.redirect("userinfo/" + nickname);
