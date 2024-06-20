@@ -8,11 +8,10 @@
   align-items: first baseline;
 }
 
-.hovermenu {
+.nicknameContainer .hovermenu {
   background-color: rgba(249, 213, 255, 0.8);
-  /* position: absolute; */
-  right: -100px;
-  top: 0px;
+  /* right: -100px;
+  top: -10px; */
   box-shadow: 2px 2px 3px black;
   padding: 5px 10px;
   width: max-content;

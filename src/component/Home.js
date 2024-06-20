@@ -6,7 +6,6 @@ import FriendList from "./FriendList.js";
 import ChooseGame from "./ChooseGame.js";
 import UserStatus from "./UserStatus.js";
 import "../css/home.css";
-import Chat from "./Chat.js";
 
 const Home = () => {
   const [data, setData] = useState({
@@ -48,7 +47,6 @@ const Home = () => {
       <div id="myStatus">
         <UserStatus data={data} />
         <FriendList list={list} friendlist={friendlist} />
-        <Chat />
       </div>
     </div>
   );

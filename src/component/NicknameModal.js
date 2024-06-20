@@ -10,9 +10,13 @@ const NicknameModal = ({ nickname }) => {
       .closest(".nicknameContainer")
       .getElementsByClassName("hovermenu");
     console.log(menu);
+    const xPos = menu[0].parentNode.children[0].offsetWidth + 30; //원래 아이디 노드의 너비
     if (show) menu[0].classList.remove("hidden");
     else menu[0].classList.add("hidden");
     show = show ? 0 : 1;
+    console.log(menu[0].parentNode.children[0].offsetWidth);
+    menu[0].style.left = xPos + "px";
+    console.log(menu[0].parentNode.offsetWidth);
   }
   function routeToFriend() {
     myReact.redirect("userinfo/" + nickname);
@@ -31,43 +35,41 @@ const NicknameModal = ({ nickname }) => {
 
   return (
     <div class="nicknameContainer" id={nickname} onclick={showmenu}>
-      <p class="nickname">
-        {nickname}
-        <div class="hidden hovermenu">
-          <ul>
-            <li>
-              <span
-                onclick={() => {
-                  routeToFriend();
-                }}
-              >
-                🔍 {nickname} 정보보기
-              </span>
-            </li>
-            <li
+      <p class="nickname">{nickname} </p>
+      <div class="hidden hovermenu">
+        <ul>
+          <li>
+            <span
               onclick={() => {
-                requestFriend();
+                routeToFriend();
               }}
             >
-              👐 친구신청하기
-            </li>
-            <li
-              onclick={() => {
-                inviteToGame();
-              }}
-            >
-              🏓 게임초대하기
-            </li>
-            <li
-              onclick={() => {
-                wisper();
-              }}
-            >
-              💌 대화하기
-            </li>
-          </ul>
-        </div>
-      </p>
+              🔍 {nickname} 정보보기
+            </span>
+          </li>
+          <li
+            onclick={() => {
+              requestFriend();
+            }}
+          >
+            👐 친구신청하기
+          </li>
+          <li
+            onclick={() => {
+              inviteToGame();
+            }}
+          >
+            🏓 게임초대하기
+          </li>
+          <li
+            onclick={() => {
+              wisper();
+            }}
+          >
+            💌 대화하기
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
