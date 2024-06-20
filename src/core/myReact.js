@@ -94,12 +94,12 @@ function createMyReact() {
 		const fiber = new fiberNode(oldfiber);
 		//new fiber state value update && copy values of old fiber
 		//if fiber changed? call instance
-		if (fiber.changed){
+		if (fiber.changedState && fiber.changedState.length){
 			//console.log("changedState", fiber.changedState)
 			fiber.changedState.forEach(d => {
 				//console.log(d)
 				fiber.state[d.i] = d.value;
-				//console.log("fiber updated state" , fiber.state);
+				console.log("fiber updated state" , fiber.state);
 			})
 			fiber.changedState = [];
 			fiber.changed = false;
@@ -186,7 +186,7 @@ export function useState(initValue){
 		// myReact.render(null, "reRender");
 		//render, how I can get the infomation of current page?
 	}
-	return [fiber.state[i], setState];
+	return [fiber.state[i], (v) => setState(v)];
 }
 
 function scheduleUpdate(fiber) {
