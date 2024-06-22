@@ -4,12 +4,11 @@ import myReact from "../core/myReact.js";
 import '../css/UserStatus.css';
 
 const UserStatus = (props) => {
-	console.log("프롭스의 데이터", props.data)
 	return <div id="container-UserStatus">
 			<div id="info-line">
 				<div class="level">level</div>
 				<div class="level">42</div>
-				<div class="usernickname">{props.data.nickname}</div>
+				<div class="usernickname">{localStorage.nickname}</div>
 			</div>
 			<div class="status-line" style="background-color: #f1f1f1">
 				<div id="stat-name">핑퐁 승률</div>

@@ -10,51 +10,48 @@ const PingPong = ({ gameinfo, gameSocket }) => {
 
     const [score, setScore] = useState({ left: 0, right: 0 });
 
-
+	//
     useEffect(() => {
-        if (!gameinfo || !gameSocket) {
+        if (!gameinfo || !gameSocket.current) {
             console.log("something is wrong...");
             return;
         }
 
-        if (gameinfo.owner == localStorage.getItem("nickname")) isowner = true;
+        if (gameinfo.owner === localStorage.getItem("nickname")) isowner = true;
 
-        console.log("PingPong useEffect");
-        console.log("gameInfo:", gameinfo);
-        console.log("gameSocket:", gameSocket.readyState);
-        console.log("is owner ? : ", isowner);
+        // console.log("PingPong useEffect");
+        // console.log("gameInfo:", gameinfo);
+        // console.log("gameSocket.current:", gameSocket.current.readyState);
 
         canvas = document.getElementById("myCanvas");
 
         if (canvas && canvas.getContext) {
             ctx = canvas.getContext("2d");
-            initGame(canvas);//게임 초기화
-            draw();//드로우 함수 호출
-            // interval = setInterval(draw, 20);//드로우 함수 초당 20번 호출
-            //여기서 인터벌을 무한으로 갈겼을 가능성이 높음 - 다른데로 옮기거나 셋인터벌함수를 안쓰던가
-            gameSocket.onmessage = (event) => {
+            initGame(canvas);
+            draw();
+
+            gameSocket.current.onmessage = (event) => {
                 const message = JSON.parse(event.data);
-                handleSocketMessage(message);//움직임 전송?
+                handleSocketMessage(message);
             };
- 
-            return () => {//컴포넌트 해제시
+
+            return () => {
+                // clearInterval(interval);
                 document.removeEventListener("keydown", keyDownHandler);
                 document.removeEventListener("keyup", keyUpHandler);
             };
         } else {
             console.log("Canvas context not supported");
         }
-    }, []);
-
+    }, [score]);
 
     function handleSocketMessage(message) {
         if (message.type === "paddle_move") {
             const { data } = message;
             enemyPaddleX = data.x;
-            console.log("data : ", data)
         } else if (message.type === "game_update") {
             const { ball, paddle } = message.data;
-            if (ball && isowner != true) {
+            if (ball && !isowner) {
                 x = ball.x;
                 y = ball.y;
                 dx = ball.dx;
@@ -62,6 +59,8 @@ const PingPong = ({ gameinfo, gameSocket }) => {
             }
             if (paddle) {
                 enemyPaddleX = paddle.x;
+                console.log("cavnas", canvas.width, "paddle", paddle.x);
+                console.log("enemypaddle:", enemyPaddleX);
             }
         }
     }
@@ -72,21 +71,20 @@ const PingPong = ({ gameinfo, gameSocket }) => {
             right: score.right + rightAdd,
         };
         setScore(newScore);
-        if (score.left < 3 && score.right < 3) resetGame();//3점 일하라면 게임 재시작
+        if (score.left < 3 && score.right < 3) resetGame();
     }
 
     function initGame(newCanvas) {//게임 초기화화
-        console.log("initGame");
+        // console.log("initGame");
         ballRadius = 10;
         x = newCanvas.width / 2;
         y = newCanvas.height / 2;
         dx = 2;
         dy = 2;
-
         paddleHeight = 10;
         paddleWidth = 75;
         paddleX = (newCanvas.width - paddleWidth) / 2;
-        enemyPaddleX = (newCanvas.width - paddleWidth) / 2;
+        // enemyPaddleX = (newCanvas.width - paddleWidth) / 2;
         rightPressed = false;
         leftPressed = false;
 
@@ -101,8 +99,8 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         dx = 2;
         dy = 2;
         paddleX = (canvas.width - paddleWidth) / 2;
-        enemyPaddleX = (canvas.width - paddleWidth) / 2;
-        draw();    
+        // enemyPaddleX = (canvas.width - paddleWidth) / 2;
+        draw();
     }
 
     function drawBall() {
@@ -175,10 +173,10 @@ const PingPong = ({ gameinfo, gameSocket }) => {
 
         if (rightPressed) {
             paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
-            sendPaddlePosition();
+            // sendPaddlePosition();
         } else if (leftPressed) {
             paddleX = Math.max(paddleX - 7, 0);
-            sendPaddlePosition();
+            // sendPaddlePosition();
         }
 
         x += dx;
@@ -188,22 +186,22 @@ const PingPong = ({ gameinfo, gameSocket }) => {
     }
 
     function sendPaddlePosition() {
-        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
-            gameSocket.send(JSON.stringify({
+        if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
+            gameSocket.current.send(JSON.stringify({
                 type: "paddle_move",
-                data: { x: canvas.width - paddleX },
+                data: { x: canvas.width - (paddleX + paddleWidth)},
                 nickname: localStorage.getItem("nickname"),
             }));
         }
     }
 
     function sendGameState() {
-        if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
+        if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
             const data = {
                 ball: { x: canvas.width - x, y: canvas.height - y, dx: -dx, dy: -dy },
-                paddle: { x: canvas.width - paddleX }
+                paddle: { x: canvas.width - (paddleX + paddleWidth) }
             };
-            gameSocket.send(JSON.stringify({ data: data, type: "game_update", nickname: localStorage.getItem("nickname") }));
+            gameSocket.current.send(JSON.stringify({ data: data, type: "game_update", nickname: localStorage.getItem("nickname") }));
         }
     }
 
