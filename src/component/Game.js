@@ -72,6 +72,17 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         };
         setScore(newScore);
         if (score.left < 3 && score.right < 3) resetGame();
+        else {
+            if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
+                gameSocket.current.send(JSON.stringify({
+                    type: "game_result",
+                    data: newScore,
+                    nickname: localStorage.getItem("nickname"),
+                }));
+            }
+            window.history.back();
+            return ;
+        }
     }
 
     function initGame(newCanvas) {//게임 초기화화
