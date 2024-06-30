@@ -9,47 +9,47 @@ import "../css/home.css";
 import Chat from "./Chat.js";
 
 const Home = () => {
-  const [data, setData] = useState({
-    id: "",
-    username: "",
-    nickname: "",
-    introduction: "",
-    losses: "",
-    total_games: "",
-    wins: "",
-    win_rate: "",
-    image: "",
-    email: "",
-  });
+  // const [data, setData] = useState({
+  //   id: "",
+  //   username: "",
+  //   nickname: "",
+  //   introduction: "",
+  //   losses: "",
+  //   total_games: "",
+  //   wins: "",
+  //   win_rate: "",
+  //   image: "",
+  //   email: "",
+  // });
 
-  const [list, setList] = useState({
-    sends: [],
-    receives: [],
-  });
+  // const [list, setList] = useState({
+  //   sends: [],
+  //   receives: [],
+  // });
 
-  const [friendlist, setFriendList] = useState([]);
+  // const [friendlist, setFriendList] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await api.getUserInfomation(localStorage.nickname);
-      const friendRequests = await api.getRequestFriendList();
-      const friends = await api.getFriendList();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await api.getUserInfomation(localStorage.nickname);
+  //     const friendRequests = await api.getRequestFriendList();
+  //     const friends = await api.getFriendList();
 
-      setList(friendRequests);
-      setFriendList(friends);
-      setData(response);
-    };
-    fetchData();
-  }, []);
+  //     setList(friendRequests);
+  //     setFriendList(friends);
+  //     setData(response);
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <div id="home">
       <ChooseGame />
-      <div id="myStatus">
-        <UserStatus data={data} />
-        <FriendList list={list} friendlist={friendlist} />
-        <Chat />
-      </div>
+      {/* <div id="myStatus"> */}
+        {/* <UserStatus data={data} /> */}
+        {/* <FriendList list={list} friendlist={friendlist} /> */}
+        {/* <Chat /> */}
+      {/* </div> */}
     </div>
   );
 };
