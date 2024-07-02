@@ -1,14 +1,14 @@
 /* @jsx myReact.createElement */
 import myReact, { useState, useEffect } from "../core/myReact.js";
 import "../css/Pingpong.css";
+import api from "../core/Api_.js";
 
 const PingPong = ({ gameinfo, gameSocket }) => {
     let ctx, ballRadius, x, y, dx, dy, canvas;
     let paddleHeight, paddleWidth, paddleX, rightPressed, leftPressed, enemyPaddleX;
-    let interval;
     let isowner = false;
-
-    const [score, setScore] = useState({ left: 0, right: 0 });
+    let userscore,enemyscore;
+    let flag = false;
 
 	//
     useEffect(() => {
@@ -34,6 +34,12 @@ const PingPong = ({ gameinfo, gameSocket }) => {
                 const message = JSON.parse(event.data);
                 handleSocketMessage(message);
             };
+
+            gameSocket.current.onclose = () => { //t소켓이 끊겼음을 감지
+                const message = JSON.stringify({ type: "game_end", nickname: localStorage.getItem("nickname") });
+                console.log("gameSocket closed");
+                window.history.back();
+            }
 
             return () => {
                 // clearInterval(interval);
@@ -66,36 +72,32 @@ const PingPong = ({ gameinfo, gameSocket }) => {
     }
 
     function updateScore(leftAdd, rightAdd) {//스코어 업데이트
-        const newScore = {
-            left: score.left + leftAdd,
-            right: score.right + rightAdd,
-        };
-        setScore(newScore);
-        if (score.left < 3 && score.right < 3) resetGame();
+        userscore += leftAdd;
+        enemyscore += rightAdd;
+        if (userscore < 3 && enemyscore < 3) resetGame();
         else {
-            if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
-                gameSocket.current.send(JSON.stringify({
-                    type: "game_result",
-                    data: newScore,
-                    nickname: localStorage.getItem("nickname"),
-                }));
-            }
+            api.sendGameResult(userscore,enemyscore,localStorage.getItem("nickname"));
+            gameSocket.current.close();
             window.history.back();
-            return ;
         }
+        return ;
     }
 
     function initGame(newCanvas) {//게임 초기화화
         // console.log("initGame");
         ballRadius = 10;
-        x = newCanvas.width / 2;
-        y = newCanvas.height / 2;
-        dx = 2;
-        dy = 2;
+        if (isowner) {
+            x = newCanvas.width / 2;
+            y = newCanvas.height / 2;
+            dx = 2;
+            dy = 2;
+        }
         paddleHeight = 10;
         paddleWidth = 75;
         paddleX = (newCanvas.width - paddleWidth) / 2;
-        // enemyPaddleX = (newCanvas.width - paddleWidth) / 2;
+        userscore = 0;
+        enemyscore = 0;
+        enemyPaddleX = (newCanvas.width - paddleWidth) / 2;
         rightPressed = false;
         leftPressed = false;
 
@@ -110,6 +112,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         dx = 2;
         dy = 2;
         paddleX = (canvas.width - paddleWidth) / 2;
+        flag = false;
         // enemyPaddleX = (canvas.width - paddleWidth) / 2;
         draw();
     }
@@ -153,14 +156,34 @@ const PingPong = ({ gameinfo, gameSocket }) => {
             leftPressed = false;
         }
     }
+    
+    function drawText(text, x, y, color) {
+        ctx.fillStyle = color;
+        ctx.font = "45px fantasy";
+        ctx.fillText(text, x, y);
+    }
+
+    function socketCloseCheck() {
+        if (gameSocket.current && gameSocket.current.readyState === WebSocket.OPEN) {
+            return true;
+        }
+        return false;
+    }
 
     function draw() {
         if (!ctx) return;
         if (score && (score.left >= 3 || score.right >= 3)) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBall();
+        if (flag == false) { 
+            sendGameState();
+            flag = true;
+        }
         drawPaddle();
         drawEnemyPaddle();
+        // 점수 표시
+        drawText(userscore, canvas.width / 4, canvas.height / 5, "white");
+        drawText(enemyscore, (3 * canvas.width) / 4, canvas.height / 5, "white");
 
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
@@ -168,6 +191,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         if (y + dy > canvas.height - ballRadius) {
             if (x > paddleX && x < paddleX + paddleWidth) {
                 dy = -dy;
+                sendGameState();
             } else {
                 updateScore(1, 0);
                 return;
@@ -176,6 +200,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
         if (y + dy < ballRadius) {
             if (x > enemyPaddleX && x < enemyPaddleX + paddleWidth) {
                 dy = -dy;
+                sendGameState();
             } else {
                 updateScore(0, 1);
                 return;
@@ -184,15 +209,17 @@ const PingPong = ({ gameinfo, gameSocket }) => {
 
         if (rightPressed) {
             paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
+            sendGameState();
             // sendPaddlePosition();
         } else if (leftPressed) {
             paddleX = Math.max(paddleX - 7, 0);
+            sendGameState();
             // sendPaddlePosition();
         }
 
         x += dx;
         y += dy;
-        sendGameState();
+        //sendGameState();
         interval = requestAnimationFrame(draw);
     }
 
@@ -224,7 +251,7 @@ const PingPong = ({ gameinfo, gameSocket }) => {
 
     return (
         <div id="score">
-            <p>{resultValue}</p>
+            {/* <p>{resultValue}</p> */}
             <canvas id="myCanvas" width="480" height="320"></canvas>
         </div>
     );
