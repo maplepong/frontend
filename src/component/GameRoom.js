@@ -146,7 +146,7 @@ const GameRoom = () => {
     return (
         ready ? 
         (<div className="game-container">
-            <canvas id="myCanvas" width="240" height="160"></canvas>
+            <canvas id="myCanvas" width="480" height="320"></canvas>
             <PingPong gameinfo={gameInfo} gameSocket={gameSocket} />
         </div>)
         : 

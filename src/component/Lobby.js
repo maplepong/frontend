@@ -117,7 +117,7 @@ const Lobby = (props) => {
     return (
         <div id="container-lobby" className="modal">
             <button onClick={requestLogin}>login: test</button>
-            <div id="lobby-headline">
+            {/* <div id="lobby-headline">
                 <p>Pingpong🏓</p>
                 <button>X</button>
                 <button id="open-modal" onClick={openModal}>게임 만들기</button>
@@ -140,6 +140,7 @@ const Lobby = (props) => {
                     </form>
                 </div>
             </div>
+			{/* <GameList /> */}
             <button onClick={updateList}>방이 있을까?</button>
             <div class="game_interface">
                 <div class="lobby_body">
@@ -162,3 +163,12 @@ const Lobby = (props) => {
 };
 
 export default Lobby;
+
+// {lobbyData.length > 0 ? lobbyData.map((room, index) => (
+// <li class="room_info " onClick={() => { joinGame(room.id) }}>
+// 	<span class="room_number">{room.id}</span>
+// 	<span class="room_title" >{room.title}</span>
+// 	<span class="players">{room.players}</span>
+// 	<span class="room_status">{room.status}</span>
+// </li>
+// )) : ""}
